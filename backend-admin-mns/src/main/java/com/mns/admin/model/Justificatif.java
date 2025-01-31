@@ -1,5 +1,6 @@
 package com.mns.admin.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -20,6 +21,7 @@ public class Justificatif {
 
     @ManyToOne
     @JoinColumn(name = "id_absence", nullable = false)
+    @JsonIgnore
     private Absence absence;
 
     @Column(name = "typeDocument_justificatif", nullable = false, length = 50)
@@ -29,7 +31,7 @@ public class Justificatif {
     @Temporal(TemporalType.TIMESTAMP)
     private Date dateDepotJustificatif;
 
-    @ManyToOne
-    @JoinColumn(name = "id_statut", nullable = false)
+    @Column(name = "statut", nullable = false)
+    @Enumerated(EnumType.STRING)
     private Statut statut;
 }
