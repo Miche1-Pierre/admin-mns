@@ -1,5 +1,6 @@
 package com.mns.admin.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -20,6 +21,7 @@ public class Dossier {
 
     @ManyToOne
     @JoinColumn(name = "id_stagiaire", nullable = false)
+    @JsonIgnore
     private Utilisateur stagiaire;
 
     @Column(name = "dateCreation_dossier", nullable = false)
@@ -30,7 +32,7 @@ public class Dossier {
     @Temporal(TemporalType.TIMESTAMP)
     private Date dateValidationDossier;
 
-    @ManyToOne
-    @JoinColumn(name = "id_statut", nullable = false)
+    @Column(name = "statut", nullable = false)
+    @Enumerated(EnumType.STRING)
     private Statut statut;
 }
