@@ -1,5 +1,6 @@
 package com.mns.admin.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -20,10 +21,12 @@ public class PartSecret {
 
     @ManyToOne
     @JoinColumn(name = "id_secret", nullable = false)
+    @JsonIgnore
     private Secret secret;
 
     @ManyToOne
     @JoinColumn(name = "id_uttilisateur", nullable = false)
+    @JsonIgnore
     private Utilisateur uttilisateur;
 
     @Column(name = "part_partSecret", nullable = false)

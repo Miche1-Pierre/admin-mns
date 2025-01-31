@@ -1,5 +1,6 @@
 package com.mns.admin.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -20,10 +21,12 @@ public class Absence {
 
     @ManyToOne
     @JoinColumn(name = "id_stagiaire", nullable = false)
+    @JsonIgnore
     private Utilisateur stagiaire;
 
     @ManyToOne
     @JoinColumn(name = "id_typeAbsence", nullable = false)
+    @JsonIgnore
     private TypeAbsence typeAbsence;
 
     @Column(name = "dateDebut_absence", nullable = false)
