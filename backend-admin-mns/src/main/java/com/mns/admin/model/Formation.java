@@ -3,6 +3,7 @@ package com.mns.admin.model;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @Entity
@@ -29,9 +30,9 @@ public class Formation {
 
     @Column(name = "dateDebut_formation", nullable = false)
     @Temporal(TemporalType.TIMESTAMP)
-    private Date dateDebutFormation;
+    private LocalDateTime dateDebutFormation;
 
     @Column(name = "dateFin_formation", nullable = false)
     @Temporal(TemporalType.TIMESTAMP)
-    private Date dateFinFormation;
+    private LocalDateTime dateFinFormation;
 }

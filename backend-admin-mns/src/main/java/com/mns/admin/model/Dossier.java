@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @Entity
@@ -26,11 +27,11 @@ public class Dossier {
 
     @Column(name = "dateCreation_dossier", nullable = false)
     @Temporal(TemporalType.TIMESTAMP)
-    private Date dateCreationDossier;
+    private LocalDateTime dateCreationDossier;
 
     @Column(name = "dateValidation_dossier")
     @Temporal(TemporalType.TIMESTAMP)
-    private Date dateValidationDossier;
+    private LocalDateTime dateValidationDossier;
 
     @Column(name = "statut", nullable = false)
     @Enumerated(EnumType.STRING)

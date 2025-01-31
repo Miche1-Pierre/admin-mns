@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @Entity
@@ -34,7 +35,7 @@ public class PartSecret {
 
     @Column(name = "dateCreation_partSecret", nullable = false)
     @Temporal(TemporalType.TIMESTAMP)
-    private Date dateCreationPartSecret;
+    private LocalDateTime dateCreationPartSecret;
 
     @Column(name = "statut_partSecret", nullable = false, length = 50)
     private String statutPartSecret;

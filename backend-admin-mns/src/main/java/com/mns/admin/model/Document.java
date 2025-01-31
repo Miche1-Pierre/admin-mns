@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @Entity
@@ -38,11 +39,11 @@ public class Document {
 
     @Column(name = "dateDepot_document", nullable = false, updatable = false)
     @Temporal(TemporalType.TIMESTAMP)
-    private Date dateDepotDocument;
+    private LocalDateTime dateDepotDocument;
 
     @Column(name = "dateLimite_document")
     @Temporal(TemporalType.TIMESTAMP)
-    private Date dateLimiteDocument;
+    private LocalDateTime dateLimiteDocument;
 
     @Column(name = "cleChiffrement_document", nullable = false)
     private String cleChiffrement_document;
