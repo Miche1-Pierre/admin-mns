@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @Entity
@@ -31,5 +32,5 @@ public class Inscription {
 
     @Column(name = "date_inscription", nullable = false, updatable = false)
     @Temporal(TemporalType.TIMESTAMP)
-    private Date dateInscription;
+    private LocalDateTime dateInscription;
 }

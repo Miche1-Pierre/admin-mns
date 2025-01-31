@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @Entity
@@ -29,7 +30,7 @@ public class Justificatif {
 
     @Column(name = "dateDepot_justificatif", nullable = false, updatable = false)
     @Temporal(TemporalType.TIMESTAMP)
-    private Date dateDepotJustificatif;
+    private LocalDateTime dateDepotJustificatif;
 
     @Column(name = "statut", nullable = false)
     @Enumerated(EnumType.STRING)

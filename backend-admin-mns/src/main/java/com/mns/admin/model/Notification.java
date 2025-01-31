@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @Entity
@@ -34,7 +35,7 @@ public class Notification {
 
     @Column(name = "date_notification", nullable = false, updatable = false)
     @Temporal(TemporalType.TIMESTAMP)
-    private Date dateNotification;
+    private LocalDateTime dateNotification;
 
     @Column(name = "statut_notification", nullable = false, length = 50)
     private String statutNotification;

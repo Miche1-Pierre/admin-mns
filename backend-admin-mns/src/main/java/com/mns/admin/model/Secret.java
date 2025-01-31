@@ -3,6 +3,7 @@ package com.mns.admin.model;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @Entity
@@ -26,7 +27,7 @@ public class Secret {
 
     @Column(name = "dateCreation_secret", nullable = false, updatable = false)
     @Temporal(TemporalType.TIMESTAMP)
-    private Date dateCreationSecret;
+    private LocalDateTime dateCreationSecret;
 
     @Column(name = "statut_secret", nullable = false)
     private String statutSecret;

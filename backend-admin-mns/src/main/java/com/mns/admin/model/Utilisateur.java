@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @Entity
@@ -33,11 +34,11 @@ public class Utilisateur {
 
     @Column(name = "dateCreation_utilisateur", updatable = false)
     @Temporal(TemporalType.TIMESTAMP)
-    private Date dateCreationUtilisateur;
+    private LocalDateTime dateCreationUtilisateur;
 
     @Column(name = "dateMiseAJour_utilisateur")
     @Temporal(TemporalType.TIMESTAMP)
-    private Date dateMiseAJourUtilisateur;
+    private LocalDateTime dateMiseAJourUtilisateur;
 
     @ManyToOne
     @JoinColumn(name = "role_id", nullable = false)
@@ -46,12 +47,12 @@ public class Utilisateur {
 
     @PrePersist
     protected void onCreate() {
-        dateCreationUtilisateur = new Date();
-        dateMiseAJourUtilisateur = new Date();
+        dateCreationUtilisateur = LocalDateTime.now();
+        dateMiseAJourUtilisateur = LocalDateTime.now();
     }
 
     @PreUpdate
     protected void onUpdate() {
-        dateMiseAJourUtilisateur = new Date();
+        dateMiseAJourUtilisateur = LocalDateTime.now();
     }
 }

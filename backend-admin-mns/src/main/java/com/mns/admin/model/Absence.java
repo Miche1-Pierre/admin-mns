@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @Entity
@@ -31,11 +32,11 @@ public class Absence {
 
     @Column(name = "dateDebut_absence", nullable = false)
     @Temporal(TemporalType.TIMESTAMP)
-    private Date dateDebutAbsence;
+    private LocalDateTime dateDebutAbsence;
 
     @Column(name = "dateFin_absence")
     @Temporal(TemporalType.TIMESTAMP)
-    private Date dateFinAbsence;
+    private LocalDateTime dateFinAbsence;
 
     @Column(name = "justifie_absence", nullable = false)
     private boolean justifieAbsence;
