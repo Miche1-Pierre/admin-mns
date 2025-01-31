@@ -1,5 +1,6 @@
 package com.mns.admin.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -20,10 +21,12 @@ public class Notification {
 
     @ManyToOne
     @JoinColumn(name = "id_utilisateur", nullable = false)
+    @JsonIgnore
     private Utilisateur utilisateur;
 
     @ManyToOne
     @JoinColumn(name = "id_typeNotification", nullable = false)
+    @JsonIgnore
     private TypeNotification typeNotification;
 
     @Column(name = "contenu_notification", nullable = false)

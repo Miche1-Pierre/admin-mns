@@ -1,5 +1,6 @@
 package com.mns.admin.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -17,7 +18,13 @@ public class RoleModule {
     private Long idRoleModule;
 
     @ManyToOne
+    @JoinColumn(name = "id_role", nullable = false)
+    @JsonIgnore
+    private Role role;
+
+    @ManyToOne
     @JoinColumn(name = "id_module", nullable = false)
+    @JsonIgnore
     private Module module;
 
     @Column(name = "actif_roleModule", nullable = false)

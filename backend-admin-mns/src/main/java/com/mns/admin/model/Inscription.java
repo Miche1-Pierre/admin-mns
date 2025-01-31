@@ -1,5 +1,6 @@
 package com.mns.admin.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -20,10 +21,12 @@ public class Inscription {
 
     @ManyToOne
     @JoinColumn(name = "id_stagiaire", nullable = false)
+    @JsonIgnore
     private Utilisateur stagiaire;
 
     @ManyToOne
     @JoinColumn(name = "id_formation", nullable = false)
+    @JsonIgnore
     private Formation formation;
 
     @Column(name = "date_inscription", nullable = false, updatable = false)

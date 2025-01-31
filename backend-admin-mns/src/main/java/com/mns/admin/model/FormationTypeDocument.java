@@ -1,5 +1,6 @@
 package com.mns.admin.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -18,10 +19,12 @@ public class FormationTypeDocument {
 
     @ManyToOne
     @JoinColumn(name = "id_typeDocument", nullable = false)
+    @JsonIgnore
     private TypeDocument typeDocument;
 
     @ManyToOne
     @JoinColumn(name = "id_formation", nullable = false)
+    @JsonIgnore
     private Formation formation;
 
     @Column(name = "obligatoire_formationTypeDocument")

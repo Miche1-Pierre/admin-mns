@@ -1,5 +1,6 @@
 package com.mns.admin.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -32,6 +33,7 @@ public class Document {
 
     @ManyToOne
     @JoinColumn(name = "id_secret")
+    @JsonIgnore
     private Secret secret;
 
     @Column(name = "dateDepot_document", nullable = false, updatable = false)
