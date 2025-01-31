@@ -32,7 +32,7 @@ public class Justificatif {
     @Temporal(TemporalType.TIMESTAMP)
     private LocalDateTime dateDepotJustificatif;
 
-    @Column(name = "statut", nullable = false)
-    @Enumerated(EnumType.STRING)
+    @ManyToOne
+    @JoinColumn(name = "id_statut", referencedColumnName = "idStatut", nullable = false)
     private Statut statut;
 }

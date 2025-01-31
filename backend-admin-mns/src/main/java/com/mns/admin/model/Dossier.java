@@ -33,7 +33,7 @@ public class Dossier {
     @Temporal(TemporalType.TIMESTAMP)
     private LocalDateTime dateValidationDossier;
 
-    @Column(name = "statut", nullable = false)
-    @Enumerated(EnumType.STRING)
+    @ManyToOne
+    @JoinColumn(name = "id_statut", referencedColumnName = "idStatut", nullable = false)
     private Statut statut;
 }
