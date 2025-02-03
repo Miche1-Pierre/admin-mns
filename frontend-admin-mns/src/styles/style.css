@@ -1,0 +1,324 @@
+/*Google Fonts*/
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap');
+
+:root {
+    /* Colors */
+    --primary-color: #D90429;
+    --secondary-color: #2B2D42;
+    --primary-background-color: #EDF2F4;
+    --secondary-background-color: #ffffff;
+    --border-colors: #eeeeee;
+    --text-color-dark: #424242;
+    --text-color-light: #fafafa;
+    --shadow-color: rgba(0, 0, 0, 0.1);
+
+    /* Transition */
+    --tran-primary-color: #EF233C;
+    --tran-secondary-color: #8D99AE;
+    --transition: .2s;
+
+    /* Border-radius */
+    --border-radius: 6px;
+
+    /* Font-size */
+    --mini-text-font-size: 10px;
+    --text-font-size: 14px;
+    --title-font-size: 20px;
+    --super-title-font-size: 30px;
+    --semi-title-font-size: 18px;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Outfit", serif;
+    color: var(--text-color-dark);
+}
+
+body {
+    height: 100vh;
+    background-color: var(--primary-background-color);
+    display: flex;
+}
+
+main {
+    height: 100vh;
+    position: relative;
+    width: calc(100% - 350px);
+    left: 50px;
+}
+
+/* Navbar */
+.navbar {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    min-height: 100vh;
+}
+
+.sidebar {
+    position: relative;
+    width: 256px;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    background-color: var(--secondary-background-color);
+    padding: 24px;
+    transition: var(--transition);
+}
+
+.sidebar .head {
+    display: flex;
+    gap: 20px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid var(--border-colors);
+}
+
+.logo-details img {
+    width: 50%;
+}
+
+.logo-details .title,
+.menu .title {
+    font-size: var(--mini-text-font-size);
+    font-weight: 500;
+    color: var(--tran-secondary-color);
+    text-transform: uppercase;
+    margin-bottom: 10px;
+}
+
+.logo-details .name {
+    font-size: var(--text-font-size);
+    font-weight: 500;
+}
+
+.nav {
+    flex: 1;
+}
+
+.menu ul li {
+    position: relative;
+    list-style: none;
+    margin-bottom: 5px;
+}
+
+.menu ul li a {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: var(--text-font-size);
+    font-weight: 500;
+    color: var(--text-color-dark);
+    text-decoration: none;
+    padding: 12px 8px;
+    border-radius: var(--border-radius);
+    transition: var(--transition);
+}
+
+.menu ul li>a:hover,
+.menu ul li.active>a {
+    color: var(--text-color-dark);
+    background-color: var(--primary-background-color);
+}
+
+.menu ul li .icon {
+    font-size: var(--title-font-size);
+}
+
+.menu ul li .text {
+    flex: 1;
+}
+
+.menu ul li .arrow {
+    font-size: var(--text-font-size);
+    transition: var(--transition);
+}
+
+.menu ul li.active .arrow {
+    transform: rotate(180deg);
+}
+
+.menu .sub-menu {
+    display: none;
+    margin-left: 20px;
+    padding-left: 20px;
+    padding-top: 5px;
+    border-left: 1px solid var(--border-colors);
+}
+
+.menu .sub-menu li a {
+    padding: 10px 8px;
+    font-size: var(--text-font-size);
+}
+
+.menu:not(:last-child) {
+    padding-bottom: 10px;
+    margin-bottom: 20px;
+    border-bottom: 2px solid var(--border-colors);
+}
+
+.menu-btn {
+    position: absolute;
+    right: -20px;
+    top: 3.5%;
+    width: 38px;
+    height: 38px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    border: 5px solid var(--border-colors);
+    background-color: var(--primary-color);
+    transition: var(--transition);
+}
+
+.menu-btn .icon {
+    font-size: var(--title-font-size);
+    color: var(--text-color-light);
+}
+
+.menu-btn:hover {
+    background-color: var(--tran-primary-color);
+}
+
+.menu-btn i {
+    transition: var(--transition);
+}
+
+.sidebar.active {
+    width: 92px;
+}
+
+.sidebar.active .menu-btn i {
+    transform: rotate(180deg);
+}
+
+.sidebar.active .logo-details {
+    display: none;
+}
+
+.sidebar.active .menu .title {
+    text-align: center;
+}
+
+.sidebar.active .menu ul li .arrow {
+    display: none;
+}
+
+.sidebar.active .menu>ul>li>a {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.sidebar.active .menu>ul>li>a .text {
+    position: absolute;
+    left: 70px;
+    top: 50%;
+    transform: translateY(-50%);
+    padding: 10px;
+    border-radius: var(--border-radius);
+    color: var(--text-color-light);
+    background-color: var(--text-color-dark);
+    opacity: 0;
+    visibility: hidden;
+    transition: var(--transition);
+}
+
+.sidebar.active .menu>ul>li>a .text::after {
+    content: "";
+    position: absolute;
+    left: -5px;
+    top: 20%;
+    width: 20px;
+    height: 20px;
+    border-radius: var(--border-radius);
+    background-color: var(--text-color-dark);
+    transform: rotate(45deg);
+    z-index: -1;
+}
+
+.sidebar.active .menu>ul>li>a:hover .text {
+    left: 50px;
+    opacity: 1;
+    visibility: visible;
+}
+
+.sidebar.active .menu .sub-menu {
+    position: absolute;
+    top: 0;
+    left: 20px;
+    width: 200px;
+    border-radius: var(--border-radius);
+    padding: 10px 20px;
+    border: 1px solid var(--border-colors);
+    background-color: var(--secondary-background-color);
+    box-shadow: 0px 10px 8px var(--shadow-color);
+}
+
+/* Breadcrumb */
+.breadcrumb {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    grid-gap: 16px;
+    flex-wrap: wrap;
+    margin-top: 10px;
+}
+
+.breadcrumb .left h1 {
+    font-size: var(--super-title-font-size);
+    font-weight: 600;
+    margin-bottom: 10px;
+    color: var(--text-color-dark);
+}
+
+.breadcrumb .left ul {
+    display: flex;
+    align-items: center;
+    grid-gap: 15px;
+}
+
+.breadcrumb .left ul li {
+    color: var(--text-color-dark);
+    list-style: none;
+}
+
+.breadcrumb .left ul li a {
+    color: var(--tran-secondary-color);
+    pointer-events: none;
+    text-decoration: none;
+    font-size: var(--text-font-size);
+}
+
+.breadcrumb .left ul li a.active {
+    color: var(--primary-color);
+    pointer-events: none;
+    font-weight: 500;
+}
+
+.breadcrumb .profile {
+    display: flex;
+    gap: 2rem;
+    text-align: right;
+}
+
+.breadcrumb .profile .info {
+    font-size: var(--text-font-size);
+}
+
+.breadcrumb .profile .profile-photo {
+    width: 2.8rem;
+    height: 2.8rem;
+    border-radius: 50%;
+    overflow: hidden;
+}
+.breadcrumb .profile .profile-photo img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
