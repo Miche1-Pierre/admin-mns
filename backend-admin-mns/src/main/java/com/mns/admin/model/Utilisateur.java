@@ -5,11 +5,8 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
-import java.util.Date;
 
 @Entity
-@Getter
-@Setter
 @ToString
 @AllArgsConstructor
 @NoArgsConstructor
@@ -54,5 +51,71 @@ public class Utilisateur {
     @PreUpdate
     protected void onUpdate() {
         dateMiseAJourUtilisateur = LocalDateTime.now();
+    }
+
+    //Getter Setter
+
+    public Long getIdUtilisateur() {
+        return idUtilisateur;
+    }
+
+    public void setIdUtilisateur(Long idUtilisateur) {
+        this.idUtilisateur = idUtilisateur;
+    }
+
+    public String getNomUtilisateur() {
+        return nomUtilisateur;
+    }
+
+    public void setNomUtilisateur(String nomUtilisateur) {
+        this.nomUtilisateur = nomUtilisateur;
+    }
+
+    public String getPrenomUtilisateur() {
+        return prenomUtilisateur;
+    }
+
+    public void setPrenomUtilisateur(String prenomUtilisateur) {
+        this.prenomUtilisateur = prenomUtilisateur;
+    }
+
+    public String getEmailUtilisateur() {
+        return emailUtilisateur;
+    }
+
+    public void setEmailUtilisateur(String emailUtilisateur) {
+        this.emailUtilisateur = emailUtilisateur;
+    }
+
+    public String getMotDePasseUtilisateur() {
+        return motDePasseUtilisateur;
+    }
+
+    public void setMotDePasseUtilisateur(String motDePasseUtilisateur) {
+        this.motDePasseUtilisateur = motDePasseUtilisateur;
+    }
+
+    public LocalDateTime getDateCreationUtilisateur() {
+        return dateCreationUtilisateur;
+    }
+
+    public void setDateCreationUtilisateur(LocalDateTime dateCreationUtilisateur) {
+        this.dateCreationUtilisateur = dateCreationUtilisateur;
+    }
+
+    public LocalDateTime getDateMiseAJourUtilisateur() {
+        return dateMiseAJourUtilisateur;
+    }
+
+    public void setDateMiseAJourUtilisateur(LocalDateTime dateMiseAJourUtilisateur) {
+        this.dateMiseAJourUtilisateur = dateMiseAJourUtilisateur;
+    }
+
+    public Role getRole() {
+        return role;
+    }
+
+    public void setRole(Role role) {
+        this.role = role;
     }
 }
