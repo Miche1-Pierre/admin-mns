@@ -13,13 +13,13 @@
             <div class="menu">
                 <p class="title">Main</p>
                 <ul>
-                    <li>
+                    <li class="active">
                         <a href="#">
                             <i class='bx bx-home-alt'></i>
                             <span class="text">Home</span>
                         </a>
                     </li>
-                    <li class="active">
+                    <li>
                         <a href="#">
                             <i class='bx bx-grid-alt'></i>
                             <span class="text">Modules</span>
@@ -28,11 +28,13 @@
                         <ul class="sub-menu">
                             <li>
                                 <a href="#">
+                                    <i class='bx bxs-id-card'></i>
                                     <span class="text">Applications</span>
                                 </a>
                             </li>
                             <li>
                                 <a href="#">
+                                    <i class='bx bx-timer'></i>
                                     <span class="text">Absences & Lateness</span>
                                 </a>
                             </li>
@@ -47,7 +49,13 @@
                     <li>
                         <a href="#">
                             <i class='bx bx-folder'></i>
-                            <span class="text">Documents</span>
+                            <span class="text">Documents (GED)</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <i class='bx bx-mail-send'></i>
+                            <span class="text">Messaging</span>
                         </a>
                     </li>
                     <li>
@@ -59,12 +67,14 @@
                         <ul class="sub-menu">
                             <li>
                                 <a href="#">
-                                    <span class="text">Nothing</span>
+                                    <i class='bx bx-line-chart'></i>
+                                    <span class="text">Stats</span>
                                 </a>
                             </li>
                             <li>
                                 <a href="#">
-                                    <span class="text">Nothing</span>
+                                    <i class='bx bx-cog'></i>
+                                    <span class="text">Settings (Admin)</span>
                                 </a>
                             </li>
                         </ul>
