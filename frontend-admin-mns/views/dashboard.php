@@ -1,23 +1,27 @@
 <?php
 include $_SERVER['DOCUMENT_ROOT'] . "/frontend-admin-mns/components/card.php";
 include $_SERVER['DOCUMENT_ROOT'] . "/frontend-admin-mns/components/stats.php";
+include $_SERVER['DOCUMENT_ROOT'] . "/frontend-admin-mns/components/home/widget_absences.php";
+include $_SERVER['DOCUMENT_ROOT'] . "/frontend-admin-mns/components/home/widget_messages.php";
+include $_SERVER['DOCUMENT_ROOT'] . "/frontend-admin-mns/components/home/widget_documents.php";
 
 /* Stats */
-$data1 = [
-    "labels" => ["Jan", "Feb", "Mar", "Apr", "May", "Jun"],
-    "datasets" => [[
-        "label" => "Inscriptions",
-        "data" => [10, 20, 25, 40, 60, 100],
-        "backgroundColor" => "#D90429"
-    ]]
-];
+include $_SERVER['DOCUMENT_ROOT'] . "/frontend-admin-mns/components/home/chart_stats.php";
 
-$data2 = [
-    "labels" => ["Absences", "Retards"],
-    "datasets" => [[
-        "data" => [25, 75],
-        "backgroundColor" => ["#D90429", "#2B2D42"]
-    ]]
+$labelsAbsences = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+$labelsCandidatures = ["CDA", "Bachelor Dev", "Bachelor Réseaux", "DFS", "Num&Boost"];
+
+$absencesData = [2, 5, 3, 12, 6, 2, 4, 3, 9, 8, 3];
+$absencesColors = ['#2B2D42'];
+$absencesBorder = ['#eeeeee'];
+
+$candidaturesData = [5, 9, 7, 12, 15];
+$candidaturesColors = ['#2B2D42', '#D90429', '#8D99AE', '#424242', '#EF233C'];
+$candidaturesBorder = ['#eeeeee'];
+
+$options = [
+    "responsive" => true,
+    "maintainAspectRatio" => false
 ];
 ?>
 
@@ -32,7 +36,6 @@ $data2 = [
     <link rel="stylesheet" href="/frontend-admin-mns/css/dashboard.css">
     <!-- Icons -->
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
-
     <title>ADMIN MNS | Home</title>
 </head>
 
@@ -42,27 +45,37 @@ $data2 = [
     </header>
     <main>
         <?php include $_SERVER['DOCUMENT_ROOT'] . "/frontend-admin-mns/components/breadcrumb.php"; ?>
-        <div class="card-zone">
+        <div class="dashboard-zone">
             <?php
+            widgetAbsences();
+            widgetMessages();
+            widgetDocuments();
             generateCard(
-                "Make things float in air",
-                "Hover over this card to unleash the power of CSS perspective",
-                "https://images.unsplash.com/photo-1441974231531-c6227db76b6e?q=80&w=2560&auto=format&fit=crop",
-                "https://twitter.com/mannupaaji"
+                "Absences",
+                "#",
+                null,
+                null,
+                "absencesChart",
+                "bar",
+                $labelsAbsences,
+                $absencesData,
+                $absencesColors,
+                $absencesBorder,
+                $options
             );
-
             generateCard(
-                "Another cool effect",
-                "Try different hover animations and interactivity",
-                "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?q=80&w=2560&auto=format&fit=crop",
-                "https://example.com"
+                "Candidatures",
+                "#",
+                null,
+                null,
+                "candidaturesChart",
+                "pie",
+                $labelsCandidatures,
+                $candidaturesData,
+                $candidaturesColors,
+                $candidaturesBorder,
+                $options
             );
-            ?>
-        </div>
-        <div class="stats-zone">
-            <?php
-            generateStats("Inscriptions Mensuelles", "Graphique des inscriptions par mois", "#", "chart1", $data1, "bar");
-            generateStats("Absences & Retards", "Graphique des Absences et des Retards", "#", "chart2", $data2, "pie");
             ?>
         </div>
     </main>
@@ -72,7 +85,7 @@ $data2 = [
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="/frontend-admin-mns/js/dashboard.js"></script>
-    
+
 </body>
 
 </html>
