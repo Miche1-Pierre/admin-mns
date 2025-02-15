@@ -1,6 +1,6 @@
 <?php
 $documents = [];
-for ($i = 1; $i <= 50; $i++) {
+for ($i = 1; $i <= 100; $i++) {
     $documents[] = [
         "id" => $i,
         "nom" => "Document $i",
@@ -10,56 +10,72 @@ for ($i = 1; $i <= 50; $i++) {
     ];
 }
 
-$docsParPage = 10;
-$pageActuelle = isset($_GET['page']) && is_numeric($_GET['page']) ? (int)$_GET['page'] : 1;
-$totalPages = ceil(count($documents) / $docsParPage);
-$indexDepart = ($pageActuelle - 1) * $docsParPage;
-$documentsAffiches = array_slice($documents, $indexDepart, $docsParPage);
+$page = isset($_GET['page']) ? $_GET['page'] : 'documents';
+
 ?>
 
+<script>
+    window.documents = <?= json_encode($documents, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_NUMERIC_CHECK) ?>;
+</script>
+<script src="/frontend-admin-mns/js/documents.js" defer></script>
 <div class="document-container">
-    <h2>Gestion des Documents</h2>
-    <button class="button add" id="add-document-btn">Ajouter un document</button>
-    <div id="add-document-form" class="hidden">
-        <input type="text" id="doc-name" placeholder="Nom du document">
-        <select id="doc-type">
+    <button class="button add">Ajouter un document</button>
+    <!-- Bandeau de filtrage -->
+    <div class="filter-bar">
+        <input type="text" id="searchInput" placeholder="Rechercher un document..." />
+        <select id="filterType">
+            <option value="">Tous les types</option>
             <option value="PDF">PDF</option>
-            <option value="Word">Word</option>
-            <option value="Excel">Excel</option>
+            <option value="DOCX">DOCX</option>
+            <option value="XLSX">XLSX</option>
         </select>
-        <input type="text" id="doc-auteur" placeholder="Auteur">
-        <button class="button save" id="save-document-btn">Enregistrer</button>
-    </div>
-    <table class="styled-table">
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>Nom</th>
-                <th>Type</th>
-                <th>Date</th>
-                <th>Auteur</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody id="document-list">
-            <?php foreach ($documentsAffiches as $doc) : ?>
-                <tr>
-                    <td><?= $doc['id'] ?></td>
-                    <td><?= $doc['nom'] ?></td>
-                    <td><?= $doc['type'] ?></td>
-                    <td><?= $doc['date'] ?></td>
-                    <td><?= $doc['auteur'] ?></td>
-                    <td>
-                        <button class="button edit">Modifier</button>
-                        <button class="button delete">Supprimer</button>
-                    </td>
-                </tr>
+        <select id="filterAuthor">
+            <option value="">Tous les auteurs</option>
+            <?php foreach ($documents as $doc) : ?>
+                <option value="<?= $doc['auteur'] ?>"><?= $doc['auteur'] ?></option>
             <?php endforeach; ?>
-        </tbody>
-    </table>
-    <div class="pagination" id="pagination">
-        <?php for ($i = 1; $i <= $totalPages; $i++) : ?>
-            <a href="#" class="page-link <?= ($i == $pageActuelle) ? 'active' : '' ?>" data-page="<?= $i ?>"><?= $i ?></a>
-        <?php endfor; ?>
+        </select>
+        <select id="itemsPerPage">
+            <option value="10">10 éléments</option>
+            <option value="25" selected>25 éléments</option>
+            <option value="50">50 éléments</option>
+            <option value="100">100 éléments</option>
+        </select>
+    </div>
+
+    <!-- Tableau des documents -->
+    <div class="carousel">
+        <table class="styled-table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Nom</th>
+                    <th>Type</th>
+                    <th>Date</th>
+                    <th>Auteur</th>
+                </tr>
+            </thead>
+            <tbody id="documentTableBody">
+                <?php foreach ($documents as $doc) : ?>
+                    <tr>
+                        <td><?= $doc['id'] ?></td>
+                        <td><?= $doc['nom'] ?></td>
+                        <td><?= $doc['type'] ?></td>
+                        <td><?= $doc['date'] ?></td>
+                        <td><?= $doc['auteur'] ?></td>
+                        <td>
+                            <button class="button edit">Modifier</button>
+                            <button class="button delete">Supprimer</button>
+                        </td>
+                    </tr>
+                <?php endforeach; ?>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Pagination -->
+    <div class="pagination">
+        <button class="prev-slide">Précédent</button>
+        <button class="next-slide">Suivant</button>
     </div>
 </div>
