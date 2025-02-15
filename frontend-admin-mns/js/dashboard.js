@@ -1,38 +1,38 @@
-/* Navbar */
 document.addEventListener("DOMContentLoaded", function () {
+    initSidebar();
+    initDropdownMenu();
+    initCards();
+    initializeCharts();
+    initPagination();
+    loadPage(1);
+    setupAjaxNavigation();
+});
+
+function initSidebar() {
     let sidebar = document.querySelector(".sidebar");
     let main = document.querySelector("main");
     let menuBtn = document.querySelector(".menu-btn");
 
-    // Récupérer l'état de la sidebar au chargement de la page
+    if (!sidebar || !menuBtn) return;
+
     let isSidebarActive = localStorage.getItem("sidebarActive") === "true";
 
-    if (isSidebarActive) {
-        sidebar.classList.add("active");
-        main.style.marginLeft = "100px";
-        main.style.width = "calc(100% - 180px)";
-    } else {
-        sidebar.classList.remove("active");
-        main.style.marginLeft = "270px";
-        main.style.width = "calc(100% - 350px)";
-    }
+    sidebar.classList.toggle("active", isSidebarActive);
+    updateMainLayout(isSidebarActive);
 
-    // Gérer le clic sur le bouton menu pour afficher/masquer la sidebar
     menuBtn.addEventListener("click", function () {
-        sidebar.classList.toggle("active");
-
-        if (sidebar.classList.contains("active")) {
-            main.style.marginLeft = "100px";
-            main.style.width = "calc(100% - 180px)";
-            localStorage.setItem("sidebarActive", "true");
-        } else {
-            main.style.marginLeft = "270px";
-            main.style.width = "calc(100% - 350px)";
-            localStorage.setItem("sidebarActive", "false");
-        }
+        let isActive = sidebar.classList.toggle("active");
+        updateMainLayout(isActive);
+        localStorage.setItem("sidebarActive", isActive);
     });
 
-    /* Gestion du menu déroulant */
+    function updateMainLayout(active) {
+        main.style.marginLeft = active ? "100px" : "270px";
+        main.style.width = active ? "calc(100% - 180px)" : "calc(100% - 350px)";
+    }
+}
+
+function initDropdownMenu() {
     document.querySelectorAll(".menu > ul > li").forEach(item => {
         item.addEventListener("click", function (e) {
             e.stopPropagation();
@@ -53,46 +53,43 @@ document.addEventListener("DOMContentLoaded", function () {
             }
         });
     });
-});
+}
 
+function initCards() {
+    document.querySelectorAll(".card-container").forEach(card => {
+        card.addEventListener("mousemove", (e) => {
+            let boundingBox = card.getBoundingClientRect();
+            let x = e.clientX - boundingBox.left;
+            let y = e.clientY - boundingBox.top;
+            let centerX = boundingBox.width / 2;
+            let centerY = boundingBox.height / 2;
+            let rotateX = (centerY - y) / 20;
+            let rotateY = (x - centerX) / 20;
 
-/* Card */
-document.querySelectorAll(".card-container").forEach(card => {
-    card.addEventListener("mousemove", (e) => {
-        let boundingBox = card.getBoundingClientRect();
-        let x = e.clientX - boundingBox.left;
-        let y = e.clientY - boundingBox.top;
-        let centerX = boundingBox.width / 2;
-        let centerY = boundingBox.height / 2;
-        let rotateX = (centerY - y) / 20;
-        let rotateY = (x - centerX) / 20;
+            card.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+        });
 
-        card.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+        card.addEventListener("mouseleave", () => {
+            card.style.transform = "rotateX(0deg) rotateY(0deg)";
+        });
     });
+}
 
-    card.addEventListener("mouseleave", () => {
-        card.style.transform = "rotateX(0deg) rotateY(0deg)";
-    });
-});
-
-/* Stats */
-document.addEventListener("DOMContentLoaded", function () {
+function initializeCharts() {
     setTimeout(() => {
         if (window.chartData) {
             window.chartData.forEach(chart => {
                 var ctx = document.getElementById(chart.chartId);
                 if (ctx) {
-                    new Chart(ctx.getContext('2d'), {
+                    if (ctx.chartInstance) {
+                        ctx.chartInstance.destroy();
+                    }
+
+                    ctx.chartInstance = new Chart(ctx.getContext("2d"), {
                         type: chart.chartType,
                         data: {
                             labels: chart.labels,
-                            datasets: [{
-                                label: chart.title,
-                                data: chart.data,
-                                backgroundColor: chart.bgColor,
-                                borderColor: chart.borderColor,
-                                borderWidth: 1
-                            }]
+                            datasets: chart.datasets
                         },
                         options: chart.options
                     });
@@ -104,16 +101,159 @@ document.addEventListener("DOMContentLoaded", function () {
             console.error("Aucune donnée de graphique trouvée.");
         }
     }, 500);
-});
+}
 
+function setupAjaxNavigation() {
+    const links = document.querySelectorAll(".ajax-link");
+    const contentDiv = document.getElementById("dashboard-zone");
 
-/* AJAX */
-document.addEventListener("DOMContentLoaded", function() {
-    // Écouteur sur le menu
-    document.querySelectorAll(".menu-item").forEach(item => {
-        item.addEventListener("click", function() {
-            let page = this.dataset.page;
-            loadComponent(page);
+    links.forEach(link => {
+        link.addEventListener("click", function (event) {
+            event.preventDefault();
+
+            let page = this.getAttribute("data-page");
+            let subPage = this.getAttribute("data-subpage");
+            let url = `dashboard.php?page=${page}`;
+
+            if (subPage) {
+                url += `&subpage=${subPage}`;
+            }
+
+            if (!page) return;
+
+            console.log(`Navigating to: ${url}`);
+
+            fetch(url)
+                .then(response => response.text())
+                .then(html => {
+                    let parser = new DOMParser();
+                    let doc = parser.parseFromString(html, "text/html");
+                    let newContent = doc.querySelector("#dashboard-zone");
+
+                    if (newContent) {
+                        contentDiv.innerHTML = newContent.innerHTML;
+                        reinitializeComponents();
+                        window.history.pushState({ page: page, subpage: subPage }, "", subPage ? `?page=${page}&subpage=${subPage}` : `?page=${page}`);
+                    } else {
+                        console.error("Erreur : la page n'a pas pu être chargée");
+                    }
+                })
+                .catch(error => console.error("Erreur:", error));
         });
     });
+
+    window.addEventListener("popstate", function (event) {
+        let page = event.state ? event.state.page : "home";
+        let subPage = event.state ? event.state.subpage : null;
+        let url = `dashboard.php?page=${page}`;
+
+        if (subPage) {
+            url += `&subpage=${subPage}`;
+        }
+
+        fetch(url)
+            .then(response => response.text())
+            .then(html => {
+                let parser = new DOMParser();
+                let doc = parser.parseFromString(html, "text/html");
+                let newContent = doc.querySelector("#dashboard-zone");
+
+                if (newContent) {
+                    contentDiv.innerHTML = newContent.innerHTML;
+                    reinitializeComponents();
+                }
+            });
+    });
+}
+
+function initPagination() {
+    let pagination = document.getElementById("pagination");
+    if (!pagination) return;
+
+    pagination.addEventListener("click", function (e) {
+        if (e.target.classList.contains("page-link")) {
+            e.preventDefault();
+            let page = e.target.getAttribute("data-page");
+
+            loadPage(page);
+        }
+    });
+}
+
+function loadPage(page) {
+    fetch(`documents.php?page=${page}`)
+        .then(response => response.text())
+        .then(html => {
+            let parser = new DOMParser();
+            let doc = parser.parseFromString(html, "text/html");
+
+            let documentList = doc.querySelector("#document-list");
+            let pagination = doc.querySelector("#pagination");
+
+            if (documentList && pagination) {
+                document.getElementById("document-list").innerHTML = documentList.innerHTML;
+                document.getElementById("pagination").innerHTML = pagination.innerHTML;
+
+                updatePaginationActive(page);
+                window.history.pushState({ page: page }, "", `?page=${page}`);
+            }
+
+            initDocumentActions();
+        })
+        .catch(error => console.error("Erreur:", error));
+}
+
+function updatePaginationActive(page) {
+    document.querySelectorAll(".page-link").forEach(link => {
+        if (link.getAttribute("data-page") == page) {
+            link.classList.add("active");
+        } else {
+            link.classList.remove("active");
+        }
+    });
+}
+
+function initDocumentActions() {
+    document.getElementById("add-document-btn")?.addEventListener("click", function () {
+        document.getElementById("add-document-form")?.classList.toggle("hidden");
+    });
+
+    document.getElementById("save-document-btn")?.addEventListener("click", function () {
+        let name = document.getElementById("doc-name").value;
+        let type = document.getElementById("doc-type").value;
+        let auteur = document.getElementById("doc-auteur").value;
+
+        let newRow = `<tr>
+            <td>NEW</td>
+            <td>${name}</td>
+            <td>${type}</td>
+            <td>${new Date().toLocaleDateString()}</td>
+            <td>${auteur}</td>
+            <td>
+                <button class="button edit">Modifier</button>
+                <button class="button delete">Supprimer</button>
+            </td>
+        </tr>`;
+
+        document.getElementById("document-list").innerHTML += newRow;
+    });
+}
+
+window.addEventListener("DOMContentLoaded", () => {
+    let params = new URLSearchParams(window.location.search);
+    let page = params.get("page") || 1;
+    loadPage(page);
 });
+
+window.addEventListener("popstate", function (event) {
+    let page = event.state ? event.state.page : 1;
+    loadPage(page);
+});
+
+function reinitializeComponents() {
+    initializeCharts();
+    initCards();
+    initDropdownMenu();
+    initPagination();
+    initDocumentActions();
+}
