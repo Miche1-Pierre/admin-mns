@@ -1,10 +1,6 @@
 document.addEventListener("DOMContentLoaded", function () {
     initSidebar();
     initDropdownMenu();
-    initCards();
-    initializeCharts();
-    initPagination();
-    loadPage(1);
     setupAjaxNavigation();
 });
 
@@ -55,54 +51,6 @@ function initDropdownMenu() {
     });
 }
 
-function initCards() {
-    document.querySelectorAll(".card-container").forEach(card => {
-        card.addEventListener("mousemove", (e) => {
-            let boundingBox = card.getBoundingClientRect();
-            let x = e.clientX - boundingBox.left;
-            let y = e.clientY - boundingBox.top;
-            let centerX = boundingBox.width / 2;
-            let centerY = boundingBox.height / 2;
-            let rotateX = (centerY - y) / 20;
-            let rotateY = (x - centerX) / 20;
-
-            card.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
-        });
-
-        card.addEventListener("mouseleave", () => {
-            card.style.transform = "rotateX(0deg) rotateY(0deg)";
-        });
-    });
-}
-
-function initializeCharts() {
-    setTimeout(() => {
-        if (window.chartData) {
-            window.chartData.forEach(chart => {
-                var ctx = document.getElementById(chart.chartId);
-                if (ctx) {
-                    if (ctx.chartInstance) {
-                        ctx.chartInstance.destroy();
-                    }
-
-                    ctx.chartInstance = new Chart(ctx.getContext("2d"), {
-                        type: chart.chartType,
-                        data: {
-                            labels: chart.labels,
-                            datasets: chart.datasets
-                        },
-                        options: chart.options
-                    });
-                } else {
-                    console.error(`Canvas avec l'ID '${chart.chartId}' non trouvé.`);
-                }
-            });
-        } else {
-            console.error("Aucune donnée de graphique trouvée.");
-        }
-    }, 500);
-}
-
 function setupAjaxNavigation() {
     const links = document.querySelectorAll(".ajax-link");
     const contentDiv = document.getElementById("dashboard-zone");
@@ -132,7 +80,7 @@ function setupAjaxNavigation() {
 
                     if (newContent) {
                         contentDiv.innerHTML = newContent.innerHTML;
-                        reinitializeComponents();
+                        reinitializeComponents(page);
                         window.history.pushState({ page: page, subpage: subPage }, "", subPage ? `?page=${page}&subpage=${subPage}` : `?page=${page}`);
                     } else {
                         console.error("Erreur : la page n'a pas pu être chargée");
@@ -160,100 +108,55 @@ function setupAjaxNavigation() {
 
                 if (newContent) {
                     contentDiv.innerHTML = newContent.innerHTML;
-                    reinitializeComponents();
+                    reinitializeComponents(page);
                 }
             });
     });
 }
 
-function initPagination() {
-    let pagination = document.getElementById("pagination");
-    if (!pagination) return;
+function reinitializeComponents(page) {
+    console.log(`Reinitialisation des composants pour ${page}...`);
 
-    pagination.addEventListener("click", function (e) {
-        if (e.target.classList.contains("page-link")) {
-            e.preventDefault();
-            let page = e.target.getAttribute("data-page");
+    removeScript("home.js");
+    removeScript("documents.js");
 
-            loadPage(page);
-        }
-    });
-}
-
-function loadPage(page) {
-    fetch(`documents.php?page=${page}`)
-        .then(response => response.text())
-        .then(html => {
-            let parser = new DOMParser();
-            let doc = parser.parseFromString(html, "text/html");
-
-            let documentList = doc.querySelector("#document-list");
-            let pagination = doc.querySelector("#pagination");
-
-            if (documentList && pagination) {
-                document.getElementById("document-list").innerHTML = documentList.innerHTML;
-                document.getElementById("pagination").innerHTML = pagination.innerHTML;
-
-                updatePaginationActive(page);
-                window.history.pushState({ page: page }, "", `?page=${page}`);
+    if (page === "home") {
+        loadScript("home.js");
+    } else if (page === "documents") {
+        loadScript("documents.js", function () {
+            if (typeof initDocuments === "function") {
+                initDocuments();
+            } else {
+                console.error("initDocuments() non trouvé après le chargement de documents.js");
             }
-
-            initDocumentActions();
-        })
-        .catch(error => console.error("Erreur:", error));
+        });
+    }
 }
 
-function updatePaginationActive(page) {
-    document.querySelectorAll(".page-link").forEach(link => {
-        if (link.getAttribute("data-page") == page) {
-            link.classList.add("active");
-        } else {
-            link.classList.remove("active");
-        }
-    });
+function loadScript(filename, callback) {
+    let existingScript = document.querySelector(`script[src*="${filename}"]`);
+    if (existingScript) {
+        existingScript.remove();
+    }
+
+    let script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src = `/frontend-admin-mns/js/${filename}`;
+    
+    script.onload = () => {
+        console.log(`${filename} chargé avec succès.`);
+        if (callback) callback();
+    };
+    
+    script.onerror = () => console.error(`Erreur de chargement du script: ${filename}`);
+    
+    document.body.appendChild(script);
 }
 
-function initDocumentActions() {
-    document.getElementById("add-document-btn")?.addEventListener("click", function () {
-        document.getElementById("add-document-form")?.classList.toggle("hidden");
-    });
-
-    document.getElementById("save-document-btn")?.addEventListener("click", function () {
-        let name = document.getElementById("doc-name").value;
-        let type = document.getElementById("doc-type").value;
-        let auteur = document.getElementById("doc-auteur").value;
-
-        let newRow = `<tr>
-            <td>NEW</td>
-            <td>${name}</td>
-            <td>${type}</td>
-            <td>${new Date().toLocaleDateString()}</td>
-            <td>${auteur}</td>
-            <td>
-                <button class="button edit">Modifier</button>
-                <button class="button delete">Supprimer</button>
-            </td>
-        </tr>`;
-
-        document.getElementById("document-list").innerHTML += newRow;
-    });
-}
-
-window.addEventListener("DOMContentLoaded", () => {
-    let params = new URLSearchParams(window.location.search);
-    let page = params.get("page") || 1;
-    loadPage(page);
-});
-
-window.addEventListener("popstate", function (event) {
-    let page = event.state ? event.state.page : 1;
-    loadPage(page);
-});
-
-function reinitializeComponents() {
-    initializeCharts();
-    initCards();
-    initDropdownMenu();
-    initPagination();
-    initDocumentActions();
+function removeScript(filename) {
+    let oldScript = document.querySelector(`script[src*="${filename}"]`);
+    if (oldScript) {
+        oldScript.remove();
+        console.log(`${filename} supprimé.`);
+    }
 }
