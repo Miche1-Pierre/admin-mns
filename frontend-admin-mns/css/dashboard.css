@@ -327,6 +327,7 @@ main .dashboard-zone {
     border-radius: 50%;
     overflow: hidden;
 }
+
 .breadcrumb .profile .profile-photo img {
     width: 100%;
     height: 100%;
@@ -339,6 +340,7 @@ main .dashboard-zone {
     margin-top: 33px;
     perspective: 5000px;
 }
+
 .card .card-container {
     width: 30rem;
     padding: 20px;
@@ -349,33 +351,40 @@ main .dashboard-zone {
     transition: transform var(--transition);
     transition: var(--transition);
 }
+
 .card .card-container:hover {
     transform: rotateX(10deg) rotateY(10deg);
     box-shadow: 0px 10px 20px var(--shadow-color);
 }
+
 .card .card-container p {
     margin: 15px 0;
 }
+
 .card .card-container img {
     width: 100%;
     border-radius: var(--border-radius);
 }
+
 .card .buttons {
     display: flex;
     flex-flow: row-reverse;
     margin-top: 20px;
 }
+
 .card .button {
     padding: 10px 16px;
     border-radius: var(--border-radius);
     text-decoration: none;
     font-size: var(--text-font-size);
 }
+
 .card .button.primary {
     background: var(--primary-color);
     color: var(--text-color-light);
     transition: var(--transition);
 }
+
 .card .button.primary:hover {
     background: var(--tran-primary-color);
 }
@@ -425,27 +434,84 @@ canvas {
     box-shadow: 0px 10px 20px var(--shadow-color);
 }
 
-.document-container .styled-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 20px;
+.document-container .filter-bar {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 15px;
+    align-items: center;
 }
 
-.document-container.styled-table th, .document-container .styled-table td {
+.document-container .filter-bar input,
+.document-container .filter-bar select {
+    padding: 8px;
+    border: 1px solid var(--shadow-color);
+    border-radius: var(--border-radius);
+    background: var(--secondary-background-color);
+    color: var(--text-color-dark);
+}
+
+/* Carrousel */
+.document-container .carousel {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    position: relative;
+    width: 100%;
+}
+
+/* Table */
+.document-container .carousel table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.document-container .carousel thead th {
+    padding: 12px;
+    text-align: left;
+    background-color: var(--primary-background-color);
+    color: var(--text-color-dark);
+}
+
+.document-container .carousel tbody td {
     padding: 12px;
     text-align: left;
     border-bottom: 1px solid var(--shadow-color);
 }
 
-.document-container .styled-table th {
-    background: var(--primary-background-color);
+.document-container .carousel tbody tr:hover {
+    background-color: var(--primary-background-color);
+}
+
+/* Pagination */
+.document-container .pagination {
+    margin-top: 20px;
+    text-align: center;
+}
+
+.document-container .pagination button {
+    display: inline-block;
+    padding: 8px 12px;
+    margin: 0 5px;
+    background: var(--secondary-background-color);
     color: var(--text-color-dark);
+    border-radius: var(--border-radius);
+    border: 1px solid var(--shadow-color);
+    box-shadow: 0px 3px 7px var(--shadow-color);
+    transition: var(--transition);
+    cursor: pointer;
 }
 
-.document-container .styled-table tr:hover {
-    background: var(--primary-background-color);
+.document-container .pagination button:hover {
+    border: 1px solid var(--secondary-background-color);
+    box-shadow: none;
 }
 
+.document-container .pagination button.disabled {
+    opacity: 0.5;
+    pointer-events: none;
+}
+
+/* Boutons */
 .document-container .button {
     padding: 8px 12px;
     margin: 5px 0;
@@ -493,34 +559,7 @@ canvas {
     background: #0056b3;
 }
 
-.document-container .pagination {
-    margin-top: 20px;
-    text-align: center;
-}
-
-.document-container .pagination a {
-    display: inline-block;
-    padding: 8px 12px;
-    margin: 0 5px;
-    background: var(--secondary-background-color);
-    color: var(--text-color-dark);
-    border-radius: var(--border-radius);
-    text-decoration: none;
-    border: 1px solid var(--shadow-color);
-    box-shadow: 0px 3px 7px var(--shadow-color);
-    transition: var(--transition);
-}
-
-.document-container .pagination a:hover {
-    border: 1px solid var(--secondary-background-color);
-    box-shadow: none;
-}
-
-.document-container .pagination a.active {
-    background: var(--primary-color);
-    color: var(--text-color-light);
-}
-
+/* Formulaires */
 .document-container #add-document-form {
     display: flex;
     gap: 10px;
