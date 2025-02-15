@@ -1,13 +1,22 @@
 <?php
-function generateCard($title, $link, $text = null, $img = null, $chartId = null, $chartType = null, $labels = [], $data = [], $bgColor = [], $borderColor = [], $options = [])
+function generateCard($title, $link, $text = null, $img = null, $chartId = null, $chartType = null, $labels = [], $datasets = [], $options = [])
 {
+    if (!isset($datasets[0]['label'])) {
+        $datasets = [[
+            "label" => $title,
+            "data" => $datasets,
+            "backgroundColor" => "#2B2D42",
+            "borderColor" => "#eeeeee",
+            "borderWidth" => 1
+        ]];
+    }
 ?>
     <div class="card">
         <div class="card-container" id="card-container">
             <h2><?= htmlspecialchars($title) ?></h2>
 
             <?php if ($text): ?>
-                <p><?= htmlspecialchars($text) ?></p>
+                <p><?= $text ?></p>
             <?php endif; ?>
 
             <?php if ($img): ?>
@@ -19,12 +28,11 @@ function generateCard($title, $link, $text = null, $img = null, $chartId = null,
                 <script>
                     window.chartData = window.chartData || [];
                     window.chartData.push({
+                        title: <?= json_encode($title) ?>,
                         chartId: <?= json_encode($chartId) ?>,
                         chartType: <?= json_encode($chartType) ?>,
                         labels: <?= json_encode($labels) ?>,
-                        data: <?= json_encode($data) ?>,
-                        bgColor: <?= json_encode($bgColor) ?>,
-                        borderColor: <?= json_encode($borderColor) ?>,
+                        datasets: <?= json_encode($datasets) ?>,
                         options: <?= json_encode($options) ?>
                     });
                 </script>
