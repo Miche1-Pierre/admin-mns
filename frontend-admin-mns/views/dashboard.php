@@ -11,6 +11,7 @@ include $_SERVER['DOCUMENT_ROOT'] . "/frontend-admin-mns/components/card.php";
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="/frontend-admin-mns/css/dashboard.css">
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <script src="/frontend-admin-mns/js/dashboard.js"></script>
     <title>ADMIN MNS | Dashboard</title>
 </head>
 
@@ -55,7 +56,6 @@ include $_SERVER['DOCUMENT_ROOT'] . "/frontend-admin-mns/components/card.php";
     <footer></footer>
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="/frontend-admin-mns/js/dashboard.js"></script>
 </body>
 
 </html>
