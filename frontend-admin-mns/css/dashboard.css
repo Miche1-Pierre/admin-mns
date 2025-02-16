@@ -49,6 +49,7 @@ main {
     width: calc(100% - 350px);
     left: 50px;
     transition: var(--transition);
+    z-index: 9;
 }
 
 main .dashboard-zone {
@@ -63,8 +64,8 @@ main .dashboard-zone {
     position: fixed;
     display: flex;
     align-items: center;
-    width: 100%;
     min-height: 100vh;
+    z-index: 10;
 }
 
 .sidebar {
@@ -77,6 +78,8 @@ main .dashboard-zone {
     background-color: var(--secondary-background-color);
     padding: 24px;
     transition: var(--transition);
+    box-shadow: 0 0 3px 0 var(--shadow-color);
+    z-index: 10;
 }
 
 .sidebar .head {
