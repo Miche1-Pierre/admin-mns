@@ -1,12 +1,9 @@
 <div class="breadcrumb">
     <div class="left">
-        <h1>Dashboard</h1>
-        <ul>
-            <li><a href="#">
-                    Modules
-                </a></li>
-            /
-            <li><a href="#" class="active">Applications</a></li>
+        <h1 id="breadcrumb-title">Dashboard</h1>
+        <ul id="breadcrumb-list">
+            <li><a href="#"></a></li>
+            <li><a href="#" class="active"></a></li>
         </ul>
     </div>
     <div class="profile">
