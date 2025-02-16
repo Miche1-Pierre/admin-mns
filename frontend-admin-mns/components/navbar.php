@@ -13,8 +13,8 @@
             <div class="menu">
                 <p class="title">Main</p>
                 <ul>
-                    <li class="active">
-                        <a href="#" class="ajax-link" data-page="home">
+                    <li>
+                        <a href="/frontend-admin-mns/views/dashboard.php">
                             <i class='bx bx-home-alt'></i>
                             <span class="text">Home</span>
                         </a>
@@ -27,13 +27,13 @@
                         </a>
                         <ul class="sub-menu">
                             <li>
-                                <a href="#" class="ajax-link" data-page="modules" data-subpage="candidatures">
+                                <a href="/frontend-admin-mns/components/modules/candidatures.php">
                                     <i class='bx bxs-id-card'></i>
                                     <span class="text">Applications</span>
                                 </a>
                             </li>
                             <li>
-                                <a href="#" class="ajax-link" data-page="modules" data-subpage="absences">
+                                <a href="/frontend-admin-mns/components/modules/absences.php">
                                     <i class='bx bx-timer'></i>
                                     <span class="text">Absences & Lateness</span>
                                 </a>
@@ -41,19 +41,19 @@
                         </ul>
                     </li>
                     <li>
-                        <a href="#" class="ajax-link" data-page="users">
+                        <a href="/frontend-admin-mns/components/users/users.php">
                             <i class='bx bx-user'></i>
                             <span class="text">Users</span>
                         </a>
                     </li>
                     <li>
-                        <a href="#" class="ajax-link" data-page="documents">
+                        <a href="/frontend-admin-mns/components/documents/documents.php">
                             <i class='bx bx-folder'></i>
                             <span class="text">Documents (GED)</span>
                         </a>
                     </li>
                     <li>
-                        <a href="#" class="ajax-link" data-page="messaging">
+                        <a href="/frontend-admin-mns/components/messaging/messaging.php">
                             <i class='bx bx-mail-send'></i>
                             <span class="text">Messaging</span>
                         </a>
@@ -66,13 +66,13 @@
                         </a>
                         <ul class="sub-menu">
                             <li>
-                                <a href="#" class="ajax-link" data-page="more" data-subpage="stats">
+                                <a href="/frontend-admin-mns/components/more/stats.php">
                                     <i class='bx bx-line-chart'></i>
                                     <span class="text">Stats</span>
                                 </a>
                             </li>
                             <li>
-                                <a href="#" class="ajax-link" data-page="more" data-subpage="settings">
+                                <a href="/frontend-admin-mns/components/more/settings.php">
                                     <i class='bx bx-cog'></i>
                                     <span class="text">Settings (Admin)</span>
                                 </a>
