@@ -41,7 +41,7 @@ for ($i = 1; $i <= 100; $i++) {
                 <!-- Bandeau de filtrage -->
                 <div class="filter-bar">
                     <input type="text" id="searchInput" placeholder="Rechercher un étudiant..." />
-                    <select id="filterStatut"> <!-- Correction du nom -->
+                    <select id="filterStatut">
                         <option value="">Tous les statuts</option>
                         <option value="Absence">Absence</option>
                         <option value="Retard">Retard</option>
