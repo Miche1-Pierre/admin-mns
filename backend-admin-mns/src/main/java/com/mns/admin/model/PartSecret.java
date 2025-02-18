@@ -26,9 +26,9 @@ public class PartSecret {
     private Secret secret;
 
     @ManyToOne
-    @JoinColumn(name = "id_uttilisateur", nullable = false)
+    @JoinColumn(name = "id_utilisateur", nullable = false)
     @JsonIgnore
-    private Utilisateur uttilisateur;
+    private Utilisateur utilisateur;
 
     @Column(name = "part_partSecret", nullable = false)
     private String partPartSecret;
