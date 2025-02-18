@@ -572,3 +572,108 @@ canvas {
 .document-container .hidden {
     display: none;
 }
+
+/* Messaging */
+.messaging-container {
+    display: flex;
+    width: 100%;
+    height: 85vh;
+    border: 1px solid var(--shadow-color);
+    border-radius: var(--border-radius);
+    background: var(--secondary-background-color);
+    margin-top: 20px;
+    box-shadow: 0px 10px 20px var(--shadow-color);
+}
+
+.messaging-container .contacts-sidebar {
+    width: 30%;
+    background: var(--secondary-background-color);
+    padding: 10px;
+    border-right: 1px solid var(--border-colors);
+    border-top-left-radius: var(--border-radius);
+    border-bottom-left-radius: var(--border-radius);
+    max-width: 15%;
+    min-width: 185px;
+}
+
+.messaging-container .contacts-sidebar input {
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 10px;
+    border: 1px solid var(--border-colors);
+    border-radius: var(--border-radius);
+}
+
+.messaging-container #contactsList {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.messaging-container #contactsList li {
+    padding: 10px;
+    border-bottom: 1px solid var(--border-colors);
+    cursor: pointer;
+}
+
+.messaging-container #contactsList li:hover {
+    background: var(--primary-background-color);
+}
+
+.messaging-container .chat-zone {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.messaging-container .chat-header {
+    padding: 15px;
+    background: var(--primary-color);
+    font-weight: bold;
+    text-align: center;
+    border-top-right-radius: var(--border-radius);
+}
+
+.messaging-container .chat-header #chatContactName {
+    color: var(--text-color-light);
+}
+
+.messaging-container .chat-messages {
+    flex: 1;
+    padding: 15px;
+    overflow-y: auto;
+    background: var(--text-color-light);
+}
+
+.messaging-container .chat-input {
+    display: flex;
+    padding: 10px;
+    background: var(--secondary-background-color);
+    border-top: 1px solid var(--border-colors);
+    border-bottom-right-radius: var(--border-radius);
+}
+
+.messaging-container .chat-input input {
+    flex: 1;
+    padding: 10px;
+    border: 1px solid var(--border-colors);
+    border-radius: var(--border-radius);
+}
+
+.messaging-container .chat-input button {
+    background: var(--primary-color);
+    border: none;
+    padding: 10px 15px;
+    margin-left: 10px;
+    cursor: pointer;
+    border-radius: var(--border-radius);
+    transition: var(--transition);
+}
+
+.messaging-container .chat-input button .bx {
+    color: var(--text-color-light);
+}
+
+.messaging-container .chat-input button:hover {
+    background: var(--tran-primary-color);
+}
