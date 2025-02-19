@@ -28,11 +28,11 @@ public class Formation {
     @Column(name = "duree_formation", nullable = false)
     private Integer dureeFormation;
 
-    @Column(name = "dateDebut_formation", nullable = false)
+    @Column(name = "date_debut_formation", nullable = false)
     @Temporal(TemporalType.TIMESTAMP)
     private LocalDateTime dateDebutFormation;
 
-    @Column(name = "dateFin_formation", nullable = false)
+    @Column(name = "date_fin_formation", nullable = false)
     @Temporal(TemporalType.TIMESTAMP)
     private LocalDateTime dateFinFormation;
 }

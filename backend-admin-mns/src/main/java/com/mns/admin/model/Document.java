@@ -37,18 +37,18 @@ public class Document {
     @JsonIgnore
     private Secret secret;
 
-    @Column(name = "dateDepot_document", nullable = false, updatable = false)
+    @Column(name = "date_depot_document", nullable = false, updatable = false)
     @Temporal(TemporalType.TIMESTAMP)
     private LocalDateTime dateDepotDocument;
 
-    @Column(name = "dateLimite_document")
+    @Column(name = "date_limite_document")
     @Temporal(TemporalType.TIMESTAMP)
     private LocalDateTime dateLimiteDocument;
 
-    @Column(name = "cleChiffrement_document", nullable = false)
+    @Column(name = "cle_chiffrement_document", nullable = false)
     private String cleChiffrement_document;
 
-    @Column(name = "contenuChiffre_document", nullable = false)
+    @Column(name = "contenu_chiffre_document", nullable = false)
     @Lob
     private byte[] contenuChiffreDocument;
 }

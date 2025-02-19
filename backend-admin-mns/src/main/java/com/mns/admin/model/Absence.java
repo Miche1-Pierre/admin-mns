@@ -30,11 +30,11 @@ public class Absence {
     @JsonIgnore
     private TypeAbsence typeAbsence;
 
-    @Column(name = "dateDebut_absence", nullable = false)
+    @Column(name = "date_debut_absence", nullable = false)
     @Temporal(TemporalType.TIMESTAMP)
     private LocalDateTime dateDebutAbsence;
 
-    @Column(name = "dateFin_absence")
+    @Column(name = "date_fin_absence")
     @Temporal(TemporalType.TIMESTAMP)
     private LocalDateTime dateFinAbsence;
 

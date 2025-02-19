@@ -13,7 +13,7 @@ import java.util.Date;
 @ToString
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "partSecret")
+@Table(name = "part_secret")
 public class PartSecret {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -30,13 +30,13 @@ public class PartSecret {
     @JsonIgnore
     private Utilisateur utilisateur;
 
-    @Column(name = "part_partSecret", nullable = false)
+    @Column(name = "part_part_secret", nullable = false)
     private String partPartSecret;
 
-    @Column(name = "dateCreation_partSecret", nullable = false)
+    @Column(name = "date_creation_part_secret", nullable = false)
     @Temporal(TemporalType.TIMESTAMP)
     private LocalDateTime dateCreationPartSecret;
 
-    @Column(name = "statut_partSecret", nullable = false, length = 50)
+    @Column(name = "statut_part_secret", nullable = false, length = 50)
     private String statutPartSecret;
 }

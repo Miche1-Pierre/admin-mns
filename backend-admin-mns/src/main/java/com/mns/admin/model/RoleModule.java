@@ -10,11 +10,11 @@ import lombok.*;
 @ToString
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "roleModule")
+@Table(name = "role_module")
 public class RoleModule {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id_roleModule")
+    @Column(name = "id_role_module")
     private Long idRoleModule;
 
     @ManyToOne
@@ -27,6 +27,6 @@ public class RoleModule {
     @JsonIgnore
     private Module module;
 
-    @Column(name = "actif_roleModule", nullable = false)
+    @Column(name = "actif_role_module", nullable = false)
     private boolean actifRoleModule;
 }

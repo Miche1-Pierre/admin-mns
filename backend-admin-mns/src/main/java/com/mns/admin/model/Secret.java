@@ -25,13 +25,13 @@ public class Secret {
     @Column(name ="description_secret")
     private String descriptionSecret;
 
-    @Column(name = "dateCreation_secret", nullable = false, updatable = false)
+    @Column(name = "date_creation_secret", nullable = false, updatable = false)
     @Temporal(TemporalType.TIMESTAMP)
     private LocalDateTime dateCreationSecret;
 
     @Column(name = "statut_secret", nullable = false)
     private String statutSecret;
 
-    @Column(name = "completeHash_secret", nullable = false)
+    @Column(name = "complete_hash_secret", nullable = false)
     private String completeHashSecret;
 }

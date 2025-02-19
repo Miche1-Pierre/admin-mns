@@ -26,7 +26,7 @@ public class Notification {
     private Utilisateur utilisateur;
 
     @ManyToOne
-    @JoinColumn(name = "id_typeNotification", nullable = false)
+    @JoinColumn(name = "id_type_notification", nullable = false)
     @JsonIgnore
     private TypeNotification typeNotification;
 
