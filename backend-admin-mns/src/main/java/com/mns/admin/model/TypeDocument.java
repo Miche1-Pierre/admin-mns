@@ -9,22 +9,22 @@ import lombok.*;
 @ToString
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "typeDocument")
+@Table(name = "type_document")
 public class TypeDocument {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id_typeDocument")
+    @Column(name = "id_type_document")
     private Long idTypeDocument;
 
-    @Column(name = "nom_typeDocument", nullable = false, length = 50)
+    @Column(name = "nom_type_document", nullable = false, length = 50)
     private String nomTypeDocument;
 
-    @Column(name = "description_typeDocument")
+    @Column(name = "description_type_document")
     private String descriptionTypeDocument;
 
-    @Column(name = "chiffrementRequis_typeDocument", nullable = false)
+    @Column(name = "chiffrement_requis_type_document", nullable = false)
     private boolean chiffrementRequisTypeDocument;
 
-    @Column(name = "obligatoire_typeDocument", nullable = false)
+    @Column(name = "obligatoire_type_document", nullable = false)
     private boolean obligatoireTypeDocument;
 }

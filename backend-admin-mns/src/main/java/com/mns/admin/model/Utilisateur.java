@@ -26,14 +26,14 @@ public class Utilisateur {
     @Column(name = "email_utilisateur", nullable = false, length = 100, unique = true)
     private String emailUtilisateur;
 
-    @Column(name = "motDePasse_utilisateur", nullable = false)
+    @Column(name = "mot_de_passe_utilisateur", nullable = false)
     private String motDePasseUtilisateur;
 
-    @Column(name = "dateCreation_utilisateur", updatable = false)
+    @Column(name = "date_creation_utilisateur", updatable = false)
     @Temporal(TemporalType.TIMESTAMP)
     private LocalDateTime dateCreationUtilisateur;
 
-    @Column(name = "dateMiseAJour_utilisateur")
+    @Column(name = "date_mise_a_jour_utilisateur")
     @Temporal(TemporalType.TIMESTAMP)
     private LocalDateTime dateMiseAJourUtilisateur;
 

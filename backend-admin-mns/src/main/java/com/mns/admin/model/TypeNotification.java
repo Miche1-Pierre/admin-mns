@@ -9,13 +9,13 @@ import lombok.*;
 @ToString
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "typeNotification")
+@Table(name = "type_notification")
 public class TypeNotification {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id_typeNotification")
+    @Column(name = "id_type_notification")
     private Long idTypeNotification;
 
-    @Column(name = "nom_typeNotification", nullable = false, length = 50)
+    @Column(name = "nom_type_notification", nullable = false, length = 50)
     private String nomTypeNotification;
 }

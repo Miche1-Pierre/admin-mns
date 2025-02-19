@@ -25,11 +25,11 @@ public class Dossier {
     @JsonIgnore
     private Utilisateur stagiaire;
 
-    @Column(name = "dateCreation_dossier", nullable = false)
+    @Column(name = "date_creation_dossier", nullable = false)
     @Temporal(TemporalType.TIMESTAMP)
     private LocalDateTime dateCreationDossier;
 
-    @Column(name = "dateValidation_dossier")
+    @Column(name = "date_validation_dossier")
     @Temporal(TemporalType.TIMESTAMP)
     private LocalDateTime dateValidationDossier;
 

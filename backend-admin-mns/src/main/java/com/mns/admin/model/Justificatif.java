@@ -25,10 +25,10 @@ public class Justificatif {
     @JsonIgnore
     private Absence absence;
 
-    @Column(name = "typeDocument_justificatif", nullable = false, length = 50)
+    @Column(name = "type_document_justificatif", nullable = false, length = 50)
     private String typeDocumentJustificatif;
 
-    @Column(name = "dateDepot_justificatif", nullable = false, updatable = false)
+    @Column(name = "date_depot_justificatif", nullable = false, updatable = false)
     @Temporal(TemporalType.TIMESTAMP)
     private LocalDateTime dateDepotJustificatif;
 
