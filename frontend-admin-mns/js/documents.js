@@ -173,18 +173,19 @@ function initDocuments() {
     }
 
     function displayDocuments() {
-        console.log("Affichage des documents...");
+        console.log("Documents à afficher:", documents);
+    
         const startIndex = (currentPage - 1) * itemsPerPage;
         const endIndex = startIndex + itemsPerPage;
-
-        const displayedDocs = filteredDocuments.slice(startIndex, endIndex);
+    
+        const displayedDocs = documents.slice(startIndex, endIndex);
         tableBody.innerHTML = "";
-
+    
         if (displayedDocs.length === 0) {
             tableBody.innerHTML = "<tr><td colspan='6'>Aucun document trouvé.</td></tr>";
             return;
         }
-
+    
         displayedDocs.forEach(doc => {
             const row = document.createElement("tr");
             row.innerHTML = `
@@ -200,9 +201,9 @@ function initDocuments() {
             `;
             tableBody.appendChild(row);
         });
-
+    
         updatePagination();
-    }
+    }    
 
     function updatePagination() {
         const pagination = document.querySelector(".pagination");
