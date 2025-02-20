@@ -142,10 +142,9 @@ function initAbsences() {
     const searchInput = document.getElementById("searchInput");
     const filterStatut = document.getElementById("filterStatut");
     const filterMotif = document.getElementById("filterMotif");
-    const filterAuthor = document.getElementById("filterAuthor");
     const tableBody = document.getElementById("documentTableBody");
 
-    if (!itemsPerPageSelect || !searchInput || !filterStatut || !filterMotif || !filterAuthor || !tableBody) {
+    if (!itemsPerPageSelect || !searchInput || !filterStatut || !filterMotif || !tableBody) {
         console.error("Un ou plusieurs éléments DOM manquent.");
         return;
     }
@@ -157,17 +156,13 @@ function initAbsences() {
 
     function filterAbsences() {
         console.log("Filtrage des absences...");
-        const searchQuery = searchInput.value.toLowerCase();
         const selectedStatut = filterStatut.value;
         const selectedMotif = filterMotif.value;
-        const selectedAuthor = filterAuthor.value;
 
         filteredAbsences = window.absences.filter(abs => {
             return (
                 (selectedStatut === "" || abs.statut?.toLowerCase() === selectedStatut.toLowerCase()) &&
-                (selectedMotif === "" || abs.motif?.toLowerCase() === selectedMotif.toLowerCase()) &&
-                (selectedAuthor === "" || abs.auteur?.toLowerCase() === selectedAuthor.toLowerCase()) &&
-                (abs.nom?.toLowerCase().includes(searchQuery))
+                (selectedMotif === "" || abs.type?.toLowerCase() === selectedMotif.toLowerCase())
             );
         });
 
@@ -176,7 +171,7 @@ function initAbsences() {
     }
 
     function displayAbsences() {
-        console.log("Affichage des absences...");
+        console.log("Affichage des absences...", absences);
         const startIndex = (currentPage - 1) * itemsPerPage;
         const endIndex = startIndex + itemsPerPage;
 
@@ -192,11 +187,12 @@ function initAbsences() {
             const row = document.createElement("tr");
             row.innerHTML = `
                 <td>${abs.id}</td>
-                <td>${abs.nom}</td>
+                <td>${abs.utilisateur}</td>
                 <td>${abs.statut}</td>
-                <td>${abs.date}</td>
-                <td>${abs.motif}</td>
-                <td>${abs.auteur}</td>
+                <td>${abs.type}</td>
+                <td>${abs.debut}</td>
+                <td>${abs.fin}</td>
+                <td>${abs.justifie}</td>
                 <td>
                     <button class="button edit">Modifier</button>
                     <button class="button delete">Supprimer</button>
@@ -238,7 +234,6 @@ function initAbsences() {
     searchInput.addEventListener("input", filterAbsences);
     filterStatut.addEventListener("change", filterAbsences);
     filterMotif.addEventListener("change", filterAbsences);
-    filterAuthor.addEventListener("change", filterAbsences);
 
     displayAbsences();
 }

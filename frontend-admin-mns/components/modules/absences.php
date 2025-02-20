@@ -1,15 +1,23 @@
 <?php
+include $_SERVER['DOCUMENT_ROOT'] . '/frontend-admin-mns/php/api/db.php';
+
 $absences = [];
-for ($i = 1; $i <= 100; $i++) {
-    $absences[] = [
-        "id" => $i,
-        "nom" => "Étudiant $i",
-        "statut" => ($i % 2 == 0) ? "Absence" : "Retard",
-        "date" => date("d/m/Y", strtotime("-$i days")),
-        "motif" => ($i % 3 == 0) ? "Maladie" : "Autre",
-        "auteur" => "Professeur $i"
-    ];
-}
+
+$query = $pdo->query("
+    SELECT
+        a.id_absence AS id,
+        ua.nom_utilisateur AS utilisateur,
+        ta.nom_type_absence AS type,
+        a.date_debut_absence AS debut,
+        a.date_fin_absence AS fin,
+        a.justifie_absence AS justifie,
+        a.statut_absence AS statut
+    FROM absence a
+    JOIN utilisateur ua ON ua.id_utilisateur = a.id_stagiaire
+    JOIN type_absence ta ON ta.id_type_absence = a.id_type_absence
+");
+
+$absences = $query->fetchAll(PDO::FETCH_ASSOC);
 ?>
 
 <!DOCTYPE html>
@@ -49,13 +57,8 @@ for ($i = 1; $i <= 100; $i++) {
                     <select id="filterMotif">
                         <option value="">Tous les motifs</option>
                         <option value="Maladie">Maladie</option>
+                        <option value="Congé payé">Congé payé</option>
                         <option value="Autre">Autre</option>
-                    </select>
-                    <select id="filterAuthor">
-                        <option value="">Tous les professeurs</option>
-                        <?php foreach (array_unique(array_column($absences, 'auteur')) as $author) : ?>
-                            <option value="<?= htmlspecialchars($author) ?>"><?= htmlspecialchars($author) ?></option>
-                        <?php endforeach; ?>
                     </select>
                     <select id="itemsPerPage">
                         <option value="10">10 éléments</option>
@@ -73,9 +76,10 @@ for ($i = 1; $i <= 100; $i++) {
                                 <th>ID</th>
                                 <th>Étudiant</th>
                                 <th>Statut</th>
-                                <th>Date</th>
-                                <th>Motif</th>
-                                <th>Enseignant</th>
+                                <th>Type</th>
+                                <th>Debut</th>
+                                <th>Fin</th>
+                                <th>Justifie</th>
                                 <th>Actions</th>
                             </tr>
                         </thead>
