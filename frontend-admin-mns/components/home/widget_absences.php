@@ -2,7 +2,8 @@
 include_once $_SERVER['DOCUMENT_ROOT'] . "/frontend-admin-mns/components/card.php";
 include_once $_SERVER['DOCUMENT_ROOT'] . "/frontend-admin-mns/php/api/db.php";
 
-function getAbsencesParMois($pdo) {
+function getAbsencesParMois($pdo)
+{
     $query = "SELECT 
                 MONTH(date_debut_absence) AS mois, 
                 SUM(CASE WHEN id_type_absence = 1 THEN 1 ELSE 0 END) AS absences,
@@ -16,7 +17,8 @@ function getAbsencesParMois($pdo) {
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
 
-function widgetAbsences() {
+function widgetAbsences()
+{
     global $pdo;
     $title = "Absences & Retards";
     $link = "#";
