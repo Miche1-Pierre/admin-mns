@@ -170,7 +170,7 @@ function initUsers() {
     }
 
     function displayUsers() {
-        console.log("Affichage des utilisateurs...");
+        console.log("Affichage des utilisateurs...", users);
         const startIndex = (currentPage - 1) * itemsPerPage;
         const endIndex = startIndex + itemsPerPage;
 
@@ -187,9 +187,9 @@ function initUsers() {
             row.innerHTML = `
                 <td>${user.id}</td>
                 <td>${user.nom}</td>
+                <td>${user.prenom}</td>
                 <td>${user.email}</td>
                 <td>${user.role}</td>
-                <td>${user.date_inscription}</td>
                 <td>
                     <button class="button edit">Modifier</button>
                     <button class="button delete">Supprimer</button>
