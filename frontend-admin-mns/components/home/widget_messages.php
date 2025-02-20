@@ -1,29 +1,40 @@
 <?php
 include_once $_SERVER['DOCUMENT_ROOT'] . "/frontend-admin-mns/components/card.php";
+include_once $_SERVER['DOCUMENT_ROOT'] . "/frontend-admin-mns/php/api/db.php";
 
-function widgetMessages() {
+function getNotifications($pdo)
+{
+    $query = "SELECT date_notification, id_type_notification, contenu_notification 
+              FROM notification
+              ORDER BY date_notification DESC
+              LIMIT 5";
+
+    $stmt = $pdo->prepare($query);
+    $stmt->execute();
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
+
+function widgetMessages()
+{
+    global $pdo;
     $title = "Messagerie";
     $text = "Consultez et envoyez vos messages.";
     $link = "#";
     $img = null;
 
-    $messages = [
-        ["expediteur" => "Admin", "contenu" => "Rappel: réunion demain à 10h.", "heure" => "10:30"],
-        ["expediteur" => "Professeur X", "contenu" => "Votre devoir est à rendre vendredi.", "heure" => "09:15"],
-        ["expediteur" => "RH", "contenu" => "Votre attestation est disponible.", "heure" => "08:50"],
-        ["expediteur" => "Candidature", "contenu" => "Votre dossier est en cours de traitement.", "heure" => "08:30"],
-        ["expediteur" => "Secrétariat", "contenu" => "Votre document a été validé.", "heure" => "08:00"]
-    ];
+    // Récupération des 5 dernières notifications
+    $notifications = getNotifications($pdo);
 
-    $content = "<table class='table-widget'><thead><tr><th>Expéditeur</th><th>Message</th><th>Heure</th></tr></thead><tbody>";
-    foreach ($messages as $msg) {
+    $content = "<table class='table-widget'><thead><tr><th>Type</th><th>Message</th><th>Date</th></tr></thead><tbody>";
+    foreach ($notifications as $notif) {
         $content .= "<tr>
-                        <td>" . htmlspecialchars($msg["expediteur"]) . "</td>
-                        <td>" . htmlspecialchars($msg["contenu"]) . "</td>
-                        <td>" . htmlspecialchars($msg["heure"]) . "</td>
+                        <td>" . htmlspecialchars($notif["id_type_notification"]) . "</td>
+                        <td>" . htmlspecialchars($notif["contenu_notification"]) . "</td>
+                        <td>" . htmlspecialchars(date("d/m/Y H:i", strtotime($notif["date_notification"]))) . "</td>
                      </tr>";
     }
     $content .= "</tbody></table>";
 
     generateCard($title, $link, $content, $img);
 }
+
