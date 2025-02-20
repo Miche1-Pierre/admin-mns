@@ -38,6 +38,9 @@ public class Absence {
     @Temporal(TemporalType.TIMESTAMP)
     private LocalDateTime dateFinAbsence;
 
+    @Column(name = "statut_absence", nullable = false)
+    private String statutAbsence;
+
     @Column(name = "justifie_absence", nullable = false)
     private boolean justifieAbsence;
 }
