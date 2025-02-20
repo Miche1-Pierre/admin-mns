@@ -4,7 +4,7 @@ include $_SERVER['DOCUMENT_ROOT'] . '/frontend-admin-mns/php/api/db.php';
 $documents = [];
 
 $query = $pdo->query("
-    SELECT 
+    SELECT
         d.id_document AS id,
         d.contenu_chiffre_document AS nom,
         td.nom_type_document AS type,

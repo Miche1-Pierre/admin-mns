@@ -1,14 +1,20 @@
 <?php
+include $_SERVER['DOCUMENT_ROOT'] . '/frontend-admin-mns/php/api/db.php';
+
 $users = [];
-for ($i = 1; $i <= 100; $i++) {
-    $users[] = [
-        "id" => $i,
-        "nom" => "Utilisateur $i",
-        "email" => "user$i@example.com",
-        "role" => $i % 2 === 0 ? "Admin" : "Utilisateur",
-        "date_inscription" => date("d/m/Y", strtotime("-$i days"))
-    ];
-}
+
+$query = $pdo->query("
+    SELECT
+        u.id_utilisateur AS id,
+        u.nom_utilisateur AS nom,
+        u.prenom_utilisateur AS prenom,
+        u.email_utilisateur AS email,
+        ru.nom_role AS role
+    FROM utilisateur u
+    JOIN role ru ON u.role_id = ru.id_role
+");
+
+$users = $query->fetchAll(PDO::FETCH_ASSOC);
 ?>
 
 <!DOCTYPE html>
@@ -42,7 +48,9 @@ for ($i = 1; $i <= 100; $i++) {
                     <select id="filterRole">
                         <option value="">Tous les rôles</option>
                         <option value="Admin">Admin</option>
-                        <option value="Utilisateur">Utilisateur</option>
+                        <option value="Candidat">Candidat</option>
+                        <option value="Stagiaire">Stagiaire</option>
+                        <option value="Formateur">Formateur</option>
                     </select>
                     <select id="itemsPerPage">
                         <option value="10">10 éléments</option>
@@ -58,9 +66,9 @@ for ($i = 1; $i <= 100; $i++) {
                             <tr>
                                 <th>ID</th>
                                 <th>Nom</th>
+                                <th>Prénom</th>
                                 <th>Email</th>
                                 <th>Rôle</th>
-                                <th>Date d'inscription</th>
                                 <th>Actions</th>
                             </tr>
                         </thead>
