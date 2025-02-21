@@ -49,6 +49,7 @@ body {
     width: 768px;
     max-width: 100%;
     min-height: 480px;
+    text-align: center;
 }
 
 .container p {
@@ -153,6 +154,7 @@ body {
     display: flex;
     justify-content: space-between;
     gap: 20px;
+    text-align: left;
 }
 
 .grid .name-field,
@@ -160,6 +162,7 @@ body {
 .grid .password-field,
 .grid .confirm_password-field {
     flex: 1;
+    text-align: left;
 }
 
 .email-field,
@@ -169,6 +172,7 @@ body {
 .confirm_password-field,
 .confirm_password-field label {
     display: block;
+    text-align: left;
 }
 
 span {

@@ -15,39 +15,10 @@
 <body>
     <div class="container" id="container">
         <div class="form-container sign-up">
-            <form method="POST" action="/api/auth/register">
-                <h1>Create Account</h1>
-                <div class="social-icons">
-                    <a href="#" class="icon"><i class='bx bxl-google-plus'></i></a>
-                    <a href="#" class="icon"><i class='bx bxl-facebook'></i></a>
-                    <a href="#" class="icon"><i class='bx bxl-github'></i></a>
-                    <a href="#" class="icon"><i class='bx bxl-linkedin'></i></a>
-                </div>
-                <span>or use your email for registeration</span>
-                <div class="grid">
-                    <div class="name-field">
-                        <label for="name">Name</label>
-                        <input type="text" name="name" placeholder="Name" required>
-                    </div>
-                    <div class="firstname-field">
-                        <label for="firstname">Firstname</label>
-                        <input type="text" name="firstname" placeholder="Firstname" required>
-                    </div>
-                </div>
-                <div class="email-field">
-                    <label for="email">Email</label>
-                    <input type="email" name="email" placeholder="Email" required>
-                </div>
-                <div class="grid">
-                    <div class="password-field">
-                        <label for="password">Password</label>
-                        <input type="password" name="password" placeholder="Password" required>
-                    </div>
-                    <div class="confirm_password-field">
-                        <label for="confirm_password">Confirm password</label>
-                        <input type="password" name="confirm_password" placeholder="Confirm Password">
-                    </div>
-                </div>
+            <form method="" action="/frontend-admin-mns/views/candidatures.php">
+                <h1>Create an Account Integrating MNS</h1>
+                <p>Vous allez être redirigé vers la page de candidature en cliquant sur le bouton ci-dessous.</p>
+                <p>Veuillez vous assurer d'avoir toutes les informations nécessaires avant de continuer.</p>
                 <button>Sign Up</button>
             </form>
         </div>
