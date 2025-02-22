@@ -5,6 +5,7 @@ document.addEventListener("DOMContentLoaded", function () {
     window.absences = absences;
     initAbsences();
     updateBreadcrumb();
+    initAddAbsenceModal();
 });
 
 function setActiveMenu() {
@@ -236,4 +237,52 @@ function initAbsences() {
     filterMotif.addEventListener("change", filterAbsences);
 
     displayAbsences();
+}
+
+function initAddAbsenceModal() {
+    const addButton = document.querySelector(".button.add");
+    const modal = document.getElementById("addAbsenceModal");
+    const closeModalButton = modal.querySelector(".close-btn");
+    const form = document.getElementById("addAbsenceForm");
+
+    addButton.addEventListener("click", () => {
+        modal.style.display = "block";
+    });
+
+    closeModalButton.addEventListener("click", () => {
+        modal.style.display = "none";
+    });
+
+    window.addEventListener("click", (e) => {
+        if (e.target === modal) {
+            modal.style.display = "none";
+        }
+    });
+
+    form.addEventListener("submit", (e) => {
+        e.preventDefault();
+
+        const utilisateur = document.getElementById("utilisateur").value;
+        const statut = document.getElementById("statut").value;
+        const type = document.getElementById("type").value;
+        const debut = document.getElementById("debut").value;
+        const fin = document.getElementById("fin").value;
+        const justifie = document.getElementById("justifie").files[0];
+
+        // Créer un objet d'absence à ajouter
+        const newAbsence = {
+            id: window.absences.length + 1,
+            utilisateur,
+            statut,
+            type,
+            debut,
+            fin,
+            justifie: justifie ? justifie.name : null,
+        };
+
+        window.absences.push(newAbsence);
+        displayAbsences();
+        modal.style.display = "none";
+        form.reset();
+    });
 }
