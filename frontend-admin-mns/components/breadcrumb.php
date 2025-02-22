@@ -12,7 +12,7 @@
             <small class="text-muted">Admin</small>
         </div>
         <div class="profile-photo">
-            <img src="/frontend-admin-mns/assets/user1.png">
+            <a href="/frontend-admin-mns/components/profile/profile.php"><img src="/frontend-admin-mns/assets/user1.png"></a>
         </div>
     </div>
 </div>
