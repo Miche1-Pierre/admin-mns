@@ -93,6 +93,42 @@ $absences = $query->fetchAll(PDO::FETCH_ASSOC);
                     <button class="next-slide">Suivant</button>
                 </div>
             </div>
+
+            <!-- Popup pour ajouter une absence/retard -->
+            <div id="addAbsenceModal" class="modal">
+                <div class="modal-content">
+                    <span class="close-btn"><i class='bx bx-x'></i></span>
+                    <h2>Ajouter une Absence/Retard</h2>
+                    <form id="addAbsenceForm">
+                        <label for="utilisateur">Nom de l'Étudiant</label>
+                        <input type="text" id="utilisateur" name="utilisateur" required>
+
+                        <label for="statut">Statut</label>
+                        <select id="statut" name="statut" required>
+                            <option value="Absence">Absence</option>
+                            <option value="Retard">Retard</option>
+                        </select>
+
+                        <label for="type">Type d'absence</label>
+                        <select id="type" name="type" required>
+                            <option value="Rendez-vous médical">Rendez-vous médical</option>
+                            <option value="Congé payé">Congé payé</option>
+                            <option value="Autre">Autre</option>
+                        </select>
+
+                        <label for="debut">Date de début</label>
+                        <input type="datetime-local" id="debut" name="debut" required>
+
+                        <label for="fin">Date de fin</label>
+                        <input type="datetime-local" id="fin" name="fin" required>
+
+                        <label for="justifie">Justificatif (optionnel)</label>
+                        <input type="file" id="justifie" name="justifie">
+
+                        <button type="submit" class="button">Ajouter</button>
+                    </form>
+                </div>
+            </div>
         </div>
     </main>
     <footer></footer>
