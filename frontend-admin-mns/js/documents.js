@@ -5,6 +5,7 @@ document.addEventListener("DOMContentLoaded", function () {
     window.documents = documents;
     initDocuments();
     updateBreadcrumb();
+    initAddDocumentModal();
 });
 
 function setActiveMenu() {
@@ -97,10 +98,10 @@ function updateBreadcrumb() {
         updateBreadcrumbLinks(["Home"]);
     } else if (path.includes("candidatures.php")) {
         breadcrumbTitle.textContent = "Dashboard";
-        updateBreadcrumbLinks(["Modules", "Candidatures"]);
+        updateBreadcrumbLinks(["Modules", "/", "Candidatures"]);
     } else if (path.includes("absences.php")) {
         breadcrumbTitle.textContent = "Dashboard";
-        updateBreadcrumbLinks(["Modules", "Absences & Lateness"]);
+        updateBreadcrumbLinks(["Modules", "/", "Absences & Lateness"]);
     } else if (path.includes("users.php")) {
         breadcrumbTitle.textContent = "Dashboard";
         updateBreadcrumbLinks(["Users"]);
@@ -109,7 +110,7 @@ function updateBreadcrumb() {
         updateBreadcrumbLinks(["Documents"]);
     } else if (path.includes("stats.php")) {
         breadcrumbTitle.textContent = "Dashboard";
-        updateBreadcrumbLinks(["More", "Stats"]);
+        updateBreadcrumbLinks(["More", "/", "Stats"]);
     } else {
         breadcrumbTitle.textContent = "Page Not Found";
         updateBreadcrumbLinks([]);
@@ -237,4 +238,52 @@ function initDocuments() {
     filterAuthor.addEventListener("change", filterDocuments);
 
     displayDocuments();
+}
+
+function initAddDocumentModal() {
+    const addButton = document.querySelector(".button.add");
+    const modal = document.getElementById("addDocumentModal");
+    const closeModalButton = modal.querySelector(".close-btn");
+    const form = document.getElementById("addDocumentForm");
+
+    addButton.addEventListener("click", () => {
+        modal.style.display = "block";
+    });
+
+    closeModalButton.addEventListener("click", () => {
+        modal.style.display = "none";
+    });
+
+    window.addEventListener("click", (e) => {
+        if (e.target === modal) {
+            modal.style.display = "none";
+        }
+    });
+
+    form.addEventListener("submit", (e) => {
+        e.preventDefault();
+
+        const utilisateur = document.getElementById("utilisateur").value;
+        const statut = document.getElementById("statut").value;
+        const type = document.getElementById("type").value;
+        const debut = document.getElementById("debut").value;
+        const fin = document.getElementById("fin").value;
+        const justifie = document.getElementById("justifie").files[0];
+
+        // Créer un objet d'absence à ajouter
+        const newDocument = {
+            id: window.absences.length + 1,
+            utilisateur,
+            statut,
+            type,
+            debut,
+            fin,
+            justifie: justifie ? justifie.name : null,
+        };
+
+        window.absences.push(newDocument);
+        displayDocuments();
+        modal.style.display = "none";
+        form.reset();
+    });
 }

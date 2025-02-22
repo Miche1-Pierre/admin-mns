@@ -97,10 +97,10 @@ function updateBreadcrumb() {
         updateBreadcrumbLinks(["Home"]);
     } else if (path.includes("candidatures.php")) {
         breadcrumbTitle.textContent = "Dashboard";
-        updateBreadcrumbLinks(["Modules", "Candidatures"]);
+        updateBreadcrumbLinks(["Modules", "/", "Candidatures"]);
     } else if (path.includes("absences.php")) {
         breadcrumbTitle.textContent = "Dashboard";
-        updateBreadcrumbLinks(["Modules", "Absences & Lateness"]);
+        updateBreadcrumbLinks(["Modules /", "Absences & Lateness"]);
     } else if (path.includes("users.php")) {
         breadcrumbTitle.textContent = "Dashboard";
         updateBreadcrumbLinks(["Users"]);
@@ -109,7 +109,7 @@ function updateBreadcrumb() {
         updateBreadcrumbLinks(["Documents"]);
     } else if (path.includes("stats.php")) {
         breadcrumbTitle.textContent = "Dashboard";
-        updateBreadcrumbLinks(["More", "Stats"]);
+        updateBreadcrumbLinks(["More /", "Stats"]);
     } else {
         breadcrumbTitle.textContent = "Page Not Found";
         updateBreadcrumbLinks([]);
