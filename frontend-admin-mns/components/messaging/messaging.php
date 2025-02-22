@@ -1,5 +1,18 @@
 <?php
+include $_SERVER['DOCUMENT_ROOT'] . '/frontend-admin-mns/php/api/db.php';
 
+$contacts = [];
+
+$query = $pdo->query("
+    SELECT 
+        u.id_utilisateur AS id, 
+        u.nom_utilisateur AS nom, 
+        u.email_utilisateur AS email 
+    FROM utilisateur u
+    LIMIT 10
+");
+
+$contacts = $query->fetchAll(PDO::FETCH_ASSOC);
 ?>
 
 <!DOCTYPE html>
@@ -18,7 +31,7 @@
         <?php include $_SERVER['DOCUMENT_ROOT'] . "/frontend-admin-mns/components/navbar.php"; ?>
     </header>
     <main>
-        <?php include $_SERVER['DOCUMENT_ROOT'] . "/frontend-admin-mns/components/breadcrumb.php"; ?> 
+        <?php include $_SERVER['DOCUMENT_ROOT'] . "/frontend-admin-mns/components/breadcrumb.php"; ?>
 
         <div class="dashboard-zone" id="dashboard-zone">
             <div class="messaging-container">
@@ -26,7 +39,11 @@
                 <div class="contacts-sidebar">
                     <input type="text" id="searchContacts" placeholder="Rechercher un contact..." />
                     <ul id="contactsList">
-                        <!-- Liste des contacts affichés dynamiquement -->
+                        <?php foreach ($contacts as $contact) : ?>
+                            <li data-id="<?= $contact['id'] ?>" class="contact-item">
+                                <?= htmlspecialchars($contact['nom']) ?>
+                            </li>
+                        <?php endforeach; ?>
                     </ul>
                 </div>
 
