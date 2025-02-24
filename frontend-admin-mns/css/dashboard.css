@@ -209,8 +209,16 @@ main .dashboard-zone {
     transform: rotate(180deg);
 }
 
-.sidebar.active .logo-details {
-    display: none;
+.sidebar.active .logo-details .details {
+    font-size: var(--text-font-size);
+}
+
+.sidebar .logo-details img {
+    transition: var(--transition);
+}
+
+.sidebar.active .logo-details img {
+    width: 100%;
 }
 
 .sidebar.active .menu .title {
