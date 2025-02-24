@@ -35,8 +35,6 @@ for ($i = 1; $i <= 100; $i++) {
 
         <div class="dashboard-zone" id="dashboard-zone">
             <div class="document-container">
-                <button class="button add">Ajouter un document</button>
-
                 <!-- Bandeau de filtrage -->
                 <div class="filter-bar">
                     <input type="text" id="searchInput" placeholder="Rechercher un document..." />
