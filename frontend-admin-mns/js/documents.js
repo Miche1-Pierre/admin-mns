@@ -263,26 +263,26 @@ function initAddDocumentModal() {
     form.addEventListener("submit", (e) => {
         e.preventDefault();
 
-        const utilisateur = document.getElementById("utilisateur").value;
-        const statut = document.getElementById("statut").value;
-        const type = document.getElementById("type").value;
-        const debut = document.getElementById("debut").value;
-        const fin = document.getElementById("fin").value;
-        const justifie = document.getElementById("justifie").files[0];
+        const documentName = document.getElementById("document").value;
+        const dateLimite = document.getElementById("date_limite").value;
+        const idDossier = document.getElementById("id_dossier").value;
+        const idStatut = document.getElementById("id_statut").value;
+        const idTypeDocument = document.getElementById("id_type_document").value;
+        const dateDepotDocument = new Date().toISOString();
 
-        // Créer un objet d'absence à ajouter
         const newDocument = {
-            id: window.absences.length + 1,
-            utilisateur,
-            statut,
-            type,
-            debut,
-            fin,
-            justifie: justifie ? justifie.name : null,
+            documentName,
+            dateDepotDocument,
+            dateLimite,
+            idDossier,
+            idStatut,
+            idTypeDocument,
         };
 
-        window.absences.push(newDocument);
+        window.documents.push(newDocument);
+
         displayDocuments();
+
         modal.style.display = "none";
         form.reset();
     });
