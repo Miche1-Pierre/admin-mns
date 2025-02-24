@@ -98,30 +98,20 @@ $documents = $query->fetchAll(PDO::FETCH_ASSOC);
                     <span class="close-btn"><i class='bx bx-x'></i></span>
                     <h2>Ajouter un document</h2>
                     <form id="addDocumentForm">
-                        <label for="utilisateur">Nom de l'Étudiant</label>
-                        <input type="text" id="utilisateur" name="utilisateur" required>
+                        <label for="document">Nom du document</label>
+                        <input type="text" id="document" name="document" required>
 
-                        <label for="statut">Statut</label>
-                        <select id="statut" name="statut" required>
-                            <option value="Absence">Absence</option>
-                            <option value="Retard">Retard</option>
-                        </select>
+                        <label for="date_limite">Date limite du document</label>
+                        <input type="datetime-local" id="date_limite" name="date_limite" required>
 
-                        <label for="type">Type d'absence</label>
-                        <select id="type" name="type" required>
-                            <option value="Rendez-vous médical">Rendez-vous médical</option>
-                            <option value="Congé payé">Congé payé</option>
-                            <option value="Autre">Autre</option>
-                        </select>
+                        <label for="id_dossier">ID du dossier</label>
+                        <input type="number" id="id_dossier" name="id_dossier" required>
 
-                        <label for="debut">Date de début</label>
-                        <input type="datetime-local" id="debut" name="debut" required>
+                        <label for="id_statut">ID du statut</label>
+                        <input type="number" id="id_statut" name="id_statut" required>
 
-                        <label for="fin">Date de fin</label>
-                        <input type="datetime-local" id="fin" name="fin" required>
-
-                        <label for="justifie">Justificatif (optionnel)</label>
-                        <input type="file" id="justifie" name="justifie">
+                        <label for="id_type_document">ID du type de document</label>
+                        <input type="number" id="id_type_document" name="id_type_document" required>
 
                         <button type="submit" class="button">Ajouter</button>
                     </form>
