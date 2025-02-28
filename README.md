@@ -91,6 +91,8 @@ $ yarn start
 # The server will initialize in the <http://localhost:3000>
 ```
 
+Use the DB script in phpMyAdmin to create database : [SQL-Script](./docs/admin-mns-db.sql)
+
 ## :memo: License ##
 
 This project isn't yet under license.
