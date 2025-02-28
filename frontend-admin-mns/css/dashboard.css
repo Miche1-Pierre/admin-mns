@@ -79,8 +79,7 @@ main {
 main .dashboard-zone {
     display: flex;
     flex-wrap: wrap;
-    align-items: center;
-    column-gap: 33px;
+    gap: 20px;
 }
 
 /* Navbar */
@@ -379,12 +378,14 @@ main .dashboard-zone {
 .card .card-container {
     width: 30rem;
     padding: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
     background: var(--secondary-background-color);
     border-radius: 12px;
     border: 1px solid var(--shadow-color);
     transform-style: preserve-3d;
     transition: transform var(--transition);
-    transition: var(--transition);
 }
 
 .card .card-container:hover {
