@@ -6,6 +6,7 @@ document.addEventListener("DOMContentLoaded", function () {
     initAbsences();
     updateBreadcrumb();
     initAddAbsenceModal();
+    initViewAccountModal();
 });
 
 function setActiveMenu() {
@@ -284,5 +285,26 @@ function initAddAbsenceModal() {
         displayAbsences();
         modal.style.display = "none";
         form.reset();
+    });
+}
+
+function initViewAccountModal() {
+    const viewButton = document.querySelector(".button.view");
+    const modal = document.getElementById("viewAccountModal");
+    const closeModalButton = modal.querySelector(".close-btn");
+    // const form = document.getElementById("changeAccountForm");
+
+    viewButton.addEventListener("click", () => {
+        modal.style.display = "block";
+    });
+
+    closeModalButton.addEventListener("click", () => {
+        modal.style.display = "none";
+    });
+
+    window.addEventListener("click", (e) => {
+        if (e.target === modal) {
+            modal.style.display = "none";
+        }
     });
 }
