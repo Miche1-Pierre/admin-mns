@@ -192,8 +192,8 @@ function initUsers() {
                 <td>${user.email}</td>
                 <td>${user.role}</td>
                 <td>
-                    <button class="button edit">Modifier</button>
-                    <button class="button delete">Supprimer</button>
+                    <button class="button edit">Edit</button>
+                    <button class="button delete">Delete</button>
                 </td>
             `;
             tableBody.appendChild(row);

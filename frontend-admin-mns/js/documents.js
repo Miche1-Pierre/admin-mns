@@ -99,7 +99,7 @@ function updateBreadcrumb() {
         updateBreadcrumbLinks(["Home"]);
     } else if (path.includes("candidatures.php")) {
         breadcrumbTitle.textContent = "Dashboard";
-        updateBreadcrumbLinks(["Modules", "/", "Candidatures"]);
+        updateBreadcrumbLinks(["Modules", "/", "Applications"]);
     } else if (path.includes("absences.php")) {
         breadcrumbTitle.textContent = "Dashboard";
         updateBreadcrumbLinks(["Modules", "/", "Absences & Lateness"]);
@@ -197,8 +197,8 @@ function initDocuments() {
                 <td>${doc.date}</td>
                 <td>${doc.auteur}</td>
                 <td>
-                    <button class="button edit">Modifier</button>
-                    <button class="button delete">Supprimer</button>
+                    <button class="button edit">Edit</button>
+                    <button class="button delete">Delete</button>
                 </td>
             `;
             tableBody.appendChild(row);
