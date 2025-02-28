@@ -36,6 +36,30 @@
     color: var(--text-color-dark);
 }
 
+::-webkit-scrollbar-track
+{
+	-webkit-box-shadow: inset 0 0 6px var(--shadow-color);
+	border-radius: 10px;
+	background-color: var(--primary-background-color);
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background-color: var(--tran-primary-color);
+}
+
+::-webkit-scrollbar
+{
+	width: 12px;
+	background-color: var(--primary-background-color);
+}
+
+::-webkit-scrollbar-thumb
+{
+	border-radius: 10px;
+	-webkit-box-shadow: inset 0 0 6px var(--shadow-color);
+	background-color: var(--primary-color);
+}
+
 body {
     height: 100vh;
     background-color: var(--primary-background-color);
@@ -583,20 +607,22 @@ canvas {
 
 /* Absence */
 /* Documents */
+/* Account */
 .modal {
     display: none;
     position: fixed;
     z-index: 9999;
     left: 0;
     top: -80px;
+    height: 120vh;
     width: 100%;
-    overflow: auto;
+    overflow: hidden;
     background-color: rgba(0, 0, 0, 0.5);
     transition: var(--transition);
 }
 
 .modal .modal-content {
-    background-color: var(--secondary-background-color); 
+    background-color: var(--secondary-background-color);
     margin: 10% auto;
     padding: 30px;
     border-radius: var(--border-radius);
@@ -636,7 +662,7 @@ canvas {
     display: block;
 }
 
-.modal .modal-content input, 
+.modal .modal-content input,
 .modal .modal-content select {
     width: 100%;
     padding: 12px;
@@ -794,24 +820,29 @@ canvas {
     border-radius: var(--border-radius);
     box-shadow: 0 0 10px var(--shadow-color);
 }
+
 .settings-zone h2 {
     text-align: center;
     margin-bottom: 20px;
 }
+
 .settings-zone .form-group {
     margin-bottom: 15px;
 }
+
 .settings-zone .form-group label {
     display: block;
     font-weight: bold;
     margin-bottom: 5px;
 }
+
 .settings-zone .form-group input {
     width: 100%;
     padding: 8px;
     border: 1px solid var(--border-colors);
     border-radius: var(--border-radius);
 }
+
 .settings-zone .btn {
     display: block;
     width: 100%;
@@ -824,6 +855,7 @@ canvas {
     font-size: 16px;
     transition: var(--transition);
 }
+
 .settings-zone .btn:hover {
     background: var(--tran-primary-color);
 }
