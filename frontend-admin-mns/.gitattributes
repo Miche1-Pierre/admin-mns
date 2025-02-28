@@ -1,2 +1,12 @@
 /mvnw text eol=lf
 *.cmd text eol=crlf
+
+*.js text eol=lf
+*.css text eol=lf
+*.html text eol=lf
+*.php text eol=lf
+
+*.js linguist-language=JavaScript
+*.html linguist-language=HTML
+*.css linguist-language=CSS
+*.php linguist-language=PHP
