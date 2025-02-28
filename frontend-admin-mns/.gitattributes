@@ -9,14 +9,9 @@
 *.png binary
 *.jpg binary
 
-# Assurer que les fichiers .js sont traités comme du JavaScript
 *.js linguist-language=JavaScript
-
-# Assurer que les fichiers .css sont traités comme du CSS
 *.css linguist-language=CSS
-
-# Assurer que les fichiers .html sont traités comme du HTML
 *.html linguist-language=HTML
-
-# Assurer que les fichiers .php sont traités comme du PHP
 *.php linguist-language=PHP
+
+frontend-admin-mns/views/*.php linguist-language=PHP
