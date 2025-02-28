@@ -20,9 +20,9 @@ function getAbsencesParMois($pdo)
 function widgetAbsences()
 {
     global $pdo;
-    $title = "Absences & Retards";
+    $title = "Absences & Lateness";
     $link = "#";
-    $text = "Consultez les absences et retards";
+    $text = "View absences and late arrivals";
     $img = null;
     $chartId = "absencesChart";
     $chartType = "bar";
@@ -48,7 +48,7 @@ function widgetAbsences()
             "borderWidth" => 1
         ],
         [
-            "label" => "Retards",
+            "label" => "Lateness",
             "data" => $retardsData,
             "backgroundColor" => "#D90429",
             "borderColor" => "#eeeeee",

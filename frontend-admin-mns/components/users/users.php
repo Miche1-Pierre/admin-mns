@@ -25,7 +25,7 @@ $users = $query->fetchAll(PDO::FETCH_ASSOC);
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="/frontend-admin-mns/css/dashboard.css">
     <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
-    <title>ADMIN MNS | Utilisateurs</title>
+    <title>ADMIN MNS | Users</title>
 </head>
 
 <body>
@@ -41,22 +41,22 @@ $users = $query->fetchAll(PDO::FETCH_ASSOC);
 
         <div class="dashboard-zone" id="dashboard-zone">
             <div class="document-container">
-                <button class="button add">Ajouter un utilisateur</button>
+                <button class="button add">Add User</button>
 
                 <div class="filter-bar">
                     <input type="text" id="searchInput" placeholder="Rechercher un utilisateur..." />
                     <select id="filterRole">
-                        <option value="">Tous les rôles</option>
+                        <option value="">All roles</option>
                         <option value="Admin">Admin</option>
-                        <option value="Candidat">Candidat</option>
-                        <option value="Stagiaire">Stagiaire</option>
-                        <option value="Formateur">Formateur</option>
+                        <option value="Candidat">Candidate</option>
+                        <option value="Stagiaire">Trainee</option>
+                        <option value="Formateur">Trainer</option>
                     </select>
                     <select id="itemsPerPage">
-                        <option value="10">10 éléments</option>
-                        <option value="25" selected>25 éléments</option>
-                        <option value="50">50 éléments</option>
-                        <option value="100">100 éléments</option>
+                        <option value="10">10 lines</option>
+                        <option value="25" selected>25 lines</option>
+                        <option value="50">50 lines</option>
+                        <option value="100">100 lines</option>
                     </select>
                 </div>
 
@@ -65,10 +65,10 @@ $users = $query->fetchAll(PDO::FETCH_ASSOC);
                         <thead>
                             <tr>
                                 <th>ID</th>
-                                <th>Nom</th>
-                                <th>Prénom</th>
+                                <th>Name</th>
+                                <th>Firstname</th>
                                 <th>Email</th>
-                                <th>Rôle</th>
+                                <th>Role</th>
                                 <th>Actions</th>
                             </tr>
                         </thead>
@@ -78,8 +78,8 @@ $users = $query->fetchAll(PDO::FETCH_ASSOC);
                 </div>
 
                 <div class="pagination">
-                    <button class="prev-slide">Précédent</button>
-                    <button class="next-slide">Suivant</button>
+                    <button class="prev-slide">Previous</button>
+                    <button class="next-slide">Next</button>
                 </div>
             </div>
         </div>

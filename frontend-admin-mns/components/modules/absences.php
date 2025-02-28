@@ -28,7 +28,7 @@ $absences = $query->fetchAll(PDO::FETCH_ASSOC);
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="/frontend-admin-mns/css/dashboard.css">
     <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
-    <title>ADMIN MNS | Absences et Retards</title>
+    <title>ADMIN MNS | Absences & Lateness</title>
 </head>
 
 <body>
@@ -44,27 +44,27 @@ $absences = $query->fetchAll(PDO::FETCH_ASSOC);
 
         <div class="dashboard-zone" id="dashboard-zone">
             <div class="document-container">
-                <button class="button add">Ajouter une absence/retard</button>
+                <button class="button add">Add Absences/Lateness</button>
 
                 <!-- Bandeau de filtrage -->
                 <div class="filter-bar">
                     <input type="text" id="searchInput" placeholder="Rechercher un étudiant..." />
                     <select id="filterStatut">
-                        <option value="">Tous les statuts</option>
+                        <option value="">All statuts</option>
                         <option value="Absence">Absence</option>
-                        <option value="Retard">Retard</option>
+                        <option value="Retard">Late</option>
                     </select>
                     <select id="filterMotif">
-                        <option value="">Tous les motifs</option>
-                        <option value="Maladie">Maladie</option>
-                        <option value="Congé payé">Congé payé</option>
-                        <option value="Autre">Autre</option>
+                        <option value="">All motifs</option>
+                        <option value="Maladie">Sickness</option>
+                        <option value="Congé payé">Paid vacation</option>
+                        <option value="Autre">Other</option>
                     </select>
                     <select id="itemsPerPage">
-                        <option value="10">10 éléments</option>
-                        <option value="25" selected>25 éléments</option>
-                        <option value="50">50 éléments</option>
-                        <option value="100">100 éléments</option>
+                        <option value="10">10 lines</option>
+                        <option value="25" selected>25 lines</option>
+                        <option value="50">50 lines</option>
+                        <option value="100">100 lines</option>
                     </select>
                 </div>
 
@@ -74,12 +74,12 @@ $absences = $query->fetchAll(PDO::FETCH_ASSOC);
                         <thead>
                             <tr>
                                 <th>ID</th>
-                                <th>Étudiant</th>
-                                <th>Statut</th>
+                                <th>Student</th>
+                                <th>Status</th>
                                 <th>Type</th>
-                                <th>Debut</th>
-                                <th>Fin</th>
-                                <th>Justifie</th>
+                                <th>Start</th>
+                                <th>End</th>
+                                <th>Justify</th>
                                 <th>Actions</th>
                             </tr>
                         </thead>
@@ -89,8 +89,8 @@ $absences = $query->fetchAll(PDO::FETCH_ASSOC);
                 </div>
 
                 <div class="pagination">
-                    <button class="prev-slide">Précédent</button>
-                    <button class="next-slide">Suivant</button>
+                    <button class="prev-slide">Previous</button>
+                    <button class="next-slide">Next</button>
                 </div>
             </div>
 
@@ -98,34 +98,34 @@ $absences = $query->fetchAll(PDO::FETCH_ASSOC);
             <div id="addAbsenceModal" class="modal">
                 <div class="modal-content">
                     <span class="close-btn"><i class='bx bx-x'></i></span>
-                    <h2>Ajouter une Absence/Retard</h2>
+                    <h2>Add Absence/Lateness</h2>
                     <form id="addAbsenceForm">
-                        <label for="utilisateur">Nom de l'Étudiant</label>
+                        <label for="utilisateur">Student Name</label>
                         <input type="text" id="utilisateur" name="utilisateur" required>
 
-                        <label for="statut">Statut</label>
+                        <label for="statut">Status</label>
                         <select id="statut" name="statut" required>
                             <option value="Absence">Absence</option>
-                            <option value="Retard">Retard</option>
+                            <option value="Retard">Late</option>
                         </select>
 
-                        <label for="type">Type d'absence</label>
+                        <label for="type">Absence Type</label>
                         <select id="type" name="type" required>
-                            <option value="Rendez-vous médical">Rendez-vous médical</option>
-                            <option value="Congé payé">Congé payé</option>
-                            <option value="Autre">Autre</option>
+                            <option value="Rendez-vous médical">Medical appointment</option>
+                            <option value="Congé payé">Paid vacation</option>
+                            <option value="Autre">Other</option>
                         </select>
 
-                        <label for="debut">Date de début</label>
+                        <label for="debut">Start Date</label>
                         <input type="datetime-local" id="debut" name="debut" required>
 
-                        <label for="fin">Date de fin</label>
+                        <label for="fin">End Date</label>
                         <input type="datetime-local" id="fin" name="fin" required>
 
-                        <label for="justifie">Justificatif (optionnel)</label>
+                        <label for="justifie">Receipt (optionnal)</label>
                         <input type="file" id="justifie" name="justifie">
 
-                        <button type="submit" class="button">Ajouter</button>
+                        <button type="submit" class="button">Create</button>
                     </form>
                 </div>
             </div>
