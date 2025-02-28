@@ -39,7 +39,7 @@ function generateCard($title, $link, $text = null, $img = null, $chartId = null,
             <?php endif; ?>
 
             <div class="buttons">
-                <a href="<?= htmlspecialchars($link) ?>" class="button primary">Voir Plus</a>
+                <a href="<?= htmlspecialchars($link) ?>" class="button primary">View More</a>
             </div>
         </div>
     </div>

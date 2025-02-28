@@ -17,9 +17,9 @@ function getCandidaturesParFormation($pdo)
 function widgetCandidatures()
 {
     global $pdo;
-    $title = "Candidatures par Formation";
+    $title = "Applications by Training";
     $link = "#";
-    $text = "Répartition des candidats par formation";
+    $text = "Breakdown of applicants by training course";
     $img = null;
     $chartId = "candidaturesChart";
     $chartType = "pie";
@@ -28,7 +28,7 @@ function widgetCandidatures()
 
     $labels = [];
     $dataValues = [];
-    $bgColors = ["#D90429", "#2B2D42", "#EDF2F4", "#424242", "#8D99AE"]; // Ajoute plus de couleurs si besoin
+    $bgColors = ["#D90429", "#2B2D42", "#EDF2F4", "#424242", "#8D99AE"];
 
     foreach ($data as $index => $row) {
         $labels[] = $row["nom_formation"];
@@ -37,7 +37,7 @@ function widgetCandidatures()
 
     $datasets = [
         [
-            "label" => "Candidatures",
+            "label" => "Applications",
             "data" => $dataValues,
             "backgroundColor" => array_slice($bgColors, 0, count($dataValues)),
             "borderColor" => array_fill(0, count($dataValues), "#ffffff"),

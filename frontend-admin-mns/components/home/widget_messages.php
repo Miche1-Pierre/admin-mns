@@ -17,8 +17,7 @@ function getNotifications($pdo)
 function widgetMessages()
 {
     global $pdo;
-    $title = "Messagerie";
-    $text = "Consultez et envoyez vos messages.";
+    $title = "Messaging";
     $link = "#";
     $img = null;
 

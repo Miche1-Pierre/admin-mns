@@ -17,13 +17,13 @@ function getDocuments($pdo)
 function widgetDocuments()
 {
     global $pdo;
-    $title = "Mes Documents";
+    $title = "Documents";
     $link = "#";
     $img = null;
 
     $documents = getDocuments($pdo);
 
-    $content = "<table class='table-widget'><thead><tr><th>Type</th><th>Date Dépôt</th><th>Statut</th></tr></thead><tbody>";
+    $content = "<table class='table-widget'><thead><tr><th>Type</th><th>Deposit date</th><th>Status</th></tr></thead><tbody>";
     foreach ($documents as $doc) {
         $content .= "<tr>
                         <td>" . htmlspecialchars($doc["id_type_document"]) . "</td>

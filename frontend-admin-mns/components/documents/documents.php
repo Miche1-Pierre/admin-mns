@@ -43,28 +43,28 @@ $documents = $query->fetchAll(PDO::FETCH_ASSOC);
 
         <div class="dashboard-zone" id="dashboard-zone">
             <div class="document-container">
-                <button class="button add">Ajouter un document</button>
+                <button class="button add">Add document</button>
 
                 <!-- Bandeau de filtrage -->
                 <div class="filter-bar">
-                    <input type="text" id="searchInput" placeholder="Rechercher un document..." />
+                    <input type="text" id="searchInput" placeholder="Search document..." />
                     <select id="filterType">
-                        <option value="">Tous les types</option>
+                        <option value="">All types</option>
                         <option value="PDF">PDF</option>
                         <option value="DOCX">DOCX</option>
                         <option value="XLSX">XLSX</option>
                     </select>
                     <select id="filterAuthor">
-                        <option value="">Tous les auteurs</option>
+                        <option value="">All authors</option>
                         <?php foreach (array_unique(array_column($documents, 'auteur')) as $author) : ?>
                             <option value="<?= htmlspecialchars($author) ?>"><?= htmlspecialchars($author) ?></option>
                         <?php endforeach; ?>
                     </select>
                     <select id="itemsPerPage">
-                        <option value="10">10 éléments</option>
-                        <option value="25" selected>25 éléments</option>
-                        <option value="50">50 éléments</option>
-                        <option value="100">100 éléments</option>
+                        <option value="10">10 lines</option>
+                        <option value="25" selected>25 lines</option>
+                        <option value="50">50 lines</option>
+                        <option value="100">100 lines</option>
                     </select>
                 </div>
 
@@ -74,10 +74,10 @@ $documents = $query->fetchAll(PDO::FETCH_ASSOC);
                         <thead>
                             <tr>
                                 <th>ID</th>
-                                <th>Nom</th>
+                                <th>Name</th>
                                 <th>Type</th>
                                 <th>Date</th>
-                                <th>Auteur</th>
+                                <th>Author</th>
                                 <th>Actions</th>
                             </tr>
                         </thead>
@@ -87,8 +87,8 @@ $documents = $query->fetchAll(PDO::FETCH_ASSOC);
                 </div>
 
                 <div class="pagination">
-                    <button class="prev-slide">Précédent</button>
-                    <button class="next-slide">Suivant</button>
+                    <button class="prev-slide">Previous</button>
+                    <button class="next-slide">Next</button>
                 </div>
             </div>
 
@@ -96,24 +96,24 @@ $documents = $query->fetchAll(PDO::FETCH_ASSOC);
             <div id="addDocumentModal" class="modal">
                 <div class="modal-content">
                     <span class="close-btn"><i class='bx bx-x'></i></span>
-                    <h2>Ajouter un document</h2>
+                    <h2>Add document</h2>
                     <form id="addDocumentForm">
-                        <label for="document">Nom du document</label>
+                        <label for="document">Name</label>
                         <input type="text" id="document" name="document" required>
 
-                        <label for="date_limite">Date limite du document</label>
+                        <label for="date_limite">Document deadline</label>
                         <input type="datetime-local" id="date_limite" name="date_limite" required>
 
-                        <label for="id_dossier">ID du dossier</label>
+                        <label for="id_dossier">Dossier ID</label>
                         <input type="number" id="id_dossier" name="id_dossier" required>
 
-                        <label for="id_statut">ID du statut</label>
+                        <label for="id_statut">Status ID</label>
                         <input type="number" id="id_statut" name="id_statut" required>
 
-                        <label for="id_type_document">ID du type de document</label>
+                        <label for="id_type_document">Document type ID</label>
                         <input type="number" id="id_type_document" name="id_type_document" required>
 
-                        <button type="submit" class="button">Ajouter</button>
+                        <button type="submit" class="button">Create</button>
                     </form>
                 </div>
             </div>
