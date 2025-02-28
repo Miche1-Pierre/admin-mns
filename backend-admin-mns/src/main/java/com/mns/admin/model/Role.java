@@ -6,8 +6,6 @@ import lombok.*;
 import java.util.List;
 
 @Entity
-@Getter
-@Setter
 @ToString
 @AllArgsConstructor
 @NoArgsConstructor
@@ -27,4 +25,8 @@ public class Role {
     @OneToMany(mappedBy = "role", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @ToString.Exclude
     private List<Utilisateur> utilisateurs;
+
+    public String getNomRole() {
+        return nomRole;
+    }
 }
