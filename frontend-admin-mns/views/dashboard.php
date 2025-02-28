@@ -2,6 +2,7 @@
 include $_SERVER['DOCUMENT_ROOT'] . "/frontend-admin-mns/components/card.php";
 include $_SERVER['DOCUMENT_ROOT'] . "/frontend-admin-mns/components/home/widget_absences.php";
 include $_SERVER['DOCUMENT_ROOT'] . "/frontend-admin-mns/components/home/widget_messages.php";
+include $_SERVER['DOCUMENT_ROOT'] . "/frontend-admin-mns/components/home/widget_justificatif.php";
 include $_SERVER['DOCUMENT_ROOT'] . "/frontend-admin-mns/components/home/widget_documents.php";
 include $_SERVER['DOCUMENT_ROOT'] . "/frontend-admin-mns/components/home/widget_candidatures.php";
 ?>
@@ -28,6 +29,7 @@ include $_SERVER['DOCUMENT_ROOT'] . "/frontend-admin-mns/components/home/widget_
             <?php
             widgetAbsences();
             widgetCandidatures();
+            widgetJustificatifs();
             widgetDocuments();
             widgetMessages();
             ?>
