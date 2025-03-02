@@ -86,7 +86,7 @@
             <p class="title">Account</p>
             <ul>
                 <li>
-                    <a href="#">
+                    <a href="#" onclick="logout()">
                         <i class='bx bx-log-out'></i>
                         <span class="text">Logout</span>
                     </a>
@@ -107,3 +107,10 @@
         </div>
     </aside>
 </div>
+
+<script>
+    function logout() {
+        localStorage.removeItem("token");
+        window.location.href = "login.php";
+    }
+</script>
