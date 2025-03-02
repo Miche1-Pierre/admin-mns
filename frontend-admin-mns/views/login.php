@@ -1,3 +1,13 @@
+<?php
+session_start();
+
+if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["token"])) {
+    $_SESSION["token"] = $_POST["token"];
+    echo json_encode(["status" => "success"]);
+    exit();
+}
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -23,7 +33,7 @@
             </form>
         </div>
         <div class="form-container sign-in">
-            <form method="POST" action="/api/auth/login">
+            <form id="login-form">
                 <h1>Sign In</h1>
                 <div class="social-icons">
                     <a href="#" class="icon"><i class='bx bxl-google-plus'></i></a>
