@@ -1,0 +1,17 @@
+/mvnw text eol=lf
+*.cmd text eol=crlf
+
+*.js text eol=lf
+*.css text eol=lf
+*.html text eol=lf
+*.php text eol=lf
+
+*.png binary
+*.jpg binary
+
+*.js linguist-language=JavaScript
+*.css linguist-language=CSS
+*.html linguist-language=HTML
+*.php linguist-language=PHP
+
+frontend-admin-mns/views/*.php linguist-language=PHP
