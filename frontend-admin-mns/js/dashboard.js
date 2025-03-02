@@ -1,4 +1,7 @@
 document.addEventListener("DOMContentLoaded", function () {
+    if (!localStorage.getItem("token")) {
+        window.location.href = "login.php";
+    }
     setActiveMenu();
     initSidebar();
     initDropdownMenu();
