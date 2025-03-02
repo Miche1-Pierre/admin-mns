@@ -5,6 +5,13 @@ include $_SERVER['DOCUMENT_ROOT'] . "/frontend-admin-mns/components/home/widget_
 include $_SERVER['DOCUMENT_ROOT'] . "/frontend-admin-mns/components/home/widget_justificatif.php";
 include $_SERVER['DOCUMENT_ROOT'] . "/frontend-admin-mns/components/home/widget_documents.php";
 include $_SERVER['DOCUMENT_ROOT'] . "/frontend-admin-mns/components/home/widget_candidatures.php";
+
+session_start();
+
+if (!isset($_SESSION["token"])) {
+    header("Location: login.php");
+    exit();
+}
 ?>
 
 <!DOCTYPE html>
