@@ -17,10 +17,12 @@
   <img alt="License" src="https://img.shields.io/github/license/Miche1-Pierre/admin-mns?color=black">
 
   <img alt="Github issues" src="https://img.shields.io/github/issues/Miche1-Pierre/admin-mns?color=green" />
-
+  <br>
   <img alt="Github forks" src="https://img.shields.io/github/forks/Miche1-Pierre/admin-mns?color=56BEB8" />
-
+  <br>
   <img alt="Github stars" src="https://img.shields.io/github/stars/Miche1-Pierre/admin-mns?color=yellow" />
+
+  <img alt="GitHub language breakdown" src="https://github-readme-stats.vercel.app/api/top-langs/?username=Miche1-Pierre&repo=admin-mns&layout=compact">
 </p>
 
 Status
