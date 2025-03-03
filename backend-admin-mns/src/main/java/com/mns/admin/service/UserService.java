@@ -49,7 +49,12 @@ public class UserService {
             throw new RuntimeException("Mot de passe incorrect");
         }
 
-        return generateUserSession(utilisateur);
+        String role = utilisateur.getRole().getNomRole();
+        String token = generateUserSession(utilisateur, role);
+
+        System.out.println("Rôle de l'utilisateur : " + role);
+
+        return token;
     }
 
     public void sendEmailVerification(Utilisateur utilisateur) {
@@ -57,7 +62,7 @@ public class UserService {
             throw new RuntimeException("L'email est déjà vérifié.");
         }
         // Générer le token de vérification
-        String token = jwtUtil.generateToken(utilisateur.getEmailUtilisateur());
+        String token = jwtUtil.generateToken(utilisateur.getEmailUtilisateur(), utilisateur.getRole().getNomRole());
 
         // Enregistrer le token dans la base de données avec une durée d'expiration (par exemple, 15 minutes)
         LocalDateTime expirationDate = LocalDateTime.now().plusMinutes(15);
@@ -85,18 +90,18 @@ public class UserService {
 
         // Ajouter l'utilisateur à la table des sessions actives
         if (!userSessionRepository.existsByUtilisateur(utilisateur)) {
-            generateUserSession(utilisateur);
+            generateUserSession(utilisateur, utilisateur.getRole().getNomRole());
         }
 
         // Mettre à jour l'email comme vérifié
         utilisateur.setEmailVerified(true);
         userRepository.save(utilisateur);
 
-        return jwtUtil.generateToken(utilisateur.getEmailUtilisateur());
+        return jwtUtil.generateToken(utilisateur.getEmailUtilisateur(), utilisateur.getRole().getNomRole());
     }
 
-    public String generateUserSession(Utilisateur utilisateur) {
-        String token = jwtUtil.generateToken(utilisateur.getEmailUtilisateur());
+    public String generateUserSession(Utilisateur utilisateur, String role) {
+        String token = jwtUtil.generateToken(utilisateur.getEmailUtilisateur(), role);
         UtilisateurSession session = new UtilisateurSession(utilisateur, token, LocalDateTime.now().plusHours(1));
         userSessionRepository.save(session);
         return token;
