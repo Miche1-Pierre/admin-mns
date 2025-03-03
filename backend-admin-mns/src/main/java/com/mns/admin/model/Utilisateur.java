@@ -42,6 +42,9 @@ public class Utilisateur {
     @JsonIgnore
     private Role role;
 
+    @Column(name = "email_verifie", nullable = false)
+    private boolean emailVerifie = false;
+
     @PrePersist
     protected void onCreate() {
         dateCreationUtilisateur = LocalDateTime.now();
@@ -117,5 +120,13 @@ public class Utilisateur {
 
     public void setRole(Role role) {
         this.role = role;
+    }
+
+    public boolean isEmailVerified() {
+        return emailVerifie;
+    }
+
+    public void setEmailVerified(boolean emailVerifie) {
+        this.emailVerifie = emailVerifie;
     }
 }
