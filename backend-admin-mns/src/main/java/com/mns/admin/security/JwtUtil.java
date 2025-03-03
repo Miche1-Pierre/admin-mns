@@ -34,9 +34,15 @@ public class JwtUtil {
     }
 
     public boolean validateToken(String token) {
-        boolean isTokenValid = !isTokenExpired(token);
-        System.out.println("Le token est-il expiré ? " + !isTokenValid);
-        return  isTokenValid;
+        try {
+            if (isTokenExpired(token)) {
+                throw new RuntimeException("Le token est expiré.");
+            }
+            return true;
+        } catch (Exception e) {
+            System.out.println("Erreur de validation du token : " + e.getMessage());
+            return false;
+        }
     }
 
     public String getEmailFromToken(String token) {
