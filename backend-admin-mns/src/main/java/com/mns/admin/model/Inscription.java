@@ -33,4 +33,8 @@ public class Inscription {
     @Column(name = "date_inscription", nullable = false, updatable = false)
     @Temporal(TemporalType.TIMESTAMP)
     private LocalDateTime dateInscription;
+
+    @ManyToOne
+    @JoinColumn(name = "id_statut", nullable = false)
+    private Statut statut;
 }
