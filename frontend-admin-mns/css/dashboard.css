@@ -354,6 +354,10 @@ main .dashboard-zone {
     text-align: right;
 }
 
+.breadcrumb .profile .info span {
+    color: var(--primary-color);
+}
+
 .breadcrumb .profile .info {
     font-size: var(--text-font-size);
 }
@@ -372,13 +376,17 @@ main .dashboard-zone {
 }
 
 /* Card */
-.card {
+.cards-container {
+    display: block;
+}
+
+.cards-container .card {
     display: flex;
-    margin-top: 33px;
+    margin-top: 15px;
     perspective: 5000px;
 }
 
-.card .card-container {
+.cards-container .card .card-container {
     width: 30rem;
     padding: 20px;
     display: flex;
@@ -391,62 +399,62 @@ main .dashboard-zone {
     transition: transform var(--transition);
 }
 
-.card .card-container:hover {
+.cards-container .card .card-container:hover {
     transform: rotateX(10deg) rotateY(10deg);
     box-shadow: 0px 10px 20px var(--shadow-color);
 }
 
-.card .card-container p {
+.cards-container .card .card-container p {
     margin: 15px 0;
 }
 
-.card .card-container img {
+.cards-container .card .card-container img {
     width: 100%;
     border-radius: var(--border-radius);
 }
 
-.card .buttons {
+.cards-container .card .buttons {
     display: flex;
     flex-flow: row-reverse;
     margin-top: 20px;
 }
 
-.card .button {
+.cards-container .card .button {
     padding: 10px 16px;
     border-radius: var(--border-radius);
     text-decoration: none;
     font-size: var(--text-font-size);
 }
 
-.card .button.primary {
+.cards-container .card .button.primary {
     background: var(--primary-color);
     color: var(--text-color-light);
     transition: var(--transition);
 }
 
-.card .button.primary:hover {
+.cards-container .card .button.primary:hover {
     background: var(--tran-primary-color);
 }
 
-.card .table-widget {
+.cards-container .card .table-widget {
     width: 100%;
     border-collapse: collapse;
     margin-top: 10px;
 }
 
-.card .table-widget th,
-.card .table-widget td {
+.cards-container .card .table-widget th,
+.cards-container .card .table-widget td {
     padding: 10px;
     text-align: left;
     border-bottom: 1px solid var(--border-colors);
 }
 
-.card .table-widget th {
+.cards-container .card .table-widget th {
     background-color: var(--primary-background-color);
     font-weight: bold;
 }
 
-.card .table-widget tr:hover {
+.cards-container .card .table-widget tr:hover {
     background-color: var(--primary-background-color);
 }
 

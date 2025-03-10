@@ -8,6 +8,7 @@ document.addEventListener("DOMContentLoaded", function () {
     initCards();
     initCharts();
     updateBreadcrumb();
+    fetchProfile();
     initViewAccountModal();
 });
 
@@ -140,6 +141,28 @@ function updateBreadcrumbLinks(links) {
     });
 }
 
+function fetchProfile() {
+    fetch("http://admin-mns:8080/api/dashboard/profil", {
+        headers: {
+            'Authorization': 'Bearer ' + localStorage.getItem('token')
+        }
+    })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Erreur lors de la récupération du profil');
+            }
+            return response.json();
+        })
+        .then(data => {
+            if (data.profil && data.profil.length > 0) {
+                const profile = data.profil[0];
+                document.getElementById('user-firstname').textContent = profile.prenom_utilisateur;
+                document.getElementById('user-role').textContent = profile.nom_role;
+            }
+        })
+        .catch(error => console.error('Erreur:', error));
+}
+
 function initCards() {
     document.querySelectorAll(".card-container").forEach(card => {
         let lastExecution = 0;
@@ -166,6 +189,20 @@ function initCards() {
             card.style.transform = "rotateX(0deg) rotateY(0deg)";
         });
     });
+
+    // Initialisation de Masonry.js pour la mise en page des cartes
+    const grid = document.querySelector('.cards-container');
+    if (grid) {
+        const masonry = new Masonry(grid, {
+            itemSelector: '.card',
+            columnWidth: '.card',
+            gutter: 15,
+            percentPosition: true,
+            fitWidth: true
+        });
+
+        masonry.layout();
+    }
 };
 
 function initCharts() {

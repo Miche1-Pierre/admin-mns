@@ -1,25 +1,12 @@
 <?php
 include_once $_SERVER['DOCUMENT_ROOT'] . "/frontend-admin-mns/components/card.php";
-include_once $_SERVER['DOCUMENT_ROOT'] . "/frontend-admin-mns/php/api/db.php";
 
-function getAbsencesParMois($pdo)
+function widgetAbsences($widgetsData)
 {
-    $query = "SELECT 
-                MONTH(date_debut_absence) AS mois, 
-                SUM(CASE WHEN id_type_absence = 1 THEN 1 ELSE 0 END) AS absences,
-                SUM(CASE WHEN id_type_absence = 2 THEN 1 ELSE 0 END) AS retards
-              FROM absence
-              GROUP BY mois
-              ORDER BY mois";
+    if (!isset($widgetsData["absences"]) || empty($widgetsData["absences"])) {
+        return;
+    }
 
-    $stmt = $pdo->prepare($query);
-    $stmt->execute();
-    return $stmt->fetchAll(PDO::FETCH_ASSOC);
-}
-
-function widgetAbsences()
-{
-    global $pdo;
     $title = "Absences & Lateness";
     $link = "#";
     $text = "View absences and late arrivals";
@@ -27,14 +14,15 @@ function widgetAbsences()
     $chartId = "absencesChart";
     $chartType = "bar";
 
-    $data = getAbsencesParMois($pdo);
+    $data = $widgetsData["absences"];
 
     $labels = [];
     $absencesData = [];
     $retardsData = [];
 
     foreach ($data as $row) {
-        $labels[] = date("M", mktime(0, 0, 0, $row["mois"], 1));
+        $mois = $row["mois"];
+        $labels[] = date("M", mktime(0, 0, 0, $mois, 1));
         $absencesData[] = $row["absences"];
         $retardsData[] = $row["retards"];
     }

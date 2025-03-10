@@ -8,8 +8,8 @@
     </div>
     <div class="profile">
         <div class="info">
-            <p>Hello Pierre !</p>
-            <small class="text-muted">Admin</small>
+            <p id="greeting">Hello <span id="user-firstname">User</span> !</p>
+            <small class="text-muted" id="user-role">User</small>
         </div>
         <div class="profile-photo">
             <a class="button view"><img src="/frontend-admin-mns/assets/user1.png"></a>
