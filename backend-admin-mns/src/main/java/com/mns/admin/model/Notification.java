@@ -26,6 +26,11 @@ public class Notification {
     private Utilisateur utilisateur;
 
     @ManyToOne
+    @JoinColumn(name = "id_destinataire", nullable = false)
+    @JsonIgnore
+    private Utilisateur destinataire;
+
+    @ManyToOne
     @JoinColumn(name = "id_type_notification", nullable = false)
     @JsonIgnore
     private TypeNotification typeNotification;
