@@ -129,4 +129,8 @@ public class Utilisateur {
     public void setEmailVerified(boolean emailVerifie) {
         this.emailVerifie = emailVerifie;
     }
+
+    public Long getId() {
+        return idUtilisateur;
+    }
 }
