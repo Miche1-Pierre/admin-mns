@@ -25,8 +25,6 @@
   <img alt="GitHub language breakdown" src="https://github-readme-stats.vercel.app/api/top-langs/?username=Miche1-Pierre&repo=admin-mns&layout=compact">
 </p>
 
-Status
-
 <h4 align="center"> 
 	🚧  Admin Mns 🚀 Under construction...  🚧
 </h4>
