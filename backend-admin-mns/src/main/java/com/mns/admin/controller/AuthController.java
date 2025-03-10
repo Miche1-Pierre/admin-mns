@@ -20,11 +20,6 @@ public class AuthController {
         this.jwtUtil = jwtUtil;
     }
 
-    @PostMapping("/validate")
-    public boolean validateToken(@RequestBody AuthRequest authRequest) {
-        return jwtUtil.validateToken(authRequest.getToken());
-    }
-
     @GetMapping("/verify-email")
     public ResponseEntity<String> verifyEmail(@RequestParam String token) {
         String jwt = userService.verifyEmail(token);
