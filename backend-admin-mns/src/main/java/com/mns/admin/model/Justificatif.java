@@ -25,6 +25,10 @@ public class Justificatif {
     @JsonIgnore
     private Absence absence;
 
+    @ManyToOne
+    @JoinColumn(name = "id_utilisateur", nullable = false)
+    private Utilisateur utilisateur;
+
     @Column(name = "type_document_justificatif", nullable = false, length = 50)
     private String typeDocumentJustificatif;
 
