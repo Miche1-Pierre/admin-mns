@@ -111,6 +111,6 @@
 <script>
     function logout() {
         localStorage.removeItem("token");
-        window.location.href = "login.php";
+        window.location.href = "/frontend-admin-mns/views/login";
     }
 </script>
