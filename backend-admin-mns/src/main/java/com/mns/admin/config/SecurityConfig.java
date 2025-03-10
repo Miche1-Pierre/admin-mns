@@ -23,7 +23,21 @@ public class SecurityConfig {
         http
                 .csrf(csrf -> csrf.disable())
                 .authorizeRequests(auth -> auth
-                        .requestMatchers("/api/auth/login", "/api/auth/validate", "/api/auth/verify-email").permitAll()
+                        .requestMatchers(
+                                "/api/auth/login",
+                                "/api/auth/verify-email",
+                                "/api/dashboard",
+                                "/api/dashboard/widgets",
+                                "/api/dashboard/absences",
+                                "/api/dashboard/candidatures",
+                                "/api/dashboard/documents",
+                                "/api/dashboard/justificatifs",
+                                "/api/dashboard/messages",
+                                "/api/dashboard/profil",
+                                "/api/dashboard/modules/absences",
+                                "/api/dashboard/modules/candidatures",
+                                "/api/dashboard/messaging",
+                                "/api/dashboard/users").permitAll()
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
