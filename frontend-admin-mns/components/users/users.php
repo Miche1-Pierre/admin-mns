@@ -1,20 +1,12 @@
 <?php
-include $_SERVER['DOCUMENT_ROOT'] . '/frontend-admin-mns/php/api/db.php';
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
 
-$users = [];
-
-$query = $pdo->query("
-    SELECT
-        u.id_utilisateur AS id,
-        u.nom_utilisateur AS nom,
-        u.prenom_utilisateur AS prenom,
-        u.email_utilisateur AS email,
-        ru.nom_role AS role
-    FROM utilisateur u
-    JOIN role ru ON u.role_id = ru.id_role
-");
-
-$users = $query->fetchAll(PDO::FETCH_ASSOC);
+if (!isset($_SESSION["token"])) {
+    header("Location: login.php");
+    exit();
+}
 ?>
 
 <!DOCTYPE html>
@@ -34,10 +26,6 @@ $users = $query->fetchAll(PDO::FETCH_ASSOC);
     </header>
     <main>
         <?php include $_SERVER['DOCUMENT_ROOT'] . "/frontend-admin-mns/components/breadcrumb.php"; ?>
-
-        <script>
-            const users = <?php echo json_encode($users, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP); ?>;
-        </script>
 
         <div class="dashboard-zone" id="dashboard-zone">
             <div class="document-container">

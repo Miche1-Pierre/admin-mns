@@ -1,18 +1,12 @@
 <?php
-include $_SERVER['DOCUMENT_ROOT'] . '/frontend-admin-mns/php/api/db.php';
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
 
-$contacts = [];
-
-$query = $pdo->query("
-    SELECT 
-        u.id_utilisateur AS id, 
-        u.nom_utilisateur AS nom, 
-        u.email_utilisateur AS email 
-    FROM utilisateur u
-    LIMIT 10
-");
-
-$contacts = $query->fetchAll(PDO::FETCH_ASSOC);
+if (!isset($_SESSION["token"])) {
+    header("Location: login.php");
+    exit();
+}
 ?>
 
 <!DOCTYPE html>
@@ -39,11 +33,7 @@ $contacts = $query->fetchAll(PDO::FETCH_ASSOC);
                 <div class="contacts-sidebar">
                     <input type="text" id="searchContacts" placeholder="Search contact..." />
                     <ul id="contactsList">
-                        <?php foreach ($contacts as $contact) : ?>
-                            <li data-id="<?= $contact['id'] ?>" class="contact-item">
-                                <?= htmlspecialchars($contact['nom']) ?>
-                            </li>
-                        <?php endforeach; ?>
+                        <!-- Contact -->
                     </ul>
                 </div>
 

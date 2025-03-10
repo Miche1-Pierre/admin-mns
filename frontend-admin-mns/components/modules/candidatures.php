@@ -1,13 +1,11 @@
 <?php
-$candidatures = [];
-for ($i = 1; $i <= 100; $i++) {
-    $candidatures[] = [
-        "id" => $i,
-        "nom" => "Candidature $i",
-        "type" => "PDF",
-        "date" => date("d/m/Y", strtotime("-$i days")),
-        "auteur" => "Utilisateur $i"
-    ];
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+
+if (!isset($_SESSION["token"])) {
+    header("Location: login.php");
+    exit();
 }
 ?>
 
@@ -29,10 +27,6 @@ for ($i = 1; $i <= 100; $i++) {
     <main>
         <?php include $_SERVER['DOCUMENT_ROOT'] . "/frontend-admin-mns/components/breadcrumb.php"; ?>
 
-        <script>
-            const candidatures = <?php echo json_encode($candidatures, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP) ?>;
-        </script>
-
         <div class="dashboard-zone" id="dashboard-zone">
             <div class="document-container">
                 <!-- Bandeau de filtrage -->
@@ -46,9 +40,9 @@ for ($i = 1; $i <= 100; $i++) {
                     </select>
                     <select id="filterAuthor">
                         <option value="">All authors</option>
-                        <?php foreach (array_unique(array_column($candidatures, 'auteur')) as $author) : ?>
-                            <option value="<?= htmlspecialchars($author) ?>"><?= htmlspecialchars($author) ?></option>
-                        <?php endforeach; ?>
+                            <?php foreach (array_unique(array_column($candidatures, 'auteur')) as $author) : ?>
+                                <option value="<?= htmlspecialchars($author) ?>"><?= htmlspecialchars($author) ?></option>
+                            <?php endforeach; ?>
                     </select>
                     <select id="itemsPerPage">
                         <option value="10">10 lines</option>

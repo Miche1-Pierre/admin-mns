@@ -2,7 +2,6 @@ document.addEventListener("DOMContentLoaded", function () {
     setActiveMenu();
     initSidebar();
     initDropdownMenu();
-    window.absences = absences;
     initAbsences();
     updateBreadcrumb();
     initAddAbsenceModal();
@@ -138,8 +137,6 @@ function updateBreadcrumbLinks(links) {
 }
 
 function initAbsences() {
-    console.log("initAbsences() appelé");
-
     const itemsPerPageSelect = document.getElementById("itemsPerPage");
     const searchInput = document.getElementById("searchInput");
     const filterStatut = document.getElementById("filterStatut");
@@ -151,17 +148,47 @@ function initAbsences() {
         return;
     }
 
-    window.absences = window.absences || [];
     let currentPage = 1;
-    let filteredAbsences = [...window.absences];
+    let absences = [];
+    let filteredAbsences = [];
     let itemsPerPage = parseInt(itemsPerPageSelect.value) || 10;
 
+    // Fonction pour récupérer les absences depuis l'API
+    async function fetchAbsences() {
+        try {
+            const token = localStorage.getItem('token');
+            const response = await fetch('http://admin-mns:8080/api/dashboard/modules/absences', {
+                method: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json'
+                }
+            });
+    
+            if (!response.ok) {
+                throw new Error(`HTTP error! Status: ${response.status}`);
+            }
+    
+            const data = await response.json();
+            console.log(data);
+            
+            if (data && Array.isArray(data.absences)) {
+                absences = data.absences;
+                filteredAbsences = [...absences];
+                displayAbsences();
+            } else {
+                console.error("Absences data is not an array or is missing.");
+            }
+        } catch (error) {
+            console.error('Error fetching absences:', error.message);
+        }
+    }
+
     function filterAbsences() {
-        console.log("Filtrage des absences...");
         const selectedStatut = filterStatut.value;
         const selectedMotif = filterMotif.value;
 
-        filteredAbsences = window.absences.filter(abs => {
+        filteredAbsences = absences.filter(abs => {
             return (
                 (selectedStatut === "" || abs.statut?.toLowerCase() === selectedStatut.toLowerCase()) &&
                 (selectedMotif === "" || abs.type?.toLowerCase() === selectedMotif.toLowerCase())
@@ -173,7 +200,6 @@ function initAbsences() {
     }
 
     function displayAbsences() {
-        console.log("Affichage des absences...", absences);
         const startIndex = (currentPage - 1) * itemsPerPage;
         const endIndex = startIndex + itemsPerPage;
 
@@ -188,13 +214,13 @@ function initAbsences() {
         displayedAbs.forEach(abs => {
             const row = document.createElement("tr");
             row.innerHTML = `
-                <td>${abs.id}</td>
-                <td>${abs.utilisateur}</td>
-                <td>${abs.statut}</td>
-                <td>${abs.type}</td>
-                <td>${abs.debut}</td>
-                <td>${abs.fin}</td>
-                <td>${abs.justifie}</td>
+                <td>${abs.id_absence}</td>
+                <td>${abs.id_stagiaire}</td>
+                <td>${abs.statut_absence}</td>
+                <td>${abs.id_type_absence}</td>
+                <td>${abs.date_debut_absence}</td>
+                <td>${abs.date_fin_absence}</td>
+                <td>${abs.justifie_absence}</td>
                 <td>
                     <button class="button edit">Edit</button>
                     <button class="button delete">Delete</button>
@@ -214,6 +240,8 @@ function initAbsences() {
         prevButton.disabled = currentPage === 1;
         nextButton.disabled = currentPage * itemsPerPage >= filteredAbsences.length;
     }
+
+    fetchAbsences();
 
     document.addEventListener("click", function (event) {
         if (event.target.matches(".prev-slide") && currentPage > 1) {
@@ -236,8 +264,6 @@ function initAbsences() {
     searchInput.addEventListener("input", filterAbsences);
     filterStatut.addEventListener("change", filterAbsences);
     filterMotif.addEventListener("change", filterAbsences);
-
-    displayAbsences();
 }
 
 function initAddAbsenceModal() {
@@ -270,7 +296,6 @@ function initAddAbsenceModal() {
         const fin = document.getElementById("fin").value;
         const justifie = document.getElementById("justifie").files[0];
 
-        // Créer un objet d'absence à ajouter
         const newAbsence = {
             id: window.absences.length + 1,
             utilisateur,

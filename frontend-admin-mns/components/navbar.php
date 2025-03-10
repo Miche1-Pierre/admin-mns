@@ -1,3 +1,33 @@
+<?php
+if (!isset($_SESSION["token"])) {
+    header("Location: login.php");
+    exit();
+}
+
+$token = $_SESSION["token"];
+$apiUrl = "http://admin-mns:8080/api/dashboard/menus";
+
+$headers = [
+    "Authorization: Bearer $token",
+    "Content-Type: application/json"
+];
+
+$ch = curl_init();
+curl_setopt($ch, CURLOPT_URL, $apiUrl);
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+$response = curl_exec($ch);
+
+if ($response === false) {
+    error_log("Erreur cURL : " . curl_error($ch));
+    curl_close($ch);
+    $menusData = [];
+} else {
+    curl_close($ch);
+    $menusData = json_decode($response, true);
+}
+?>
+
 <div class="navbar">
     <aside class="sidebar">
         <div class="menu-btn">
@@ -13,12 +43,18 @@
             <div class="menu">
                 <p class="title">Main</p>
                 <ul>
+                    <!-- Lien Home -->
+                    <?php if (isset($menusData['home'])): ?>
                     <li>
-                        <a href="/frontend-admin-mns/views/dashboard.php">
-                            <i class='bx bx-home-alt'></i>
-                            <span class="text">Home</span>
+                        <a href="<?php echo $menusData['home']['link']; ?>">
+                            <i class="<?php echo $menusData['home']['icon']; ?>"></i>
+                            <span class="text"><?php echo $menusData['home']['title']; ?></span>
                         </a>
                     </li>
+                    <?php endif; ?>
+
+                    <!-- Sous-menu Modules pour Candidatures et Absences -->
+                    <?php if (isset($menusData['candidatures']) || isset($menusData['absences'])): ?>
                     <li>
                         <a>
                             <i class='bx bx-grid-alt'></i>
@@ -26,38 +62,58 @@
                             <i class='bx bx-chevron-down'></i>
                         </a>
                         <ul class="sub-menu">
+                            <?php if (isset($menusData['candidatures'])): ?>
                             <li>
-                                <a href="/frontend-admin-mns/components/modules/candidatures.php">
-                                    <i class='bx bxs-id-card'></i>
-                                    <span class="text">Applications</span>
+                                <a href="<?php echo $menusData['candidatures']['link']; ?>">
+                                    <i class="<?php echo $menusData['candidatures']['icon']; ?>"></i>
+                                    <span class="text"><?php echo $menusData['candidatures']['title']; ?></span>
                                 </a>
                             </li>
+                            <?php endif; ?>
+                            <?php if (isset($menusData['absences'])): ?>
                             <li>
-                                <a href="/frontend-admin-mns/components/modules/absences.php">
-                                    <i class='bx bx-timer'></i>
-                                    <span class="text">Absences & Lateness</span>
+                                <a href="<?php echo $menusData['absences']['link']; ?>">
+                                    <i class="<?php echo $menusData['absences']['icon']; ?>"></i>
+                                    <span class="text"><?php echo $menusData['absences']['title']; ?></span>
                                 </a>
                             </li>
+                            <?php endif; ?>
                         </ul>
                     </li>
+                    <?php endif; ?>
+
+                    <!-- Lien Users -->
+                    <?php if (isset($menusData['users'])): ?>
                     <li>
-                        <a href="/frontend-admin-mns/components/users/users.php">
-                            <i class='bx bx-user'></i>
-                            <span class="text">Users</span>
+                        <a href="<?php echo $menusData['users']['link']; ?>">
+                            <i class="<?php echo $menusData['users']['icon']; ?>"></i>
+                            <span class="text"><?php echo $menusData['users']['title']; ?></span>
                         </a>
                     </li>
+                    <?php endif; ?>
+
+                    <!-- Lien Documents -->
+                    <?php if (isset($menusData['documents'])): ?>
                     <li>
-                        <a href="/frontend-admin-mns/components/documents/documents.php">
-                            <i class='bx bx-folder'></i>
-                            <span class="text">Documents (GED)</span>
+                        <a href="<?php echo $menusData['documents']['link']; ?>">
+                            <i class="<?php echo $menusData['documents']['icon']; ?>"></i>
+                            <span class="text"><?php echo $menusData['documents']['title']; ?></span>
                         </a>
                     </li>
+                    <?php endif; ?>
+
+                    <!-- Lien Messaging -->
+                    <?php if (isset($menusData['messaging'])): ?>
                     <li>
-                        <a href="/frontend-admin-mns/components/messaging/messaging.php">
-                            <i class='bx bx-mail-send'></i>
-                            <span class="text">Messaging</span>
+                        <a href="<?php echo $menusData['messaging']['link']; ?>">
+                            <i class="<?php echo $menusData['messaging']['icon']; ?>"></i>
+                            <span class="text"><?php echo $menusData['messaging']['title']; ?></span>
                         </a>
                     </li>
+                    <?php endif; ?>
+
+                    <!-- Sous-menu More pour Stats et Settings -->
+                    <?php if (isset($menusData['stats']) || isset($menusData['settings'])): ?>
                     <li>
                         <a>
                             <i class='bx bx-dots-horizontal-rounded'></i>
@@ -65,20 +121,25 @@
                             <i class='bx bx-chevron-down'></i>
                         </a>
                         <ul class="sub-menu">
+                            <?php if (isset($menusData['stats'])): ?>
                             <li>
-                                <a href="/frontend-admin-mns/components/more/stats.php">
-                                    <i class='bx bx-line-chart'></i>
-                                    <span class="text">Stats</span>
+                                <a href="<?php echo $menusData['stats']['link']; ?>">
+                                    <i class="<?php echo $menusData['stats']['icon']; ?>"></i>
+                                    <span class="text"><?php echo $menusData['stats']['title']; ?></span>
                                 </a>
                             </li>
+                            <?php endif; ?>
+                            <?php if (isset($menusData['settings'])): ?>
                             <li>
-                                <a href="/frontend-admin-mns/components/more/settings.php">
-                                    <i class='bx bx-cog'></i>
-                                    <span class="text">Settings (Admin)</span>
+                                <a href="<?php echo $menusData['settings']['link']; ?>">
+                                    <i class="<?php echo $menusData['settings']['icon']; ?>"></i>
+                                    <span class="text"><?php echo $menusData['settings']['title']; ?></span>
                                 </a>
                             </li>
+                            <?php endif; ?>
                         </ul>
                     </li>
+                    <?php endif; ?>
                 </ul>
             </div>
         </div>

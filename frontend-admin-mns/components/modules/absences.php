@@ -1,23 +1,12 @@
 <?php
-include $_SERVER['DOCUMENT_ROOT'] . '/frontend-admin-mns/php/api/db.php';
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
 
-$absences = [];
-
-$query = $pdo->query("
-    SELECT
-        a.id_absence AS id,
-        ua.nom_utilisateur AS utilisateur,
-        ta.nom_type_absence AS type,
-        a.date_debut_absence AS debut,
-        a.date_fin_absence AS fin,
-        a.justifie_absence AS justifie,
-        a.statut_absence AS statut
-    FROM absence a
-    JOIN utilisateur ua ON ua.id_utilisateur = a.id_stagiaire
-    JOIN type_absence ta ON ta.id_type_absence = a.id_type_absence
-");
-
-$absences = $query->fetchAll(PDO::FETCH_ASSOC);
+if (!isset($_SESSION["token"])) {
+    header("Location: login.php");
+    exit();
+}
 ?>
 
 <!DOCTYPE html>
@@ -37,10 +26,6 @@ $absences = $query->fetchAll(PDO::FETCH_ASSOC);
     </header>
     <main>
         <?php include $_SERVER['DOCUMENT_ROOT'] . "/frontend-admin-mns/components/breadcrumb.php"; ?>
-
-        <script>
-            const absences = <?php echo json_encode($absences, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP); ?>;
-        </script>
 
         <div class="dashboard-zone" id="dashboard-zone">
             <div class="document-container">
