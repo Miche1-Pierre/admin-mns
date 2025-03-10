@@ -106,4 +106,13 @@ public class UserService {
         userSessionRepository.save(session);
         return token;
     }
+
+    public Utilisateur getUserFromToken(String token) {
+        if (jwtUtil.isTokenExpired(token)) {
+            throw new RuntimeException("Le token est expiré.");
+        }
+
+        String email = jwtUtil.extractUsername(token);
+        return userRepository.findByEmailUtilisateur(email).orElseThrow(() -> new RuntimeException("Utilisateur non trouvé"));
+    }
 }
