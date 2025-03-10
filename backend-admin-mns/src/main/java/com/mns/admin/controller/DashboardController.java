@@ -38,6 +38,14 @@ public class DashboardController {
         return ResponseEntity.ok(dashboardService.getAvailableWidgets(user));
     }
 
+    @GetMapping("/menus")
+    public ResponseEntity<?> getAvailableMenus(HttpServletRequest request) {
+        Utilisateur user = getAuthenticatedUser(request);
+        Map<String, Object> menus = dashboardService.getAvailableMenus(user);
+        System.out.println("Menus retournés : " + menus);
+        return ResponseEntity.ok(dashboardService.getAvailableMenus(user));
+    }
+
     @GetMapping("/absences")
     public ResponseEntity<?> getAbsences(HttpServletRequest request) {
         Utilisateur user = getAuthenticatedUser(request);
