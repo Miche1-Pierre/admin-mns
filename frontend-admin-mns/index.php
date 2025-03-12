@@ -29,7 +29,6 @@
 
     <main>
         <section class="hero">
-            <canvas id="beamsCanvas"></canvas>
             <div class="left">
                 <h2>Welcome to Admin <span>MNS</span></h2>
                 <p>Unlock your design skills to create beautiful websites and apps with a
@@ -395,7 +394,11 @@
             </div>
         </div>
     </footer>
+    <section class="banner-animation">
+        <div class="stagger-visualizer"></div>
+    </section>
 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
     <script src="/frontend-admin-mns/js/script.js"></script>
 </body>
 
