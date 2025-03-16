@@ -1,9 +1,11 @@
 package com.mns.admin.service;
 
 import com.mns.admin.dto.AuthRequest;
+import com.mns.admin.model.Role;
 import com.mns.admin.model.Utilisateur;
 import com.mns.admin.model.UtilisateurSession;
 import com.mns.admin.model.VerificationToken;
+import com.mns.admin.repository.RoleRepository;
 import com.mns.admin.repository.UserRepository;
 import com.mns.admin.repository.UserSessionRepository;
 import com.mns.admin.repository.VerrificationTokenRepository;
@@ -13,10 +15,12 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Service
 public class UserService {
     private final UserRepository userRepository;
+    private final RoleRepository roleRepository;
     private final JwtUtil jwtUtil;
     private final UserSessionRepository userSessionRepository;
     private final VerrificationTokenRepository verificationTokenRepository;
@@ -26,8 +30,9 @@ public class UserService {
     @Value("${jwt.expiration_time}")
     private long expirationTime;
 
-    public UserService(UserRepository userRepository, JwtUtil jwtUtil, UserSessionRepository userSessionRepository, VerrificationTokenRepository verificationTokenRepository, EmailService emailService, PasswordEncoder passwordEncoder) {
+    public UserService(UserRepository userRepository, RoleRepository roleRepository, JwtUtil jwtUtil, UserSessionRepository userSessionRepository, VerrificationTokenRepository verificationTokenRepository, EmailService emailService, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
+        this.roleRepository = roleRepository;
         this.jwtUtil = jwtUtil;
         this.userSessionRepository = userSessionRepository;
         this.verificationTokenRepository = verificationTokenRepository;
@@ -39,12 +44,11 @@ public class UserService {
         Utilisateur utilisateur = userRepository.findByEmailUtilisateur(authRequest.getEmail())
                 .orElseThrow(() -> new RuntimeException("Utilisateur non trouvé"));
 
-        if (!utilisateur.isEmailVerified()) {
+        if (!utilisateur.isEmailVerifie()) {
             sendEmailVerification(utilisateur);
             throw new RuntimeException("Veuillez vérifier votre email.");
         }
 
-        // Vérification du mot de passe
         if (!passwordEncoder.matches(authRequest.getMotDePasse(), utilisateur.getMotDePasseUtilisateur())) {
             throw new RuntimeException("Mot de passe incorrect");
         }
@@ -58,23 +62,19 @@ public class UserService {
     }
 
     public void sendEmailVerification(Utilisateur utilisateur) {
-        if (utilisateur.isEmailVerified()) {
+        if (utilisateur.isEmailVerifie()) {
             throw new RuntimeException("L'email est déjà vérifié.");
         }
-        // Générer le token de vérification
         String token = jwtUtil.generateToken(utilisateur.getEmailUtilisateur(), utilisateur.getRole().getNomRole());
 
-        // Enregistrer le token dans la base de données avec une durée d'expiration (par exemple, 15 minutes)
         LocalDateTime expirationDate = LocalDateTime.now().plusMinutes(15);
         VerificationToken verificationToken = new VerificationToken(token, utilisateur, expirationDate);
         verificationTokenRepository.save(verificationToken);
 
-        // Créer le lien de vérification
         String verificationLink = "http://admin-mns:8080/api/auth/verify-email?token=" + token;
         String emailBody = "<p>Cliquez sur le lien ci-dessous pour valider votre email :</p>" +
                 "<a href='" + verificationLink + "'>Vérifier mon compte</a>";
 
-        // Envoyer l'email
         emailService.sendEmail(utilisateur.getEmailUtilisateur(), "Vérification de votre compte", emailBody);
     }
 
@@ -83,18 +83,15 @@ public class UserService {
         Utilisateur utilisateur = userRepository.findByEmailUtilisateur(email)
                 .orElseThrow(() -> new RuntimeException("Utilisateur non trouvé"));
 
-        // Vérifier si le token est expiré
         if (jwtUtil.isTokenExpired(token)) {
             throw new RuntimeException("Le token de vérification a expiré.");
         }
 
-        // Ajouter l'utilisateur à la table des sessions actives
         if (!userSessionRepository.existsByUtilisateur(utilisateur)) {
             generateUserSession(utilisateur, utilisateur.getRole().getNomRole());
         }
 
-        // Mettre à jour l'email comme vérifié
-        utilisateur.setEmailVerified(true);
+        utilisateur.setEmailVerifie(true);
         userRepository.save(utilisateur);
 
         return jwtUtil.generateToken(utilisateur.getEmailUtilisateur(), utilisateur.getRole().getNomRole());
@@ -115,4 +112,35 @@ public class UserService {
         String email = jwtUtil.extractUsername(token);
         return userRepository.findByEmailUtilisateur(email).orElseThrow(() -> new RuntimeException("Utilisateur non trouvé"));
     }
+
+    public Utilisateur createUserFromCandidature(String nom, String prenom, String email) {
+        if (userRepository.findByEmailUtilisateur(email).isPresent()) {
+            throw new RuntimeException("Un utilisateur avec cet email existe déjà.");
+        }
+
+        Utilisateur utilisateur = new Utilisateur();
+        utilisateur.setNomUtilisateur(nom);
+        utilisateur.setPrenomUtilisateur(prenom);
+        utilisateur.setEmailUtilisateur(email);
+        String tempPassword = UUID.randomUUID().toString().substring(0, 8);
+        utilisateur.setMotDePasseUtilisateur(passwordEncoder.encode(tempPassword));
+        System.out.println("Mot de passe temporaire : " + tempPassword);
+
+        Role candidateRole = roleRepository.findByNomRole("CANDIDAT")
+                .orElseGet(() -> {
+                    Role newRole = new Role();
+                    newRole.setNomRole("CANDIDAT");
+                    newRole.setDescriptionRole("Rôle pour les candidats");
+                    return roleRepository.save(newRole);
+                });
+
+        utilisateur.setRole(candidateRole);
+        utilisateur.setEmailVerifie(false);
+        userRepository.save(utilisateur);
+
+        sendEmailVerification(utilisateur);
+
+        return utilisateur;
+    }
+
 }
