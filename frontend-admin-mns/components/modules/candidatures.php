@@ -7,6 +7,31 @@ if (!isset($_SESSION["token"])) {
     header("Location: login.php");
     exit();
 }
+
+$token = $_SESSION["token"];
+$apiUrl = "http://admin-mns:8080/api/dashboard/candidatures";
+
+$headers = [
+    "Authorization: Bearer $token",
+    "Content-Type: application/json"
+];
+
+$ch = curl_init();
+curl_setopt($ch, CURLOPT_URL, $apiUrl);
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+$response = curl_exec($ch);
+
+if ($response === false) {
+    error_log("Erreur cURL : " . curl_error($ch));
+    curl_close($ch);
+    $candidaturesData = [];
+} else {
+    curl_close($ch);
+    $candidaturesData = json_decode($response, true);
+}
+
+$candidatures = $candidaturesData["candidaturesMenu"] ?? [];
 ?>
 
 <!DOCTYPE html>
@@ -27,6 +52,10 @@ if (!isset($_SESSION["token"])) {
     <main>
         <?php include $_SERVER['DOCUMENT_ROOT'] . "/frontend-admin-mns/components/breadcrumb.php"; ?>
 
+        <script>
+            const candidatures = <?php echo json_encode($candidatures, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP); ?>;
+        </script>
+
         <div class="dashboard-zone" id="dashboard-zone">
             <div class="document-container">
                 <!-- Bandeau de filtrage -->
@@ -40,9 +69,9 @@ if (!isset($_SESSION["token"])) {
                     </select>
                     <select id="filterAuthor">
                         <option value="">All authors</option>
-                            <?php foreach (array_unique(array_column($candidatures, 'auteur')) as $author) : ?>
-                                <option value="<?= htmlspecialchars($author) ?>"><?= htmlspecialchars($author) ?></option>
-                            <?php endforeach; ?>
+                        <?php foreach (array_unique(array_column($candidatures, 'auteur')) as $author) : ?>
+                            <option value="<?= htmlspecialchars($author) ?>"><?= htmlspecialchars($author) ?></option>
+                        <?php endforeach; ?>
                     </select>
                     <select id="itemsPerPage">
                         <option value="10">10 lines</option>
@@ -65,7 +94,7 @@ if (!isset($_SESSION["token"])) {
                                 <th>Actions</th>
                             </tr>
                         </thead>
-                        <tbody id="documentTableBody">
+                        <tbody id="candidaturesTableBody">
                         </tbody>
                     </table>
                 </div>
