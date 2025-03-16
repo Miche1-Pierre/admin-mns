@@ -56,8 +56,6 @@ public class Utilisateur {
         dateMiseAJourUtilisateur = LocalDateTime.now();
     }
 
-    //Getter Setter
-
     public Long getIdUtilisateur() {
         return idUtilisateur;
     }
@@ -122,15 +120,11 @@ public class Utilisateur {
         this.role = role;
     }
 
-    public boolean isEmailVerified() {
+    public boolean isEmailVerifie() {
         return emailVerifie;
     }
 
-    public void setEmailVerified(boolean emailVerifie) {
+    public void setEmailVerifie(boolean emailVerifie) {
         this.emailVerifie = emailVerifie;
-    }
-
-    public Long getId() {
-        return idUtilisateur;
     }
 }
