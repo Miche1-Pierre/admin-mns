@@ -1,10 +1,13 @@
 package com.mns.admin.controller;
 
 import com.mns.admin.dto.AuthRequest;
+import com.mns.admin.dto.CandidatureDto;
 import com.mns.admin.model.Utilisateur;
 import com.mns.admin.security.JwtUtil;
+import com.mns.admin.service.CandidatureService;
 import com.mns.admin.service.UserService;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -14,10 +17,12 @@ import org.springframework.web.bind.annotation.*;
 public class AuthController {
     private final UserService userService;
     private final JwtUtil jwtUtil;
+    private final CandidatureService candidatureService;
 
-    public AuthController(UserService userService, JwtUtil jwtUtil) {
+    public AuthController(UserService userService, JwtUtil jwtUtil, CandidatureService candidatureService) {
         this.userService = userService;
         this.jwtUtil = jwtUtil;
+        this.candidatureService = candidatureService;
     }
 
     @GetMapping("/verify-email")
@@ -37,6 +42,16 @@ public class AuthController {
                         .body("Un email de vérification a été envoyé. Veuillez vérifier votre email.");
             }
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
+        }
+    }
+
+    @PostMapping(value = "/candidature", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<?> createCandidature(@ModelAttribute CandidatureDto candidatureDto) {
+        try {
+            candidatureService.createCandidature(candidatureDto);
+            return ResponseEntity.ok("Candidature créée avec succès.");
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
     }
 }
