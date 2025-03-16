@@ -8,24 +8,30 @@ if (!isset($_SESSION["token"])) {
     exit();
 }
 
-include $_SERVER['DOCUMENT_ROOT'] . '/frontend-admin-mns/php/api/db.php';
+$token = $_SESSION["token"];
+$apiUrl = "http://admin-mns:8080/api/dashboard/documents";
 
-$documents = [];
+$headers = [
+    "Authorization: Bearer $token",
+    "Content-Type: application/json"
+];
 
-$query = $pdo->query("
-    SELECT
-        d.id_document AS id,
-        d.contenu_chiffre_document AS nom,
-        td.nom_type_document AS type,
-        DATE_FORMAT(d.date_depot_document, '%d/%m/%Y') AS date,
-        u.nom_utilisateur AS auteur
-    FROM document d
-    JOIN type_document td ON d.id_type_document = td.id_type_document
-    JOIN dossier ds ON d.id_dossier = ds.id_dossier
-    JOIN utilisateur u ON ds.id_stagiaire = u.id_utilisateur
-");
+$ch = curl_init();
+curl_setopt($ch, CURLOPT_URL, $apiUrl);
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+$response = curl_exec($ch);
 
-$documents = $query->fetchAll(PDO::FETCH_ASSOC);
+if ($response === false) {
+    error_log("Erreur cURL : " . curl_error($ch));
+    curl_close($ch);
+    $documentsData = [];
+} else {
+    curl_close($ch);
+    $documentsData = json_decode($response, true);
+}
+
+$documents = $documentsData["documentsMenu"] ?? [];
 ?>
 
 <!DOCTYPE html>
@@ -47,7 +53,7 @@ $documents = $query->fetchAll(PDO::FETCH_ASSOC);
         <?php include $_SERVER['DOCUMENT_ROOT'] . "/frontend-admin-mns/components/breadcrumb.php"; ?>
 
         <script>
-            const documents = <?php echo json_encode($documents, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP) ?>;
+            const documents = <?php echo json_encode($documents, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP); ?>;
         </script>
 
         <div class="dashboard-zone" id="dashboard-zone">
@@ -83,10 +89,9 @@ $documents = $query->fetchAll(PDO::FETCH_ASSOC);
                         <thead>
                             <tr>
                                 <th>ID</th>
-                                <th>Name</th>
                                 <th>Type</th>
-                                <th>Date</th>
-                                <th>Author</th>
+                                <th>Date Dépôt</th>
+                                <th>Date Limite</th>
                                 <th>Actions</th>
                             </tr>
                         </thead>
@@ -109,19 +114,14 @@ $documents = $query->fetchAll(PDO::FETCH_ASSOC);
                     <form id="addDocumentForm">
                         <label for="document">Name</label>
                         <input type="text" id="document" name="document" required>
-
                         <label for="date_limite">Document deadline</label>
                         <input type="datetime-local" id="date_limite" name="date_limite" required>
-
                         <label for="id_dossier">Dossier ID</label>
                         <input type="number" id="id_dossier" name="id_dossier" required>
-
                         <label for="id_statut">Status ID</label>
                         <input type="number" id="id_statut" name="id_statut" required>
-
                         <label for="id_type_document">Document type ID</label>
                         <input type="number" id="id_type_document" name="id_type_document" required>
-
                         <button type="submit" class="button">Create</button>
                     </form>
                 </div>
