@@ -1,9 +1,13 @@
+let filteredCandidatures = [];
+let currentPage = 1;
+let itemsPerPage = 10;
+
 document.addEventListener("DOMContentLoaded", function () {
     setActiveMenu();
     initSidebar();
     initDropdownMenu();
-    window.candidatures = candidatures;
-    initDocuments();
+    initCandidatures();
+    fetchProfile();
     updateBreadcrumb();
     initViewAccountModal();
 });
@@ -136,108 +140,100 @@ function updateBreadcrumbLinks(links) {
     });
 }
 
-function initDocuments() {
-    console.log("initDocuments() appelé");
-
+function initCandidatures() {
     const itemsPerPageSelect = document.getElementById("itemsPerPage");
     const searchInput = document.getElementById("searchInput");
     const filterType = document.getElementById("filterType");
-    const filterAuthor = document.getElementById("filterAuthor");
-    const tableBody = document.getElementById("documentTableBody");
+    const tableBody = document.getElementById("candidaturesTableBody");
 
-    if (!itemsPerPageSelect || !searchInput || !filterType || !filterAuthor || !tableBody) {
+    if (!itemsPerPageSelect || !searchInput || !filterType || !tableBody) {
         console.error("Un ou plusieurs éléments DOM manquent.");
         return;
     }
 
-    window.candidatures = window.candidatures || [];
-    let currentPage = 1;
-    let filteredDocuments = [...window.candidatures];
-    let itemsPerPage = parseInt(itemsPerPageSelect.value) || 10;
-
-    function filterDocuments() {
-        console.log("Filtrage en cours...");
-        const searchQuery = searchInput.value.toLowerCase();
-        const selectedType = filterType.value;
-        const selectedAuthor = filterAuthor.value;
-
-        filteredDocuments = window.candidatures.filter(doc => {
-            return (
-                (selectedType === "" || doc.type?.toLowerCase() === selectedType.toLowerCase()) &&
-                (selectedAuthor === "" || doc.auteur?.toLowerCase() === selectedAuthor.toLowerCase()) &&
-                (doc.nom?.toLowerCase().includes(searchQuery) || doc.auteur?.toLowerCase().includes(searchQuery))
-            );
-        });
-
-        currentPage = 1;
-        displayDocuments();
-    }
-
-    function displayDocuments() {
-        console.log("Affichage des documents...");
-        const startIndex = (currentPage - 1) * itemsPerPage;
-        const endIndex = startIndex + itemsPerPage;
-
-        const displayedDocs = filteredDocuments.slice(startIndex, endIndex);
-        tableBody.innerHTML = "";
-
-        if (displayedDocs.length === 0) {
-            tableBody.innerHTML = "<tr><td colspan='6'>Aucun document trouvé.</td></tr>";
-            return;
-        }
-
-        displayedDocs.forEach(doc => {
-            const row = document.createElement("tr");
-            row.innerHTML = `
-                <td>${doc.id}</td>
-                <td>${doc.nom}</td>
-                <td>${doc.type}</td>
-                <td>${doc.date}</td>
-                <td>${doc.auteur}</td>
-                <td>
-                    <button class="button edit">Edit</button>
-                    <button class="button delete">Delete</button>
-                </td>
-            `;
-            tableBody.appendChild(row);
-        });
-
-        updatePagination();
-    }
-
-    function updatePagination() {
-        const pagination = document.querySelector(".pagination");
-        const prevButton = pagination.querySelector(".prev-slide");
-        const nextButton = pagination.querySelector(".next-slide");
-
-        prevButton.disabled = currentPage === 1;
-        nextButton.disabled = currentPage * itemsPerPage >= filteredDocuments.length;
-    }
-
-    document.addEventListener("click", function (event) {
-        if (event.target.matches(".prev-slide") && currentPage > 1) {
-            currentPage--;
-            displayDocuments();
-        }
-
-        if (event.target.matches(".next-slide") && currentPage * itemsPerPage < filteredDocuments.length) {
-            currentPage++;
-            displayDocuments();
-        }
-    });
+    itemsPerPage = parseInt(itemsPerPageSelect.value) || 10;
+    filteredCandidatures = [...candidatures];
+    currentPage = 1;
 
     itemsPerPageSelect.addEventListener("change", () => {
         itemsPerPage = parseInt(itemsPerPageSelect.value) || 10;
         currentPage = 1;
-        displayDocuments();
+        displayCandidatures();
     });
 
-    searchInput.addEventListener("input", filterDocuments);
-    filterType.addEventListener("change", filterDocuments);
-    filterAuthor.addEventListener("change", filterDocuments);
+    searchInput.addEventListener("input", filterCandidatures);
+    filterType.addEventListener("change", filterCandidatures);
 
-    displayDocuments();
+    displayCandidatures();
 }
+
+function filterCandidatures() {
+    const searchQuery = document.getElementById("searchInput").value.toLowerCase();
+    const selectedType = document.getElementById("filterType").value;
+    
+    filteredCandidatures = candidatures.filter(candidature => {
+        return (
+            (selectedType === "" || candidature.formation === selectedType) &&
+            (candidature.stagiaire.toLowerCase().includes(searchQuery))
+        );
+    });
+
+    currentPage = 1;
+    displayCandidatures();
+}
+
+function displayCandidatures() {
+    const tableBody = document.getElementById("candidaturesTableBody");
+    if (!tableBody) return;
+
+    const startIndex = (currentPage - 1) * itemsPerPage;
+    const endIndex = startIndex + itemsPerPage;
+    const displayCandidatures = filteredCandidatures.slice(startIndex, endIndex);
+
+    tableBody.innerHTML = "";
+
+    if (displayCandidatures.length === 0) {
+        tableBody.innerHTML = "<tr><td colspan='6'>Aucune candidature trouvée.</td></tr>";
+        return;
+    }
+
+    displayCandidatures.forEach(candidature => {
+        const row = document.createElement("tr");
+        row.innerHTML = `
+            <td>${candidature.id}</td>
+            <td>${candidature.stagiaire}</td>
+            <td>${candidature.formation}</td>
+            <td>${new Date(candidature.date_inscription).toLocaleDateString()}</td>
+            <td>${candidature.statut}</td>
+            <td>
+                <button class="button edit">Modifier</button>
+                <button class="button delete">Supprimer</button>
+            </td>
+        `;
+        tableBody.appendChild(row);
+    });
+
+    updatePagination();
+}
+
+function updatePagination() {
+    const prevButton = document.querySelector(".prev-slide");
+    const nextButton = document.querySelector(".next-slide");
+
+    prevButton.disabled = currentPage === 1;
+    nextButton.disabled = currentPage * itemsPerPage >= filteredCandidatures.length;
+}
+
+document.addEventListener("click", function (event) {
+    if (event.target.matches(".prev-slide") && currentPage > 1) {
+        currentPage--;
+        displayCandidatures();
+    }
+    if (event.target.matches(".next-slide") && currentPage * itemsPerPage < filteredCandidatures.length) {
+        currentPage++;
+        displayCandidatures();
+    }
+});
 
 function initViewAccountModal() {
     const viewButton = document.querySelector(".button.view");
@@ -258,4 +254,26 @@ function initViewAccountModal() {
             modal.style.display = "none";
         }
     });
+}
+
+function fetchProfile() {
+    fetch("http://admin-mns:8080/api/dashboard/profil", {
+        headers: {
+            'Authorization': 'Bearer ' + localStorage.getItem('token')
+        }
+    })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Erreur lors de la récupération du profil');
+            }
+            return response.json();
+        })
+        .then(data => {
+            if (data.profil && data.profil.length > 0) {
+                const profile = data.profil[0];
+                document.getElementById('user-firstname').textContent = profile.prenom_utilisateur;
+                document.getElementById('user-role').textContent = profile.nom_role;
+            }
+        })
+        .catch(error => console.error('Erreur:', error));
 }

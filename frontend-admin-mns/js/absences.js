@@ -1,8 +1,13 @@
+let filteredAbsences = [];
+let currentPage = 1;
+let itemsPerPage = 10;
+
 document.addEventListener("DOMContentLoaded", function () {
     setActiveMenu();
     initSidebar();
     initDropdownMenu();
     initAbsences();
+    fetchProfile();
     updateBreadcrumb();
     initAddAbsenceModal();
     initViewAccountModal();
@@ -141,119 +146,16 @@ function initAbsences() {
     const searchInput = document.getElementById("searchInput");
     const filterStatut = document.getElementById("filterStatut");
     const filterMotif = document.getElementById("filterMotif");
-    const tableBody = document.getElementById("documentTableBody");
+    const tableBody = document.getElementById("absencesTableBody");
 
     if (!itemsPerPageSelect || !searchInput || !filterStatut || !filterMotif || !tableBody) {
         console.error("Un ou plusieurs éléments DOM manquent.");
         return;
     }
 
-    let currentPage = 1;
-    let absences = [];
-    let filteredAbsences = [];
-    let itemsPerPage = parseInt(itemsPerPageSelect.value) || 10;
-
-    // Fonction pour récupérer les absences depuis l'API
-    async function fetchAbsences() {
-        try {
-            const token = localStorage.getItem('token');
-            const response = await fetch('http://admin-mns:8080/api/dashboard/modules/absences', {
-                method: 'GET',
-                headers: {
-                    'Authorization': `Bearer ${token}`,
-                    'Content-Type': 'application/json'
-                }
-            });
-    
-            if (!response.ok) {
-                throw new Error(`HTTP error! Status: ${response.status}`);
-            }
-    
-            const data = await response.json();
-            console.log(data);
-            
-            if (data && Array.isArray(data.absences)) {
-                absences = data.absences;
-                filteredAbsences = [...absences];
-                displayAbsences();
-            } else {
-                console.error("Absences data is not an array or is missing.");
-            }
-        } catch (error) {
-            console.error('Error fetching absences:', error.message);
-        }
-    }
-
-    function filterAbsences() {
-        const selectedStatut = filterStatut.value;
-        const selectedMotif = filterMotif.value;
-
-        filteredAbsences = absences.filter(abs => {
-            return (
-                (selectedStatut === "" || abs.statut?.toLowerCase() === selectedStatut.toLowerCase()) &&
-                (selectedMotif === "" || abs.type?.toLowerCase() === selectedMotif.toLowerCase())
-            );
-        });
-
-        currentPage = 1;
-        displayAbsences();
-    }
-
-    function displayAbsences() {
-        const startIndex = (currentPage - 1) * itemsPerPage;
-        const endIndex = startIndex + itemsPerPage;
-
-        const displayedAbs = filteredAbsences.slice(startIndex, endIndex);
-        tableBody.innerHTML = "";
-
-        if (displayedAbs.length === 0) {
-            tableBody.innerHTML = "<tr><td colspan='7'>Aucune absence trouvée.</td></tr>";
-            return;
-        }
-
-        displayedAbs.forEach(abs => {
-            const row = document.createElement("tr");
-            row.innerHTML = `
-                <td>${abs.id_absence}</td>
-                <td>${abs.id_stagiaire}</td>
-                <td>${abs.statut_absence}</td>
-                <td>${abs.id_type_absence}</td>
-                <td>${abs.date_debut_absence}</td>
-                <td>${abs.date_fin_absence}</td>
-                <td>${abs.justifie_absence}</td>
-                <td>
-                    <button class="button edit">Edit</button>
-                    <button class="button delete">Delete</button>
-                </td>
-            `;
-            tableBody.appendChild(row);
-        });
-
-        updatePagination();
-    }
-
-    function updatePagination() {
-        const pagination = document.querySelector(".pagination");
-        const prevButton = pagination.querySelector(".prev-slide");
-        const nextButton = pagination.querySelector(".next-slide");
-
-        prevButton.disabled = currentPage === 1;
-        nextButton.disabled = currentPage * itemsPerPage >= filteredAbsences.length;
-    }
-
-    fetchAbsences();
-
-    document.addEventListener("click", function (event) {
-        if (event.target.matches(".prev-slide") && currentPage > 1) {
-            currentPage--;
-            displayAbsences();
-        }
-
-        if (event.target.matches(".next-slide") && currentPage * itemsPerPage < filteredAbsences.length) {
-            currentPage++;
-            displayAbsences();
-        }
-    });
+    itemsPerPage = parseInt(itemsPerPageSelect.value) || 10;
+    filteredAbsences = [...absences];
+    currentPage = 1;
 
     itemsPerPageSelect.addEventListener("change", () => {
         itemsPerPage = parseInt(itemsPerPageSelect.value) || 10;
@@ -264,7 +166,82 @@ function initAbsences() {
     searchInput.addEventListener("input", filterAbsences);
     filterStatut.addEventListener("change", filterAbsences);
     filterMotif.addEventListener("change", filterAbsences);
+
+    displayAbsences();
 }
+
+function filterAbsences() {
+    const searchQuery = document.getElementById("searchInput").value.toLowerCase();
+    const selectedStatut = document.getElementById("filterStatut").value;
+    const selectedMotif = document.getElementById("filterMotif").value;
+
+    filteredAbsences = absences.filter(absence => {
+        const matchSearch = absence.utilisateur.toLowerCase().includes(searchQuery);
+        const matchStatut = selectedStatut === "" || absence.statut === selectedStatut;
+        const matchMotif = selectedMotif === "" || absence.type === selectedMotif;
+
+        return matchSearch && matchStatut && matchMotif;
+    });
+
+    currentPage = 1;
+    displayAbsences();
+}
+
+function displayAbsences() {
+    const tableBody = document.getElementById("absencesTableBody");
+    if (!tableBody) return;
+
+    const startIndex = (currentPage - 1) * itemsPerPage;
+    const endIndex = startIndex + itemsPerPage;
+    const displayAbsences = filteredAbsences.slice(startIndex, endIndex);
+
+    tableBody.innerHTML = "";
+
+    if (displayAbsences.length === 0) {
+        tableBody.innerHTML = "<tr><td colspan='6'>Aucune absence trouvée.</td></tr>";
+        return;
+    }
+
+    displayAbsences.forEach(absence => {
+        const row = document.createElement("tr");
+        row.innerHTML = `
+            <td>${absence.id}</td>
+            <td>${absence.utilisateur}</td>
+            <td>${absence.statut}</td>
+            <td>${absence.type}</td>
+            <td>${new Date(absence.debut).toLocaleString()}</td>
+            <td>${new Date(absence.fin).toLocaleString()}</td>
+            <td>${absence.justifie ? 'Oui' : 'Non'}</td>
+            <td>
+                <button class="button edit">Modifier</button>
+                <button class="button delete">Supprimer</button>
+            </td>
+        `;
+
+        tableBody.appendChild(row);
+    });
+
+    updatePagination();
+}
+
+function updatePagination() {
+    const prevButton = document.querySelector(".prev-slide");
+    const nextButton = document.querySelector(".next-slide");
+
+    prevButton.disabled = currentPage === 1;
+    nextButton.disabled = currentPage * itemsPerPage >= filteredAbsences.length;
+}
+
+document.addEventListener("click", function (event) {
+    if (event.target.matches(".prev-slide") && currentPage > 1) {
+        currentPage--;
+        displayAbsences();
+    }
+    if (event.target.matches(".next-slide") && currentPage * itemsPerPage < filteredAbsences.length) {
+        currentPage++;
+        displayAbsences();
+    }
+});
 
 function initAddAbsenceModal() {
     const addButton = document.querySelector(".button.add");
@@ -332,4 +309,26 @@ function initViewAccountModal() {
             modal.style.display = "none";
         }
     });
+}
+
+function fetchProfile() {
+    fetch("http://admin-mns:8080/api/dashboard/profil", {
+        headers: {
+            'Authorization': 'Bearer ' + localStorage.getItem('token')
+        }
+    })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Erreur lors de la récupération du profil');
+            }
+            return response.json();
+        })
+        .then(data => {
+            if (data.profil && data.profil.length > 0) {
+                const profile = data.profil[0];
+                document.getElementById('user-firstname').textContent = profile.prenom_utilisateur;
+                document.getElementById('user-role').textContent = profile.nom_role;
+            }
+        })
+        .catch(error => console.error('Erreur:', error));
 }
