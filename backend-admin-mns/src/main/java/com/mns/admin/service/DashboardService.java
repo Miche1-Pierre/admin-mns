@@ -2,8 +2,6 @@ package com.mns.admin.service;
 
 import com.mns.admin.model.Utilisateur;
 import com.mns.admin.repository.DashboardRepository;
-import org.apache.logging.log4j.spi.ObjectThreadContextMap;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
@@ -47,9 +45,8 @@ public class DashboardService {
         Map<String, Object> menus = new HashMap<>();
         String role = user.getRole().getNomRole();
 
-        // Définition des menus autorisés en fonction du rôle
         Set<String> roleMenus = switch (role) {
-            case "Stagiaire" -> Set.of("home", "candidatures", "absences", "documents", "messaging");
+            case "Stagiaire" -> Set.of("home", "absences", "documents", "messaging");
             case "Admin" -> Set.of("home", "candidatures", "absences", "users", "documents", "messaging", "stats", "settings");
             case "Formateur" -> Set.of("home", "candidatures", "absences", "users", "documents", "messaging");
             default -> Collections.emptySet();
@@ -64,7 +61,7 @@ public class DashboardService {
             menus.put("candidatures", getCandidaturesMenu());
         }
         if (roleMenus.contains("absences")) {
-            menus.put("absences", getAbsencesMenu());
+            menus.put("absences", getAbsencesMenu(user));
         }
         if (roleMenus.contains("documents")) {
             menus.put("documents", getDocumentsMenu());
@@ -75,12 +72,12 @@ public class DashboardService {
         if (roleMenus.contains("users")) {
             menus.put("users", getUsersMenu());
         }
-        if (roleMenus.contains("stats")) {
-            menus.put("stats", getStatsMenu());
-        }
-        if (roleMenus.contains("settings")) {
-            menus.put("settings", getSettingsMenu());
-        }
+        // if (roleMenus.contains("stats")) {
+        //     menus.put("stats", getStatsMenu());
+        // }
+        // if (roleMenus.contains("settings")) {
+        //     menus.put("settings", getSettingsMenu());
+        // }
 
         System.out.println("Menus envoyés : " + menus);
         return menus;
@@ -90,7 +87,7 @@ public class DashboardService {
         if ("Admin".equals(user.getRole().getNomRole().trim())) {
             return dashboardRepository.getAllAbsences();
         }
-        return dashboardRepository.getAbsencesByUser(user.getId());
+        return dashboardRepository.getAbsencesByUser(user.getIdUtilisateur());
     }
 
     public Map<String, Object> getCandidaturesData(Utilisateur user) {
@@ -102,50 +99,22 @@ public class DashboardService {
         if ("Admin".equals(user.getRole().getNomRole().trim())) {
             return dashboardRepository.getAllDocuments();
         }
-        return dashboardRepository.getDocumentsByUser(user.getId());
+        return dashboardRepository.getDocumentsByUser(user.getIdUtilisateur());
     }
 
     public Map<String, Object> getJustificatifsData(Utilisateur user) {
         if ("Admin".equals(user.getRole().getNomRole().trim())) {
             return dashboardRepository.getAllJustificatifs();
         }
-        return dashboardRepository.getJustificatifsByUser(user.getId());
+        return dashboardRepository.getJustificatifsByUser(user.getIdUtilisateur());
     }
 
     public Map<String, Object> getMessagesData(Utilisateur user) {
-        return dashboardRepository.getMessagesByUser(user.getId());
+        return dashboardRepository.getMessagesByUser(user.getIdUtilisateur());
     }
 
     public Map<String, Object> getProfilData(Utilisateur user) {
-        return dashboardRepository.getProfilByUser(user.getId());
-    }
-
-    public Map<String, Object> getModulesAbsencesData(Utilisateur user) {
-        if ("Admin".equals(user.getRole().getNomRole().trim())) {
-            return dashboardRepository.getAllModulesAbsences();
-        }
-        return dashboardRepository.getModulesAbsencesByUser(user.getId());
-    }
-
-    public Map<String, Object> getModulesCandidaturesData(Utilisateur user) {
-        if (!"Admin".equals(user.getRole().getNomRole().trim())) {
-            return Map.of();
-        }
-        return dashboardRepository.getAllModulesCandidatures();
-    }
-
-    public Map<String, Object> getMessagingData(Utilisateur user) {
-        if ("Admin".equals(user.getRole().getNomRole().trim())) {
-            return dashboardRepository.getAllMessagingData();
-        }
-        return dashboardRepository.getMessagingByUser(user.getId());
-    }
-
-    public Map<String, Object> getUsersData(Utilisateur user) {
-        if (!"Admin".equals(user.getRole().getNomRole().trim())) {
-            return Map.of();
-        }
-        return dashboardRepository.getAllUsers();
+        return dashboardRepository.getProfilByUser(user.getIdUtilisateur());
     }
 
     public Map<String, Object> getDashboardMenu() {
@@ -164,12 +133,23 @@ public class DashboardService {
         return menu;
     }
 
-    public Map<String, Object> getAbsencesMenu() {
+    public Map<String, Object> getCandidaturesMenuData() {
+        return dashboardRepository.getAllCandidaturesMenu();
+    }
+
+    public Map<String, Object> getAbsencesMenu(Utilisateur user) {
         Map<String, Object> menu = new HashMap<>();
         menu.put("title", "Absences");
         menu.put("icon", "bx bx-timer");
         menu.put("link", "/frontend-admin-mns/components/modules/absences.php");
         return menu;
+    }
+
+    public Map<String, Object> getAbsencesMenuData(Utilisateur user) {
+        if ("Admin".equals(user.getRole().getNomRole().trim())) {
+            return dashboardRepository.getAllAbsencesMenu();
+        }
+        return dashboardRepository.getAbsencesMenuByUser(user.getIdUtilisateur());
     }
 
     public Map<String, Object> getDocumentsMenu() {
@@ -180,12 +160,26 @@ public class DashboardService {
         return menu;
     }
 
+    public Map<String, Object> getDocumentsMenuData(Utilisateur user) {
+        if ("Admin".equals(user.getRole().getNomRole().trim())) {
+            return dashboardRepository.getAllDocumentsMenu();
+        }
+        return dashboardRepository.getDocumentsMenuByUser(user.getIdUtilisateur());
+    }
+
     public Map<String, Object> getMessagingMenu() {
         Map<String, Object> menu = new HashMap<>();
         menu.put("title", "Messaging");
         menu.put("icon", "bx bx-mail-send");
         menu.put("link", "/frontend-admin-mns/components/messaging/messaging.php");
         return menu;
+    }
+
+    public Map<String, Object> getMessagingMenuData(Utilisateur user) {
+        if ("Admin".equals(user.getRole().getNomRole().trim())) {
+            return dashboardRepository.getAllMessagingMenu();
+        }
+        return dashboardRepository.getMessagesMenuByUser(user.getIdUtilisateur());
     }
 
     public Map<String, Object> getUsersMenu() {
@@ -196,20 +190,31 @@ public class DashboardService {
         return menu;
     }
 
-    public Map<String, Object> getStatsMenu() {
-        Map<String, Object> menu = new HashMap<>();
-        menu.put("title", "Stats");
-        menu.put("icon", "bx bx-line-chart");
-        menu.put("link", "/frontend-admin-mns/components/more/stats.php");
-        return menu;
+    public Map<String, Object> getUsersMenuData() {
+        return dashboardRepository.getAllUsersMenu();
     }
 
-    public Map<String, Object> getSettingsMenu() {
-        Map<String, Object> menu = new HashMap<>();
-        menu.put("title", "Settings");
-        menu.put("icon", "bx bx-cog");
-        menu.put("link", "/frontend-admin-mns/components/more/settings.php");
-        return menu;
-    }
+    // public Map<String, Object> getStatsMenu() {
+    //     Map<String, Object> menu = new HashMap<>();
+    //     menu.put("title", "Stats");
+    //     menu.put("icon", "bx bx-line-chart");
+    //     menu.put("link", "/frontend-admin-mns/components/more/stats.php");
+    //     return menu;
+    // }
 
+    // public Map<String, Object> getStatsMenuData() {
+    //     return dashboardRepository.getAllStatsMenu();
+    // }
+
+    // public Map<String, Object> getSettingsMenu() {
+    //     Map<String, Object> menu = new HashMap<>();
+    //     menu.put("title", "Settings");
+    //     menu.put("icon", "bx bx-cog");
+    //     menu.put("link", "/frontend-admin-mns/components/more/settings.php");
+    //     return menu;
+    // }
+
+    // public Map<String, Object> getSettingsMenuData() {
+    //     return dashboardRepository.getAllSettingsMenu();
+    // }
 }
