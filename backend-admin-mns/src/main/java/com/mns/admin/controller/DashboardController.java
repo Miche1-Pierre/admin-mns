@@ -30,6 +30,14 @@ public class DashboardController {
         return userService.getUserFromToken(token);
     }
 
+    @GetMapping("/profil")
+    public ResponseEntity<?> getProfil(HttpServletRequest request) {
+        Utilisateur user = getAuthenticatedUser(request);
+        Map<String, Object> profilData = dashboardService.getProfilData(user);
+        return ResponseEntity.ok(profilData);
+    }
+
+    // Widgets
     @GetMapping("/widgets")
     public ResponseEntity<?> getAvailableWidgets(HttpServletRequest request) {
         Utilisateur user = getAuthenticatedUser(request);
@@ -38,6 +46,7 @@ public class DashboardController {
         return ResponseEntity.ok(dashboardService.getAvailableWidgets(user));
     }
 
+    // Menus
     @GetMapping("/menus")
     public ResponseEntity<?> getAvailableMenus(HttpServletRequest request) {
         Utilisateur user = getAuthenticatedUser(request);
@@ -46,73 +55,35 @@ public class DashboardController {
         return ResponseEntity.ok(dashboardService.getAvailableMenus(user));
     }
 
-    @GetMapping("/absences")
-    public ResponseEntity<?> getAbsences(HttpServletRequest request) {
-        Utilisateur user = getAuthenticatedUser(request);
-        Map<String, Object> absencesData = dashboardService.getAbsencesData(user);
-        return ResponseEntity.ok(absencesData);
+    @GetMapping("/candidatures")
+    public ResponseEntity<?> getCandidaturesMenuData(HttpServletRequest request) {
+        getAuthenticatedUser(request);
+        Map<String, Object> data = dashboardService.getCandidaturesMenuData();
+        System.out.println("Candidatures data: " + data);
+        return ResponseEntity.ok(data);
     }
 
-    @GetMapping("/candidatures")
-    public ResponseEntity<?> getCandidatures(HttpServletRequest request) {
+    @GetMapping("/absences")
+    public ResponseEntity<?> getAbsencesMenuData(HttpServletRequest request) {
         Utilisateur user = getAuthenticatedUser(request);
-        Map<String, Object> candidaturesData = dashboardService.getCandidaturesData(user);
-        return ResponseEntity.ok(candidaturesData);
+        Map<String, Object> data = dashboardService.getAbsencesMenuData(user);
+        System.out.println("Absences data: " + data);
+        return ResponseEntity.ok(data);
     }
 
     @GetMapping("/documents")
-    public ResponseEntity<?> getDocuments(HttpServletRequest request) {
+    public ResponseEntity<?> getDocumentsMenuData(HttpServletRequest request) {
         Utilisateur user = getAuthenticatedUser(request);
-        Map<String, Object> documentsData = dashboardService.getDocumentsData(user);
-        return ResponseEntity.ok(documentsData);
-    }
-
-    @GetMapping("/justificatifs")
-    public ResponseEntity<?> getJustificatifs(HttpServletRequest request) {
-        Utilisateur user = getAuthenticatedUser(request);
-        Map<String, Object> justificatifsData = dashboardService.getJustificatifsData(user);
-        return ResponseEntity.ok(justificatifsData);
-    }
-
-    @GetMapping("/messages")
-    public ResponseEntity<?> getMessages(HttpServletRequest request) {
-        Utilisateur user = getAuthenticatedUser(request);
-        Map<String, Object> messagesData = dashboardService.getMessagesData(user);
-        return ResponseEntity.ok(messagesData);
-    }
-
-    @GetMapping("/profil")
-    public ResponseEntity<?> getProfil(HttpServletRequest request) {
-        Utilisateur user = getAuthenticatedUser(request);
-        Map<String, Object> profilData = dashboardService.getProfilData(user);
-        return ResponseEntity.ok(profilData);
-    }
-
-    @GetMapping("/modules/absences")
-    public ResponseEntity<?> getModulesAbsences(HttpServletRequest request) {
-        Utilisateur user = getAuthenticatedUser(request);
-        Map<String, Object> modulesAbsencesData = dashboardService.getModulesAbsencesData(user);
-        return ResponseEntity.ok(modulesAbsencesData);
-    }
-
-    @GetMapping("/modules/candidatures")
-    public ResponseEntity<?> getModulesCandidatures(HttpServletRequest request) {
-        Utilisateur user = getAuthenticatedUser(request);
-        Map<String, Object> modulesCandidaturesData = dashboardService.getModulesCandidaturesData(user);
-        return ResponseEntity.ok(modulesCandidaturesData);
+        Map<String, Object> data = dashboardService.getDocumentsMenuData(user);
+        System.out.println("Documents data: " + data);
+        return ResponseEntity.ok(data);
     }
 
     @GetMapping("/messaging")
-    public ResponseEntity<?> getMessaging(HttpServletRequest request) {
+    public ResponseEntity<?> getMessagingMenuData(HttpServletRequest request) {
         Utilisateur user = getAuthenticatedUser(request);
-        Map<String, Object> messagingData = dashboardService.getMessagingData(user);
-        return ResponseEntity.ok(messagingData);
-    }
-
-    @GetMapping("/users")
-    public ResponseEntity<?> getUsers(HttpServletRequest request) {
-        Utilisateur user = getAuthenticatedUser(request);
-        Map<String, Object> usersData = dashboardService.getUsersData(user);
-        return ResponseEntity.ok(usersData);
+        Map<String, Object> data = dashboardService.getMessagingMenuData(user);
+        System.out.println("Messaging data: " + data);
+        return ResponseEntity.ok(data);
     }
 }
