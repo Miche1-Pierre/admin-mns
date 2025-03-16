@@ -7,11 +7,35 @@ if (!isset($_SESSION["token"])) {
     header("Location: login.php");
     exit();
 }
+
+$token = $_SESSION["token"];
+$apiUrl = "http://admin-mns:8080/api/dashboard/absences";
+
+$headers = [
+    "Authorization: Bearer $token",
+    "Content-Type: application/json"
+];
+
+$ch = curl_init();
+curl_setopt($ch, CURLOPT_URL, $apiUrl);
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+$response = curl_exec($ch);
+
+if ($response === false) {
+    error_log("Erreur cURL : " . curl_error($ch));
+    curl_close($ch);
+    $absencesData = [];
+} else {
+    curl_close($ch);
+    $absencesData = json_decode($response, true);
+}
+
+$absences = $absencesData["absencesMenu"] ?? [];
 ?>
 
 <!DOCTYPE html>
 <html lang="fr">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -19,13 +43,16 @@ if (!isset($_SESSION["token"])) {
     <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
     <title>ADMIN MNS | Absences & Lateness</title>
 </head>
-
 <body>
     <header>
         <?php include $_SERVER['DOCUMENT_ROOT'] . "/frontend-admin-mns/components/navbar.php"; ?>
     </header>
     <main>
         <?php include $_SERVER['DOCUMENT_ROOT'] . "/frontend-admin-mns/components/breadcrumb.php"; ?>
+
+        <script>
+            const absences = <?php echo json_encode($absences, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP); ?>;
+        </script>
 
         <div class="dashboard-zone" id="dashboard-zone">
             <div class="document-container">
@@ -68,7 +95,7 @@ if (!isset($_SESSION["token"])) {
                                 <th>Actions</th>
                             </tr>
                         </thead>
-                        <tbody id="documentTableBody">
+                        <tbody id="absencesTableBody">
                         </tbody>
                     </table>
                 </div>
@@ -107,7 +134,7 @@ if (!isset($_SESSION["token"])) {
                         <label for="fin">End Date</label>
                         <input type="datetime-local" id="fin" name="fin" required>
 
-                        <label for="justifie">Receipt (optionnal)</label>
+                        <label for="justifie">Receipt (optional)</label>
                         <input type="file" id="justifie" name="justifie">
 
                         <button type="submit" class="button">Create</button>
@@ -120,5 +147,4 @@ if (!isset($_SESSION["token"])) {
 
     <script src="/frontend-admin-mns/js/absences.js"></script>
 </body>
-
 </html>
