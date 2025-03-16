@@ -26,6 +26,7 @@ public class SecurityConfig {
                         .requestMatchers(
                                 "/api/auth/login",
                                 "/api/auth/verify-email",
+                                "/api/auth/candidature",
                                 "/api/dashboard",
                                 "/api/dashboard/widgets",
                                 "/api/dashboard/absences",
