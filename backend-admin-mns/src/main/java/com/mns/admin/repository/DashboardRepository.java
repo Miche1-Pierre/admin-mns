@@ -113,7 +113,7 @@ public class DashboardRepository {
         return Map.of("profil", data);
     }
 
-    public Map<String, Object> getAllModulesAbsences() {
+    public Map<String, Object> getAllAbsencesMenu() {
         List<Map<String, Object>> data = jdbcTemplate.queryForList(
                 "SELECT " +
                         "a.id_absence AS id, " +
@@ -125,57 +125,127 @@ public class DashboardRepository {
                         "a.statut_absence AS statut " +
                         "FROM absence a " +
                         "JOIN utilisateur ua ON ua.id_utilisateur = a.id_stagiaire " +
-                        "JOIN type_absence ta ON ta.id_type_absence = a.id_type_absence"
+                        "JOIN type_absence ta ON ta.id_type_absence = a.id_type_absence " +
+                        "ORDER BY a.date_debut_absence DESC"
         );
-        return Map.of("absences", data);
+        return Map.of("absencesMenu", data);
     }
 
-    public Map<String, Object> getModulesAbsencesByUser(Long id) {
+    public Map<String, Object> getAbsencesMenuByUser(Long id) {
         List<Map<String, Object>> data = jdbcTemplate.queryForList(
-                "SELECT * FROM absence WHERE id_stagiaire = ?", id
+                "SELECT " +
+                        "a.id_absence AS id, " +
+                        "ua.nom_utilisateur AS utilisateur, " +
+                        "ta.nom_type_absence AS type, " +
+                        "a.date_debut_absence AS debut, " +
+                        "a.date_fin_absence AS fin, " +
+                        "a.justifie_absence AS justifie, " +
+                        "a.statut_absence AS statut " +
+                        "FROM absence a " +
+                        "JOIN utilisateur ua ON ua.id_utilisateur = a.id_stagiaire " +
+                        "JOIN type_absence ta ON ta.id_type_absence = a.id_type_absence " +
+                        "WHERE ua.id_utilisateur = ? " +
+                        "ORDER BY a.date_debut_absence DESC", id
         );
-        return Map.of("absences", data);
+        return Map.of("absencesMenu", data);
     }
 
-    public Map<String, Object> getAllModulesCandidatures() {
+    public Map<String, Object> getAllCandidaturesMenu() {
         List<Map<String, Object>> data = jdbcTemplate.queryForList(
                 "SELECT " +
                         "i.id_inscription AS id, " +
-                        "i.id_stagiaire AS stagiaire, " +
+                        "u.nom_utilisateur AS stagiaire, " +
+                        "f.nom_formation AS formation, " +
                         "i.date_inscription AS date_inscription, " +
-                        "f.id_formation AS formation " +
+                        "s.statut AS statut " +
                         "FROM inscription i " +
-                        "JOIN formation f ON f.id_formation = i.id_formation"
-
+                        "JOIN utilisateur u ON u.id_utilisateur = i.id_stagiaire " +
+                        "JOIN formation f ON f.id_formation = i.id_formation " +
+                        "JOIN statut s ON s.id_statut = i.id_statut " +
+                        "ORDER BY i.date_inscription DESC"
         );
-        return Map.of("modules", data);
+        return Map.of("candidaturesMenu", data);
     }
 
-    public Map<String, Object> getAllMessagingData() {
-        List<Map<String, Object>> data = jdbcTemplate.queryForList(
-                "SELECT * FROM messaging"
-        );
-        return Map.of("messaging", data);
-    }
-
-    public Map<String, Object> getMessagingByUser(Long id) {
-        List<Map<String, Object>> data = jdbcTemplate.queryForList(
-                "SELECT * FROM messaging WHERE utilisateur_id = ?", id
-        );
-        return Map.of("messaging", data);
-    }
-
-    public Map<String, Object> getAllUsers() {
+    public Map<String, Object> getAllDocumentsMenu() {
         List<Map<String, Object>> data = jdbcTemplate.queryForList(
                 "SELECT " +
-                        "u.id_utilisateur AS id, " +
-                        "u.nom_utilisateur AS nom, " +
-                        "u.prenom_utilisateur AS prenom, " +
-                        "u.email_utilisateur AS email, " +
-                        "ru.nom_role AS role " +
-                        "FROM utilisateur u " +
-                        "JOIN role ru ON u.role_id = ru.id_role"
+                        "d.id_document AS id, " +
+                        "d.date_depot_document AS depot, " +
+                        "d.date_limite_document AS limite, " +
+                        "td.nom_type_document AS type, " +
+                        "do.id_stagiaire AS stagiaire " +
+                        "FROM document d " +
+                        "JOIN dossier do ON do.id_dossier = d.id_dossier " +
+                        "JOIN type_document td ON td.id_type_document = d.id_type_document " +
+                        "ORDER BY d.date_depot_document DESC"
         );
-        return Map.of("users", data);
+        return Map.of("documentsMenu", data);
     }
+
+    public Map<String, Object> getDocumentsMenuByUser(Long id) {
+        List<Map<String, Object>> data = jdbcTemplate.queryForList(
+                "SELECT " +
+                        "d.id_document AS id, " +
+                        "d.date_depot_document AS depot, " +
+                        "d.date_limite_document AS limite, " +
+                        "td.nom_type_document AS type " +
+                        "FROM document d " +
+                        "JOIN dossier do ON do.id_dossier = d.id_dossier " +
+                        "JOIN type_document td ON td.id_type_document = d.id_type_document " +
+                        "WHERE do.id_stagiaire = ? " +
+                        "ORDER BY d.date_depot_document DESC", id
+        );
+        return Map.of("documentsMenu", data);
+    }
+
+    public Map<String, Object> getAllMessagingMenu() {
+        List<Map<String, Object>> data = jdbcTemplate.queryForList(
+                "SELECT " +
+                        "n.id_notification AS id, " +
+                        "n.date_notification AS date, " +
+                        "nt.nom_type_notification AS type, " +
+                        "u.nom_utilisateur AS sender " +
+                        "FROM notification n " +
+                        "JOIN type_notification nt ON nt.id_type_notification = n.id_type_notification " +
+                        "JOIN utilisateur u ON u.id_utilisateur = n.id_utilisateur " +
+                        "ORDER BY n.date_notification DESC"
+        );
+        return Map.of("messagingMenu", data);
+    }
+
+    public Map<String, Object> getMessagesMenuByUser(Long id) {
+        List<Map<String, Object>> data = jdbcTemplate.queryForList(
+                "SELECT " +
+                        "n.id_notification AS id, " +
+                        "n.date_notification AS date, " +
+                        "nt.nom_type_notification AS type, " +
+                        "u.nom_utilisateur AS sender, " +
+                        "n.contenu_notification AS contenu " +
+                        "FROM notification n " +
+                        "JOIN type_notification nt ON nt.id_type_notification = n.id_type_notification " +
+                        "JOIN utilisateur u ON u.id_utilisateur = n.id_utilisateur " +
+                        "WHERE n.id_destinataire = ? " +
+                        "ORDER BY n.date_notification DESC", id
+        );
+        return Map.of("messagingMenu", data);
+    }
+
+    public Map<String, Object> getAllUsersMenu() {
+        List<Map<String, Object>> data = jdbcTemplate.queryForList(
+                "SELECT " +
+                        "id_utilisateur AS id, " +
+                        "nom_utilisateur AS nom, " +
+                        "prenom_utilisateur AS prenom, " +
+                        "email_utilisateur AS email " +
+                        "FROM utilisateur"
+        );
+        return Map.of("usersMenu", data);
+    }
+
+    // public Map<String, Object> getAllStatsMenu() {
+    // }
+
+    // public Map<String, Object> getAllSettingsMenu() {
+    // }
 }
