@@ -290,6 +290,69 @@ function initAddAbsenceModal() {
     });
 }
 
+function initAddAbsenceModal() {
+    const addButton = document.querySelector(".button.add");
+    const modal = document.getElementById("addAbsenceModal");
+    const closeModalButton = modal.querySelector(".close-btn");
+    const form = document.getElementById("addAbsenceForm");
+
+    addButton.addEventListener("click", () => {
+        modal.style.display = "block";
+    });
+
+    closeModalButton.addEventListener("click", () => {
+        modal.style.display = "none";
+    });
+
+    window.addEventListener("click", (e) => {
+        if (e.target === modal) {
+            modal.style.display = "none";
+        }
+    });
+
+    form.addEventListener("submit", async (e) => {
+        e.preventDefault();
+
+        const statut = document.getElementById("statut").value;
+        const idTypeAbsence = document.getElementById("type").value;
+        const dateDebutAbsence = document.getElementById("debut").value;
+        const dateFinAbsence = document.getElementById("fin").value;
+        const justifie = document.getElementById("justifie").files[0];
+
+        const formData = new FormData();
+        formData.append("statutAbsence", statut);
+        formData.append("idTypeAbsence", idTypeAbsence);
+        formData.append("dateDebutAbsence", dateDebutAbsence);
+        formData.append("dateFinAbsence", dateFinAbsence);
+
+        if (justifie) {
+            formData.append("justificatif", justifie);
+        }
+
+        try {
+            const response = await fetch("http://admin-mns:8080/api/absences", {
+                method: "POST",
+                headers: {
+                    'Authorization': 'Bearer ' + localStorage.getItem('token')
+                },
+                body: formData,
+            });
+
+            const result = await response.json();
+
+            if (response.ok) {
+                alert("Absence ajoutée avec succès !");
+                window.location.reload();
+            } else {
+                alert("Erreur : " + (result.message || "Impossible d'ajouter l'absence."));
+            }
+        } catch (error) {
+            console.error("Erreur lors de l'ajout de l'absence :", error);
+            alert("Une erreur est survenue. Veuillez réessayer.");
+        }
+    });
+}
+
 function initViewAccountModal() {
     const viewButton = document.querySelector(".button.view");
     const modal = document.getElementById("viewAccountModal");
