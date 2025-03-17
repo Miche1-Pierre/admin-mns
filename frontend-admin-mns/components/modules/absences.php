@@ -36,6 +36,7 @@ $absences = $absencesData["absencesMenu"] ?? [];
 
 <!DOCTYPE html>
 <html lang="fr">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -43,6 +44,7 @@ $absences = $absencesData["absencesMenu"] ?? [];
     <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
     <title>ADMIN MNS | Absences & Lateness</title>
 </head>
+
 <body>
     <header>
         <?php include $_SERVER['DOCUMENT_ROOT'] . "/frontend-admin-mns/components/navbar.php"; ?>
@@ -112,9 +114,6 @@ $absences = $absencesData["absencesMenu"] ?? [];
                     <span class="close-btn"><i class='bx bx-x'></i></span>
                     <h2>Add Absence/Lateness</h2>
                     <form id="addAbsenceForm">
-                        <label for="utilisateur">Student Name</label>
-                        <input type="text" id="utilisateur" name="utilisateur" required>
-
                         <label for="statut">Status</label>
                         <select id="statut" name="statut" required>
                             <option value="Absence">Absence</option>
@@ -123,9 +122,9 @@ $absences = $absencesData["absencesMenu"] ?? [];
 
                         <label for="type">Absence Type</label>
                         <select id="type" name="type" required>
-                            <option value="Rendez-vous médical">Medical appointment</option>
-                            <option value="Congé payé">Paid vacation</option>
-                            <option value="Autre">Other</option>
+                            <option value="1">Medical appointment</option>
+                            <option value="2">Paid vacation</option>
+                            <option value="3">Other</option>
                         </select>
 
                         <label for="debut">Start Date</label>
@@ -147,4 +146,5 @@ $absences = $absencesData["absencesMenu"] ?? [];
 
     <script src="/frontend-admin-mns/js/absences.js"></script>
 </body>
+
 </html>
