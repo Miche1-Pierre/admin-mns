@@ -43,4 +43,71 @@ public class Absence {
 
     @Column(name = "justifie_absence", nullable = false)
     private boolean justifieAbsence;
+
+    @Column(name = "justificatif_path")
+    private String justificatifPath;
+
+    public Long getIdAbsence() {
+        return idAbsence;
+    }
+
+    public void setIdAbsence(Long idAbsence) {
+        this.idAbsence = idAbsence;
+    }
+
+    public Utilisateur getStagiaire() {
+        return stagiaire;
+    }
+
+    public void setStagiaire(Utilisateur stagiaire) {
+        this.stagiaire = stagiaire;
+    }
+
+    public TypeAbsence getTypeAbsence() {
+        return typeAbsence;
+    }
+
+    public void setTypeAbsence(TypeAbsence typeAbsence) {
+        this.typeAbsence = typeAbsence;
+    }
+
+    public LocalDateTime getDateDebutAbsence() {
+        return dateDebutAbsence;
+    }
+
+    public void setDateDebutAbsence(LocalDateTime dateDebutAbsence) {
+        this.dateDebutAbsence = dateDebutAbsence;
+    }
+
+    public LocalDateTime getDateFinAbsence() {
+        return dateFinAbsence;
+    }
+
+    public void setDateFinAbsence(LocalDateTime dateFinAbsence) {
+        this.dateFinAbsence = dateFinAbsence;
+    }
+
+    public String getStatutAbsence() {
+        return statutAbsence;
+    }
+
+    public void setStatutAbsence(String statutAbsence) {
+        this.statutAbsence = statutAbsence;
+    }
+
+    public boolean isJustifieAbsence() {
+        return justifieAbsence;
+    }
+
+    public void setJustifieAbsence(boolean justifieAbsence) {
+        this.justifieAbsence = justifieAbsence;
+    }
+
+    public String getJustificatifPath() {
+        return justificatifPath;
+    }
+
+    public void setJustificatifPath(String justificatifPath) {
+        this.justificatifPath = justificatifPath;
+    }
 }
