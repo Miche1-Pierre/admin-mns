@@ -38,7 +38,9 @@ public class SecurityConfig {
                                 "/api/dashboard/modules/absences",
                                 "/api/dashboard/modules/candidatures",
                                 "/api/dashboard/messaging",
-                                "/api/dashboard/users").permitAll()
+                                "/api/dashboard/users",
+                                "/api/absences",
+                                "/api/absences/").permitAll()
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
