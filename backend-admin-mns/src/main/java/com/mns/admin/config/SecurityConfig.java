@@ -40,7 +40,9 @@ public class SecurityConfig {
                                 "/api/dashboard/messaging",
                                 "/api/dashboard/users",
                                 "/api/absences",
-                                "/api/absences/").permitAll()
+                                "/api/absences/",
+                                "/api/formations",
+                                "/api/formations/formations").permitAll()
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
