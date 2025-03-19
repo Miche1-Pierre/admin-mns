@@ -23,6 +23,11 @@
                 <label for="email">Email</label>
                 <input type="email" id="email" name="email" required>
 
+                <label for="formation">Formation</label>
+                <select id="formation" name="formationId" required>
+                    <option value="">-- Sélectionner une formation --</option>
+                </select>
+
                 <label for="cv">CV (PDF)</label>
                 <input type="file" id="cv" name="cv" accept=".pdf" required>
 
@@ -35,7 +40,7 @@
                 <button type="button" class="button primary" id="preview-btn">Prévisualiser</button>
             </form>
         </div>
-        
+
         <!-- Popup de récapitulatif -->
         <div id="recapModal" class="modal">
             <div class="modal-content">
@@ -44,6 +49,7 @@
                 <p><strong>Nom :</strong> <span id="recapNom"></span></p>
                 <p><strong>Prénom :</strong> <span id="recapPrenom"></span></p>
                 <p><strong>Email :</strong> <span id="recapEmail"></span></p>
+                <p><strong>Formation :</strong> <span id="recapFormation"></span></p>
                 <p><strong>Message :</strong> <span id="recapMessage"></span></p>
                 <p><strong>CV :</strong> <span id="recapCV"></span></p>
                 <p><strong>Lettre de motivation :</strong> <span id="recapLettre"></span></p>
@@ -59,6 +65,7 @@
         document.getElementById("recapNom").innerText = document.getElementById("nom").value;
         document.getElementById("recapPrenom").innerText = document.getElementById("prenom").value;
         document.getElementById("recapEmail").innerText = document.getElementById("email").value;
+        document.getElementById("recapFormation").innerText = document.getElementById("formation").selectedOptions[0].text;
         document.getElementById("recapMessage").innerText = document.getElementById("message").value || "Aucun message";
 
         let cvFile = document.getElementById("cv").files[0];
@@ -116,6 +123,21 @@
                 console.error("Erreur Fetch :", error);
                 alert("Impossible d'envoyer la candidature. Veuillez réessayer.");
             });
+    });
+
+    document.addEventListener('DOMContentLoaded', function() {
+        fetch('http://admin-mns:8080/api/formations/formations')
+            .then(response => response.json())
+            .then(formations => {
+                let formationSelect = document.getElementById('formation');
+                formations.forEach(formation => {
+                    let option = document.createElement('option');
+                    option.value = formation.idFormation;
+                    option.text = formation.nomFormation;
+                    formationSelect.appendChild(option);
+                });
+            })
+            .catch(err => console.error("Erreur lors du chargement des formations :", err));
     });
 </script>
 
