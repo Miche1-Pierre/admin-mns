@@ -8,12 +8,11 @@ function widgetMessages($widgetsData)
     }
 
     $title = "Messaging";
-    $link = "#";
+    $link = "/frontend-admin-mns/components/messaging/messaging.php";
     $img = null;
 
     $data = $widgetsData["messages"];
 
-    // Construction d'un tableau affichant Expéditeur, Date et un extrait du Message
     $content = "<table class='table-widget'>
                     <thead>
                         <tr>
