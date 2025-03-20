@@ -58,27 +58,27 @@ $absences = $absencesData["absencesMenu"] ?? [];
 
         <div class="dashboard-zone" id="dashboard-zone">
             <div class="document-container">
-                <button class="button add">Add Absences/Lateness</button>
+                <button class="button add">Ajouter une Absence/Retards</button>
 
                 <!-- Bandeau de filtrage -->
                 <div class="filter-bar">
                     <input type="text" id="searchInput" placeholder="Rechercher un étudiant..." />
                     <select id="filterStatut">
-                        <option value="">All statuts</option>
-                        <option value="Absence">Absence</option>
-                        <option value="Retard">Late</option>
+                        <option value="">Tout les status</option>
+                        <option value="Absence">Absences</option>
+                        <option value="Retard">Retards</option>
                     </select>
                     <select id="filterMotif">
-                        <option value="">All motifs</option>
-                        <option value="Maladie">Sickness</option>
-                        <option value="Congé payé">Paid vacation</option>
-                        <option value="Autre">Other</option>
+                        <option value="">Tout les motifs</option>
+                        <option value="Maladie">Maladies</option>
+                        <option value="Congé payé">Congès</option>
+                        <option value="Autre">Autres</option>
                     </select>
                     <select id="itemsPerPage">
-                        <option value="10">10 lines</option>
-                        <option value="25" selected>25 lines</option>
-                        <option value="50">50 lines</option>
-                        <option value="100">100 lines</option>
+                        <option value="10">10 lignes</option>
+                        <option value="25" selected>25 lignes</option>
+                        <option value="50">50 lignes</option>
+                        <option value="100">100 lignes</option>
                     </select>
                 </div>
 
@@ -88,12 +88,12 @@ $absences = $absencesData["absencesMenu"] ?? [];
                         <thead>
                             <tr>
                                 <th>ID</th>
-                                <th>Student</th>
+                                <th>Stagiaire</th>
                                 <th>Status</th>
                                 <th>Type</th>
-                                <th>Start</th>
-                                <th>End</th>
-                                <th>Justify</th>
+                                <th>Début</th>
+                                <th>Fin</th>
+                                <th>Justifié</th>
                                 <th>Actions</th>
                             </tr>
                         </thead>
@@ -103,8 +103,8 @@ $absences = $absencesData["absencesMenu"] ?? [];
                 </div>
 
                 <div class="pagination">
-                    <button class="prev-slide">Previous</button>
-                    <button class="next-slide">Next</button>
+                    <button class="prev-slide">Arrière</button>
+                    <button class="next-slide">Suivant</button>
                 </div>
             </div>
 
@@ -112,31 +112,31 @@ $absences = $absencesData["absencesMenu"] ?? [];
             <div id="addAbsenceModal" class="modal">
                 <div class="modal-content">
                     <span class="close-btn"><i class='bx bx-x'></i></span>
-                    <h2>Add Absence/Lateness</h2>
+                    <h2>Ajouter une Absence/Retards</h2>
                     <form id="addAbsenceForm">
                         <label for="statut">Status</label>
                         <select id="statut" name="statut" required>
                             <option value="Absence">Absence</option>
-                            <option value="Retard">Late</option>
+                            <option value="Retard">Retard</option>
                         </select>
 
-                        <label for="type">Absence Type</label>
+                        <label for="type">Type d'Absence/Retard</label>
                         <select id="type" name="type" required>
-                            <option value="1">Medical appointment</option>
-                            <option value="2">Paid vacation</option>
-                            <option value="3">Other</option>
+                            <option value="1">RDV Medical</option>
+                            <option value="2">Congès</option>
+                            <option value="3">Autre</option>
                         </select>
 
-                        <label for="debut">Start Date</label>
+                        <label for="debut">Début</label>
                         <input type="datetime-local" id="debut" name="debut" required>
 
-                        <label for="fin">End Date</label>
+                        <label for="fin">Fin</label>
                         <input type="datetime-local" id="fin" name="fin" required>
 
-                        <label for="justifie">Receipt (optional)</label>
+                        <label for="justifie">Justificatif (optionel)</label>
                         <input type="file" id="justifie" name="justifie">
 
-                        <button type="submit" class="button">Create</button>
+                        <button type="submit" class="button">Créer</button>
                     </form>
                 </div>
             </div>

@@ -58,16 +58,16 @@ $documents = $documentsData["documentsMenu"] ?? [];
 
         <div class="dashboard-zone" id="dashboard-zone">
             <div class="document-container">
-                <button class="button add">Add document</button>
+                <button class="button add">Ajouter un Document</button>
 
                 <!-- Bandeau de filtrage -->
                 <div class="filter-bar">
-                    <input type="text" id="searchInput" placeholder="Search document..." />
+                    <input type="text" id="searchInput" placeholder="Rechercher un document..." />
                     <select id="itemsPerPage">
-                        <option value="10">10 lines</option>
-                        <option value="25" selected>25 lines</option>
-                        <option value="50">50 lines</option>
-                        <option value="100">100 lines</option>
+                        <option value="10">10 lignes</option>
+                        <option value="25" selected>25 lignes</option>
+                        <option value="50">50 lignes</option>
+                        <option value="100">100 lignes</option>
                     </select>
                 </div>
 

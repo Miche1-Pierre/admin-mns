@@ -60,24 +60,23 @@ $candidatures = $candidaturesData["candidaturesMenu"] ?? [];
             <div class="document-container">
                 <!-- Bandeau de filtrage -->
                 <div class="filter-bar">
-                    <input type="text" id="searchInput" placeholder="Search document..." />
+                    <input type="text" id="searchInput" placeholder="Rechercher une candidature..." />
                     <select id="filterType">
-                        <option value="">All types</option>
-                        <option value="PDF">PDF</option>
-                        <option value="DOCX">DOCX</option>
-                        <option value="XLSX">XLSX</option>
-                    </select>
-                    <select id="filterAuthor">
-                        <option value="">All authors</option>
-                        <?php foreach (array_unique(array_column($candidatures, 'auteur')) as $author) : ?>
-                            <option value="<?= htmlspecialchars($author) ?>"><?= htmlspecialchars($author) ?></option>
-                        <?php endforeach; ?>
+                        <option value="">Type de Formation</option>
+                        <option value="BSD">BSD</option>
+                        <option value="DEVWEB">DEVWEB</option>
+                        <option value="CDA">CDA</option>
+                        <option value="BSRC">BSRC</option>
+                        <option value="DFS">DFS</option>
+                        <option value="M2I">M2I</option>
+                        <option value="TSSR">TSSR</option>
+                        <option value="MSRC">MSRC</option>
                     </select>
                     <select id="itemsPerPage">
-                        <option value="10">10 lines</option>
-                        <option value="25" selected>25 lines</option>
-                        <option value="50">50 lines</option>
-                        <option value="100">100 lines</option>
+                        <option value="10">10 lignes</option>
+                        <option value="25" selected>25 lignes</option>
+                        <option value="50">50 lignes</option>
+                        <option value="100">100 lignes</option>
                     </select>
                 </div>
 
@@ -87,10 +86,10 @@ $candidatures = $candidaturesData["candidaturesMenu"] ?? [];
                         <thead>
                             <tr>
                                 <th>ID</th>
-                                <th>Name</th>
-                                <th>Type</th>
+                                <th>Nom</th>
+                                <th>Formation</th>
                                 <th>Date</th>
-                                <th>Author</th>
+                                <th>Status</th>
                                 <th>Actions</th>
                             </tr>
                         </thead>
@@ -100,8 +99,8 @@ $candidatures = $candidaturesData["candidaturesMenu"] ?? [];
                 </div>
 
                 <div class="pagination">
-                    <button class="prev-slide">Previous</button>
-                    <button class="next-slide">Next</button>
+                    <button class="prev-slide">Arrière</button>
+                    <button class="next-slide">Suivant</button>
                 </div>
             </div>
         </div>
