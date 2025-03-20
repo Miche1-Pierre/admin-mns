@@ -171,6 +171,7 @@ public class DashboardRepository {
         List<Map<String, Object>> data = jdbcTemplate.queryForList(
                 "SELECT " +
                         "d.id_document AS id, " +
+                        "d.nom_document AS nom, " +
                         "d.date_depot_document AS depot, " +
                         "d.date_limite_document AS limite, " +
                         "td.nom_type_document AS type, " +
@@ -187,6 +188,7 @@ public class DashboardRepository {
         List<Map<String, Object>> data = jdbcTemplate.queryForList(
                 "SELECT " +
                         "d.id_document AS id, " +
+                        "d.nom_document AS nom, " +
                         "d.date_depot_document AS depot, " +
                         "d.date_limite_document AS limite, " +
                         "td.nom_type_document AS type " +
@@ -234,11 +236,13 @@ public class DashboardRepository {
     public Map<String, Object> getAllUsersMenu() {
         List<Map<String, Object>> data = jdbcTemplate.queryForList(
                 "SELECT " +
-                        "id_utilisateur AS id, " +
-                        "nom_utilisateur AS nom, " +
-                        "prenom_utilisateur AS prenom, " +
-                        "email_utilisateur AS email " +
-                        "FROM utilisateur"
+                        "u.id_utilisateur AS id, " +
+                        "u.nom_utilisateur AS nom, " +
+                        "u.prenom_utilisateur AS prenom, " +
+                        "u.email_utilisateur AS email, " +
+                        "r.nom_role AS role " +
+                        "FROM utilisateur u " +
+                        "JOIN role r ON u.role_id = r.id_role"
         );
         return Map.of("usersMenu", data);
     }
