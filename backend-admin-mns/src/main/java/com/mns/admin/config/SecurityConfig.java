@@ -31,6 +31,7 @@ public class SecurityConfig {
                                 "/api/dashboard/widgets",
                                 "/api/dashboard/absences",
                                 "/api/dashboard/candidatures",
+                                "/api/dashboard/users",
                                 "/api/dashboard/documents",
                                 "/api/dashboard/justificatifs",
                                 "/api/dashboard/messages",
