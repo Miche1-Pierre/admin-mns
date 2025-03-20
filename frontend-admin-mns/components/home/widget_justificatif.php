@@ -8,7 +8,7 @@ function widgetJustificatifs($widgetsData)
     }
 
     $title = "Receipts";
-    $link = "#";
+    $link = "/frontend-admin-mns/components/documents/documents.php";
     $img = null;
 
     $data = $widgetsData["justificatifs"];
