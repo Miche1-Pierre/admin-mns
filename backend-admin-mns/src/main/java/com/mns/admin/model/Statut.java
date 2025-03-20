@@ -37,4 +37,20 @@ public class Statut {
             return statutName;
         }
     }
+
+    public Long getIdStatut() {
+        return idStatut;
+    }
+
+    public void setIdStatut(Long idStatut) {
+        this.idStatut = idStatut;
+    }
+
+    public StatutEnum getStatutEnum() {
+        return statutEnum;
+    }
+
+    public void setStatutEnum(StatutEnum statutEnum) {
+        this.statutEnum = statutEnum;
+    }
 }

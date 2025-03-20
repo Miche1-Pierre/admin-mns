@@ -36,4 +36,44 @@ public class Dossier {
     @ManyToOne
     @JoinColumn(name = "id_statut", referencedColumnName = "idStatut", nullable = false)
     private Statut statut;
+
+    public Long getIdDossier() {
+        return idDossier;
+    }
+
+    public void setIdDossier(Long idDossier) {
+        this.idDossier = idDossier;
+    }
+
+    public Utilisateur getStagiaire() {
+        return stagiaire;
+    }
+
+    public void setStagiaire(Utilisateur stagiaire) {
+        this.stagiaire = stagiaire;
+    }
+
+    public LocalDateTime getDateCreationDossier() {
+        return dateCreationDossier;
+    }
+
+    public void setDateCreationDossier(LocalDateTime dateCreationDossier) {
+        this.dateCreationDossier = dateCreationDossier;
+    }
+
+    public LocalDateTime getDateValidationDossier() {
+        return dateValidationDossier;
+    }
+
+    public void setDateValidationDossier(LocalDateTime dateValidationDossier) {
+        this.dateValidationDossier = dateValidationDossier;
+    }
+
+    public Statut getStatut() {
+        return statut;
+    }
+
+    public void setStatut(Statut statut) {
+        this.statut = statut;
+    }
 }

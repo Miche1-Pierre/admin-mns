@@ -39,4 +39,52 @@ public class Justificatif {
     @ManyToOne
     @JoinColumn(name = "id_statut", referencedColumnName = "idStatut", nullable = false)
     private Statut statut;
+
+    public Long getIdJustificatif() {
+        return idJustificatif;
+    }
+
+    public void setIdJustificatif(Long idJustificatif) {
+        this.idJustificatif = idJustificatif;
+    }
+
+    public Absence getAbsence() {
+        return absence;
+    }
+
+    public void setAbsence(Absence absence) {
+        this.absence = absence;
+    }
+
+    public Utilisateur getUtilisateur() {
+        return utilisateur;
+    }
+
+    public void setUtilisateur(Utilisateur utilisateur) {
+        this.utilisateur = utilisateur;
+    }
+
+    public String getTypeDocumentJustificatif() {
+        return typeDocumentJustificatif;
+    }
+
+    public void setTypeDocumentJustificatif(String typeDocumentJustificatif) {
+        this.typeDocumentJustificatif = typeDocumentJustificatif;
+    }
+
+    public LocalDateTime getDateDepotJustificatif() {
+        return dateDepotJustificatif;
+    }
+
+    public void setDateDepotJustificatif(LocalDateTime dateDepotJustificatif) {
+        this.dateDepotJustificatif = dateDepotJustificatif;
+    }
+
+    public Statut getStatut() {
+        return statut;
+    }
+
+    public void setStatut(Statut statut) {
+        this.statut = statut;
+    }
 }

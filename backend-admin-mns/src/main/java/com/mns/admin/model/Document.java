@@ -28,6 +28,9 @@ public class Document {
     @JoinColumn(name = "id_typeDocument", nullable = false)
     private TypeDocument typeDocument;
 
+    @JoinColumn(name = "nom_document", nullable = false)
+    private String nomDocument;
+
     @ManyToOne
     @JoinColumn(name = "id_statut", nullable = false)
     private Statut statut;
@@ -51,4 +54,84 @@ public class Document {
     @Column(name = "contenu_chiffre_document", nullable = false)
     @Lob
     private byte[] contenuChiffreDocument;
+
+    public Long getIdDocument() {
+        return idDocument;
+    }
+
+    public void setIdDocument(Long idDocument) {
+        this.idDocument = idDocument;
+    }
+
+    public Dossier getDossier() {
+        return dossier;
+    }
+
+    public void setDossier(Dossier dossier) {
+        this.dossier = dossier;
+    }
+
+    public TypeDocument getTypeDocument() {
+        return typeDocument;
+    }
+
+    public void setTypeDocument(TypeDocument typeDocument) {
+        this.typeDocument = typeDocument;
+    }
+
+    public String getNomDocument() {
+        return nomDocument;
+    }
+
+    public void setNomDocument(String nomDocument) {
+        this.nomDocument = nomDocument;
+    }
+
+    public Statut getStatut() {
+        return statut;
+    }
+
+    public void setStatut(Statut statut) {
+        this.statut = statut;
+    }
+
+    public Secret getSecret() {
+        return secret;
+    }
+
+    public void setSecret(Secret secret) {
+        this.secret = secret;
+    }
+
+    public LocalDateTime getDateDepotDocument() {
+        return dateDepotDocument;
+    }
+
+    public void setDateDepotDocument(LocalDateTime dateDepotDocument) {
+        this.dateDepotDocument = dateDepotDocument;
+    }
+
+    public LocalDateTime getDateLimiteDocument() {
+        return dateLimiteDocument;
+    }
+
+    public void setDateLimiteDocument(LocalDateTime dateLimiteDocument) {
+        this.dateLimiteDocument = dateLimiteDocument;
+    }
+
+    public String getCleChiffrement_document() {
+        return cleChiffrement_document;
+    }
+
+    public void setCleChiffrement_document(String cleChiffrement_document) {
+        this.cleChiffrement_document = cleChiffrement_document;
+    }
+
+    public byte[] getContenuChiffreDocument() {
+        return contenuChiffreDocument;
+    }
+
+    public void setContenuChiffreDocument(byte[] contenuChiffreDocument) {
+        this.contenuChiffreDocument = contenuChiffreDocument;
+    }
 }

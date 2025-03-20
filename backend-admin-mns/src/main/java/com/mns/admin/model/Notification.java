@@ -44,4 +44,60 @@ public class Notification {
 
     @Column(name = "statut_notification", nullable = false, length = 50)
     private String statutNotification;
+
+    public Long getIdNotification() {
+        return idNotification;
+    }
+
+    public void setIdNotification(Long idNotification) {
+        this.idNotification = idNotification;
+    }
+
+    public Utilisateur getUtilisateur() {
+        return utilisateur;
+    }
+
+    public void setUtilisateur(Utilisateur utilisateur) {
+        this.utilisateur = utilisateur;
+    }
+
+    public Utilisateur getDestinataire() {
+        return destinataire;
+    }
+
+    public void setDestinataire(Utilisateur destinataire) {
+        this.destinataire = destinataire;
+    }
+
+    public TypeNotification getTypeNotification() {
+        return typeNotification;
+    }
+
+    public void setTypeNotification(TypeNotification typeNotification) {
+        this.typeNotification = typeNotification;
+    }
+
+    public String getContenuNotification() {
+        return contenuNotification;
+    }
+
+    public void setContenuNotification(String contenuNotification) {
+        this.contenuNotification = contenuNotification;
+    }
+
+    public LocalDateTime getDateNotification() {
+        return dateNotification;
+    }
+
+    public void setDateNotification(LocalDateTime dateNotification) {
+        this.dateNotification = dateNotification;
+    }
+
+    public String getStatutNotification() {
+        return statutNotification;
+    }
+
+    public void setStatutNotification(String statutNotification) {
+        this.statutNotification = statutNotification;
+    }
 }

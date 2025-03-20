@@ -37,4 +37,44 @@ public class Inscription {
     @ManyToOne
     @JoinColumn(name = "id_statut", nullable = false)
     private Statut statut;
+
+    public Long getIdInscription() {
+        return idInscription;
+    }
+
+    public void setIdInscription(Long idInscription) {
+        this.idInscription = idInscription;
+    }
+
+    public Utilisateur getStagiaire() {
+        return stagiaire;
+    }
+
+    public void setStagiaire(Utilisateur stagiaire) {
+        this.stagiaire = stagiaire;
+    }
+
+    public Formation getFormation() {
+        return formation;
+    }
+
+    public void setFormation(Formation formation) {
+        this.formation = formation;
+    }
+
+    public LocalDateTime getDateInscription() {
+        return dateInscription;
+    }
+
+    public void setDateInscription(LocalDateTime dateInscription) {
+        this.dateInscription = dateInscription;
+    }
+
+    public Statut getStatut() {
+        return statut;
+    }
+
+    public void setStatut(Statut statut) {
+        this.statut = statut;
+    }
 }
