@@ -63,18 +63,6 @@ $documents = $documentsData["documentsMenu"] ?? [];
                 <!-- Bandeau de filtrage -->
                 <div class="filter-bar">
                     <input type="text" id="searchInput" placeholder="Search document..." />
-                    <select id="filterType">
-                        <option value="">All types</option>
-                        <option value="PDF">PDF</option>
-                        <option value="DOCX">DOCX</option>
-                        <option value="XLSX">XLSX</option>
-                    </select>
-                    <select id="filterAuthor">
-                        <option value="">All authors</option>
-                        <?php foreach (array_unique(array_column($documents, 'auteur')) as $author) : ?>
-                            <option value="<?= htmlspecialchars($author) ?>"><?= htmlspecialchars($author) ?></option>
-                        <?php endforeach; ?>
-                    </select>
                     <select id="itemsPerPage">
                         <option value="10">10 lines</option>
                         <option value="25" selected>25 lines</option>
@@ -89,6 +77,7 @@ $documents = $documentsData["documentsMenu"] ?? [];
                         <thead>
                             <tr>
                                 <th>ID</th>
+                                <th>Nom</th>
                                 <th>Type</th>
                                 <th>Date Dépôt</th>
                                 <th>Date Limite</th>

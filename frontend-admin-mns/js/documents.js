@@ -135,10 +135,8 @@ function updateBreadcrumbLinks(links) {
 function initDocuments() {
     const itemsPerPageSelect = document.getElementById("itemsPerPage");
     const searchInput = document.getElementById("searchInput");
-    const filterType = document.getElementById("filterType");
-    const tableBody = document.getElementById("documentTableBody");
 
-    if (!itemsPerPageSelect || !searchInput || !filterType || !tableBody) {
+    if (!itemsPerPageSelect || !searchInput) {
         console.error("Un ou plusieurs éléments DOM manquent.");
         return;
     }
@@ -154,19 +152,16 @@ function initDocuments() {
     });
 
     searchInput.addEventListener("input", filterDocuments);
-    filterType.addEventListener("change", filterDocuments);
 
     displayDocuments();
 }
 
 function filterDocuments() {
     const searchQuery = document.getElementById("searchInput").value.toLowerCase();
-    const selectedType = document.getElementById("filterType").value;
 
     filteredDocuments = documents.filter(doc => {
         return (
-            (selectedType === "" || doc.type === selectedType) &&
-            (doc.type.toLowerCase().includes(searchQuery))
+            (doc.nom.toLowerCase().includes(searchQuery) || doc.type.toLowerCase().includes(searchQuery))
         );
     });
 
@@ -177,13 +172,15 @@ function filterDocuments() {
 function displayDocuments() {
     const tableBody = document.getElementById("documentTableBody");
     if (!tableBody) return;
+
     const startIndex = (currentPage - 1) * itemsPerPage;
     const endIndex = startIndex + itemsPerPage;
     const displayedDocs = filteredDocuments.slice(startIndex, endIndex);
+
     tableBody.innerHTML = "";
 
     if (displayedDocs.length === 0) {
-        tableBody.innerHTML = "<tr><td colspan='6'>Aucun document trouvé.</td></tr>";
+        tableBody.innerHTML = "<tr><td colspan='5'>Aucun document trouvé.</td></tr>";
         return;
     }
 
@@ -191,6 +188,7 @@ function displayDocuments() {
         const row = document.createElement("tr");
         row.innerHTML = `
             <td>${doc.id}</td>
+            <td>${doc.nom}</td>
             <td>${doc.type}</td>
             <td>${new Date(doc.depot).toLocaleString()}</td>
             <td>${new Date(doc.limite).toLocaleString()}</td>
@@ -223,6 +221,7 @@ document.addEventListener("click", function (event) {
         displayDocuments();
     }
 });
+
 
 function initAddDocumentModal() {
     const addButton = document.querySelector(".button.add");
