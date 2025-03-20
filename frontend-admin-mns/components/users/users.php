@@ -7,6 +7,31 @@ if (!isset($_SESSION["token"])) {
     header("Location: login.php");
     exit();
 }
+
+$token = $_SESSION["token"];
+$apiUrl = "http://admin-mns:8080/api/dashboard/users";
+
+$headers = [
+    "Authorization: Bearer $token",
+    "Content-Type: application/json"
+];
+
+$ch = curl_init();
+curl_setopt($ch, CURLOPT_URL, $apiUrl);
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+$response = curl_exec($ch);
+
+if ($response === false) {
+    error_log("Erreur cURL : ". curl_error($ch));
+    curl_close($ch);
+    $usersData = [];
+} else {
+    curl_close($ch);
+    $usersData = json_decode($response, true);
+}
+
+$users = $usersData["usersMenu"] ?? [];
 ?>
 
 <!DOCTYPE html>
@@ -26,6 +51,10 @@ if (!isset($_SESSION["token"])) {
     </header>
     <main>
         <?php include $_SERVER['DOCUMENT_ROOT'] . "/frontend-admin-mns/components/breadcrumb.php"; ?>
+
+        <script>
+            const users = <?php echo json_encode($users, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP) ?>;
+        </script>
 
         <div class="dashboard-zone" id="dashboard-zone">
             <div class="document-container">
