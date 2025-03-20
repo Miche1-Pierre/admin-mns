@@ -8,7 +8,7 @@ function widgetDocuments($widgetsData)
     }
 
     $title = "Documents récents";
-    $link = "#";
+    $link = "/frontend-admin-mns/components/documents/documents.php";
     $img = null;
 
     $data = $widgetsData["documents"];
