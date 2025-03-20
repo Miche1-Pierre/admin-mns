@@ -71,6 +71,13 @@ public class DashboardController {
         return ResponseEntity.ok(data);
     }
 
+    @GetMapping("/users")
+    public ResponseEntity<?> getUsersMenuData(HttpServletRequest request) {
+        Map<String, Object> data = dashboardService.getUsersMenuData();
+        System.out.println("Users data: " + data);
+        return ResponseEntity.ok(data);
+    }
+
     @GetMapping("/documents")
     public ResponseEntity<?> getDocumentsMenuData(HttpServletRequest request) {
         Utilisateur user = getAuthenticatedUser(request);
