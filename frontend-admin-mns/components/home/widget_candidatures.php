@@ -8,7 +8,7 @@ function widgetCandidatures($widgetsData)
     }
 
     $title = "Applications by Training";
-    $link = "#";
+    $link = "/frontend-admin-mns/components/modules/candidatures.php";
     $text = "Breakdown of applicants by training course";
     $img = null;
     $chartId = "candidaturesChart";
