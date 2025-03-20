@@ -2,9 +2,8 @@ document.addEventListener("DOMContentLoaded", function () {
     setActiveMenu();
     initSidebar();
     initDropdownMenu();
-    window.users = users;
-    initUsers();
     updateBreadcrumb();
+    fetchProfile();
     initViewAccountModal();
 });
 
@@ -162,7 +161,7 @@ function initUsers() {
             return (
                 (selectedRole === "" || user.role === selectedRole) &&
                 (user.nom.toLowerCase().includes(searchQuery) ||
-                 user.email.toLowerCase().includes(searchQuery))
+                    user.email.toLowerCase().includes(searchQuery))
             );
         });
 
@@ -233,6 +232,28 @@ function initUsers() {
     filterRole.addEventListener("change", filterUsers);
 
     displayUsers();
+}
+
+function fetchProfile() {
+    fetch("http://admin-mns:8080/api/dashboard/profil", {
+        headers: {
+            'Authorization': 'Bearer ' + localStorage.getItem('token')
+        }
+    })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Erreur lors de la récupération du profil');
+            }
+            return response.json();
+        })
+        .then(data => {
+            if (data.profil && data.profil.length > 0) {
+                const profile = data.profil[0];
+                document.getElementById('user-firstname').textContent = profile.prenom_utilisateur;
+                document.getElementById('user-role').textContent = profile.nom_role;
+            }
+        })
+        .catch(error => console.error('Erreur:', error));
 }
 
 function initViewAccountModal() {

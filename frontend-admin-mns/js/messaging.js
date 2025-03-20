@@ -3,6 +3,7 @@ document.addEventListener("DOMContentLoaded", function () {
     initSidebar();
     initDropdownMenu();
     updateBreadcrumb();
+    fetchProfile();
     initViewAccountModal();
 });
 
@@ -154,4 +155,25 @@ function initViewAccountModal() {
             modal.style.display = "none";
         }
     });
+}
+function fetchProfile() {
+    fetch("http://admin-mns:8080/api/dashboard/profil", {
+        headers: {
+            'Authorization': 'Bearer ' + localStorage.getItem('token')
+        }
+    })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Erreur lors de la récupération du profil');
+            }
+            return response.json();
+        })
+        .then(data => {
+            if (data.profil && data.profil.length > 0) {
+                const profile = data.profil[0];
+                document.getElementById('user-firstname').textContent = profile.prenom_utilisateur;
+                document.getElementById('user-role').textContent = profile.nom_role;
+            }
+        })
+        .catch(error => console.error('Erreur:', error));
 }
