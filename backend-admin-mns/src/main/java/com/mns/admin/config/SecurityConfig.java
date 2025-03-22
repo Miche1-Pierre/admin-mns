@@ -27,6 +27,7 @@ public class SecurityConfig {
                                 "/api/auth/login",
                                 "/api/auth/verify-email",
                                 "/api/auth/candidature",
+                                "/api/auth/change-password",
                                 "/api/dashboard",
                                 "/api/dashboard/widgets",
                                 "/api/dashboard/absences",
