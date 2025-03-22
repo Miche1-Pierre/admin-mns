@@ -2,6 +2,7 @@ package com.mns.admin.controller;
 
 import com.mns.admin.dto.AuthRequest;
 import com.mns.admin.dto.CandidatureDto;
+import com.mns.admin.dto.PasswordChangeDto;
 import com.mns.admin.model.Utilisateur;
 import com.mns.admin.security.JwtUtil;
 import com.mns.admin.service.CandidatureService;
@@ -9,6 +10,7 @@ import com.mns.admin.service.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -51,6 +53,24 @@ public class AuthController {
             candidatureService.createCandidature(candidatureDto);
             return ResponseEntity.ok("Candidature créée avec succès.");
         } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
+    }
+
+    @PostMapping("/change-password")
+    public ResponseEntity<?> changePassword(@AuthenticationPrincipal(expression = "username") String email,
+                                            @RequestBody PasswordChangeDto passwordChangeDto) {
+        System.out.println("Email reçu depuis @AuthenticationPrincipal : " + email);
+        if (email == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Utilisateur non authentifié");
+        }
+
+        System.out.println("Utilisateur authentifié : " + email);
+        try {
+            userService.changePassword(email, passwordChangeDto);
+            return ResponseEntity.ok("Mot de passe mis à jour avec succès");
+        } catch (Exception e) {
+            System.err.println("Erreur lors de la mise à jour du mot de passe : " + e.getMessage());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
     }
