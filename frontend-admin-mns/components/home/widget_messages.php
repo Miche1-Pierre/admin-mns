@@ -7,7 +7,7 @@ function widgetMessages($widgetsData)
         return;
     }
 
-    $title = "Messaging";
+    $title = "Messages";
     $link = "/frontend-admin-mns/components/messaging/messaging.php";
     $img = null;
 

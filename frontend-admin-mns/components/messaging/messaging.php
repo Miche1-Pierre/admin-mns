@@ -31,7 +31,7 @@ if (!isset($_SESSION["token"])) {
             <div class="messaging-container">
                 <!-- Barre de recherche des contacts -->
                 <div class="contacts-sidebar">
-                    <input type="text" id="searchContacts" placeholder="Search contact..." />
+                    <input type="text" id="searchContacts" placeholder="Rechercher des contacts..." />
                     <ul id="contactsList">
                         <!-- Contact -->
                     </ul>
@@ -40,14 +40,14 @@ if (!isset($_SESSION["token"])) {
                 <!-- Zone de chat -->
                 <div class="chat-zone">
                     <div class="chat-header">
-                        <span id="chatContactName">Select contact</span>
+                        <span id="chatContactName">Sélectionnez un Contact</span>
                     </div>
                     <div class="chat-messages" id="chatMessages">
                         <!-- Messages affichés dynamiquement -->
                     </div>
                     <div class="chat-input">
-                        <input type="text" id="messageInput" placeholder="Write a message..." />
-                        <button id="sendMessage"><i class='bx bx-send'></i></button>
+                        <input type="text" id="messageInput" placeholder="Rédiger un message..." />
+                        <button id="sendMessage" title="Envoyer !"><i class='bx bx-send'></i></button>
                     </div>
                 </div>
             </div>

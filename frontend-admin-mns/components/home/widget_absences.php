@@ -7,9 +7,9 @@ function widgetAbsences($widgetsData)
         return;
     }
 
-    $title = "Absences & Lateness";
+    $title = "Absences & Retards";
     $link = "/frontend-admin-mns/components/modules/absences.php";
-    $text = "View absences and late arrivals";
+    $text = "Voir les Absences et les Retards";
     $img = null;
     $chartId = "absencesChart";
     $chartType = "bar";
@@ -74,7 +74,7 @@ function widgetAbsences($widgetsData)
             "backgroundColor" => $rotatedColorsAbsences
         ],
         [
-            "label" => "Lateness",
+            "label" => "Retards",
             "data" => $rotatedRetards,
             "backgroundColor" => $rotatedColorsRetards
         ]

@@ -7,9 +7,9 @@ function widgetCandidatures($widgetsData)
         return;
     }
 
-    $title = "Applications by Training";
+    $title = "Candidatures";
     $link = "/frontend-admin-mns/components/modules/candidatures.php";
-    $text = "Breakdown of applicants by training course";
+    $text = "Voir les Candidatures par Formations";
     $img = null;
     $chartId = "candidaturesChart";
     $chartType = "pie";
@@ -44,7 +44,7 @@ function widgetCandidatures($widgetsData)
 
     $datasets = [
         [
-            "label" => "Applications",
+            "label" => "Candidatures",
             "data" => $dataValues,
             "backgroundColor" => array_slice($backgroundColors, 0, count($dataValues)),
             "borderColor" => array_fill(0, count($dataValues), "#222222"),

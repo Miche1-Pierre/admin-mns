@@ -115,6 +115,9 @@ function updateBreadcrumb() {
     } else if (path.includes("stats.php")) {
         breadcrumbTitle.textContent = "Dashboard";
         updateBreadcrumbLinks(["More", "/", "Stats"]);
+    } else if (path.includes("messaging.php")) {
+        breadcrumbTitle.textContent = "Dashboard";
+        updateBreadcrumbLinks(["Messaging"]);
     } else {
         breadcrumbTitle.textContent = "Page Not Found";
         updateBreadcrumbLinks([]);

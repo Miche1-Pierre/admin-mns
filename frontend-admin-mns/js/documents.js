@@ -97,7 +97,7 @@ function updateBreadcrumb() {
         updateBreadcrumbLinks(["Home"]);
     } else if (path.includes("candidatures.php")) {
         breadcrumbTitle.textContent = "Dashboard";
-        updateBreadcrumbLinks(["Modules", "/", "Applications"]);
+        updateBreadcrumbLinks(["Modules", "/", "Candidatures"]);
     } else if (path.includes("absences.php")) {
         breadcrumbTitle.textContent = "Dashboard";
         updateBreadcrumbLinks(["Modules", "/", "Absences & Lateness"]);
@@ -110,6 +110,9 @@ function updateBreadcrumb() {
     } else if (path.includes("stats.php")) {
         breadcrumbTitle.textContent = "Dashboard";
         updateBreadcrumbLinks(["More", "/", "Stats"]);
+    } else if (path.includes("messaging.php")) {
+        breadcrumbTitle.textContent = "Dashboard";
+        updateBreadcrumbLinks(["Messaging"]);
     } else {
         breadcrumbTitle.textContent = "Page Not Found";
         updateBreadcrumbLinks([]);
