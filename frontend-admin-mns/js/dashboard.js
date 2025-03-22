@@ -234,11 +234,16 @@ function initCharts() {
     }, 200);
 };
 
+function isPasswordStrong(password) {
+    const pattern = /^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%&!?^+=_;:§]).{8,}$/;
+    return pattern.test(password);
+}
 function initViewAccountModal() {
     const viewButton = document.querySelector(".button.view");
     const modal = document.getElementById("viewAccountModal");
     const closeModalButton = modal.querySelector(".close-btn");
-    // const form = document.getElementById("changeAccountForm");
+    const profileForm = document.getElementById("updateProfileForm");
+    const passwordForm = document.getElementById("changePasswordForm");
 
     viewButton.addEventListener("click", () => {
         modal.style.display = "block";
@@ -252,5 +257,80 @@ function initViewAccountModal() {
         if (e.target === modal) {
             modal.style.display = "none";
         }
+    });
+
+    //profileForm.addEventListener("submit", (e) => {
+    //    e.preventDefault();
+
+    //    const formData = new FormData(profileForm);
+
+    //    fetch("http://admin-mns:8080/api/auth/update-profile", {
+    //        method: 'POST',
+    //        headers: {
+    //            'Authorization': 'Bearer ' + localStorage.getItem('token')
+    //        },
+    //        body: formData
+    //    })
+    //    .then(response => {
+    //        if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+    //        return response.json();
+    //    })
+    //    .then(data => {
+    //        alert("Profil mis à jour avec succès !");
+    //    })
+    //    .catch(error => {
+    //        console.error('Erreur:', error);
+    //        alert("Erreur lors de la mise à jour du profil.");
+    //    });
+    //});
+
+    passwordForm.addEventListener("submit", (e) => {
+        e.preventDefault();
+
+        const newPassword = document.getElementById("newPassword").value;
+        const confirmNewPassword = document.getElementById("confirmNewPassword").value;
+
+        if (newPassword !== confirmNewPassword) {
+            alert("Les nouveaux mots de passe ne correspondent pas.");
+            return;
+        }
+
+        if (!isPasswordStrong(newPassword)) {
+            alert("Le mot de passe doit contenir au moins 8 caractères, une majuscule, une minuscule, un chiffre et un caractère spécial.");
+            return;
+        }
+
+        const payload = {
+            newPassword: newPassword,
+            confirmNewPassword: confirmNewPassword
+        };
+
+        console.log("Payload envoyé :", payload);
+        const token = localStorage.getItem('token');
+        console.log("Token envoyé :", token);
+
+        fetch("http://admin-mns:8080/api/auth/change-password", {
+            method: 'POST',
+            headers: {
+                'Authorization': 'Bearer ' + localStorage.getItem('token'),
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(payload)
+        })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`HTTP error ! status: ${response.status}`);
+                }
+                return response.text();
+            })
+            .then(data => {
+                console.log("Réponse reçue :", data);
+                alert(data);
+                modal.style.display = "none";
+            })
+            .catch(error => {
+                console.error('Erreur:', error);
+                alert("Erreur lors de la mise à jour du mot de passe.");
+            });
     });
 }

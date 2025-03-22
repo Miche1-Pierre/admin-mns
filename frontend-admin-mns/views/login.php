@@ -26,45 +26,45 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["token"])) {
     <div class="container" id="container">
         <div class="form-container sign-up">
             <form method="" action="/frontend-admin-mns/views/candidatures.php">
-                <h1>Create an Account Integrating MNS</h1>
+                <h1>Créer un compte pour intégrer MNS</h1>
                 <p>Vous allez être redirigé vers la page de candidature en cliquant sur le bouton ci-dessous.</p>
                 <p>Veuillez vous assurer d'avoir toutes les informations nécessaires avant de continuer.</p>
-                <button>Sign Up</button>
+                <button>S'inscrire</button>
             </form>
         </div>
         <div class="form-container sign-in">
             <form id="login-form">
-                <h1>Sign In</h1>
+                <h1>Se connecter</h1>
                 <div class="social-icons">
                     <a href="#" class="icon"><i class='bx bxl-google-plus'></i></a>
                     <a href="#" class="icon"><i class='bx bxl-facebook'></i></a>
                     <a href="#" class="icon"><i class='bx bxl-github'></i></a>
                     <a href="#" class="icon"><i class='bx bxl-linkedin'></i></a>
                 </div>
-                <span>or use your email password</span>
+                <span>ou utilisez votre email et votre mot de passe</span>
                 <div class="email-field">
                     <label for="email">Email</label>
                     <input type="email" name="email" placeholder="Email" required>
                 </div>
                 <div class="password-field">
-                    <label for="password">Password</label>
-                    <input type="password" name="password" placeholder="Password" required>
+                    <label for="password">Mot de Passe</label>
+                    <input type="password" name="password" placeholder="Mot de Passe" required>
                 </div>
-                <a href="#">Forget Your Password ?</a>
-                <button>Sign In</button>
+                <a href="#">Vous avez oublié votre mot de passe ?</a>
+                <button>Se connecter</button>
             </form>
         </div>
         <div class="toggle-container">
             <div class="toggle">
                 <div class="toggle-panel toggle-left">
-                    <h1>Welcome Back !</h1>
-                    <p>Enter your personal details to use all of site features</p>
-                    <button class="hidden" id="login">Sign In</button>
+                    <h1>Bon retour !</h1>
+                    <p>Saisissez vos données personnelles pour utiliser toutes les fonctionnalités du site</p>
+                    <button class="hidden" id="login">Se Connecter</button>
                 </div>
                 <div class="toggle-panel toggle-right">
-                    <h1>Hello, Friend !</h1>
-                    <p>Register with your personal details to use all of app features</p>
-                    <button class="hidden" id="register">Create Account</button>
+                    <h1>Bonjour, l'ami(e) !</h1>
+                    <p>Enregistrez-vous avec vos données personnelles pour utiliser toutes les fonctionnalités de l'application.</p>
+                    <button class="hidden" id="register">S'inscrire</button>
                 </div>
             </div>
         </div>
