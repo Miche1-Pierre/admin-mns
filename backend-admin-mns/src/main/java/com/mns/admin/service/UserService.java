@@ -1,6 +1,7 @@
 package com.mns.admin.service;
 
 import com.mns.admin.dto.AuthRequest;
+import com.mns.admin.dto.PasswordChangeDto;
 import com.mns.admin.model.Role;
 import com.mns.admin.model.Utilisateur;
 import com.mns.admin.model.UtilisateurSession;
@@ -11,11 +12,13 @@ import com.mns.admin.repository.UserSessionRepository;
 import com.mns.admin.repository.VerrificationTokenRepository;
 import com.mns.admin.security.JwtUtil;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
+import java.util.regex.Pattern;
 
 @Service
 public class UserService {
@@ -25,7 +28,7 @@ public class UserService {
     private final UserSessionRepository userSessionRepository;
     private final VerrificationTokenRepository verificationTokenRepository;
     private final EmailService emailService;
-    private PasswordEncoder passwordEncoder;
+    private final PasswordEncoder passwordEncoder;
 
     @Value("${jwt.expiration_time}")
     private long expirationTime;
@@ -143,4 +146,28 @@ public class UserService {
         return utilisateur;
     }
 
+    public void changePassword(String useremail, PasswordChangeDto passwordChangeDto) {
+        Utilisateur user = userRepository.findByEmailUtilisateur(useremail).orElseThrow(() -> new UsernameNotFoundException("Utilisateur non trouvé"));
+
+        if (!isPasswordStrong(passwordChangeDto.getNewPassword())) {
+            throw new RuntimeException("Le mot de passe n'est pas assez fort");
+        }
+
+        if (!passwordChangeDto.getNewPassword().equals(passwordChangeDto.getConfirmNewPassword())) {
+            throw new RuntimeException("Les nouveaux mot de passe ne correspondent pas");
+        }
+
+        String hashedPassword = passwordEncoder.encode(passwordChangeDto.getNewPassword());
+        System.out.println("Nouveau mot de passe hashé : " + hashedPassword);
+
+        user.setMotDePasseUtilisateur(hashedPassword);
+        userRepository.save(user);
+        System.out.println("Mot de passe enregistré en base.");
+    }
+
+    // Au moins 8 caractères, 1 chiffre, 1 minuscule, 1 majuscule et 1 caractère spécial
+    private boolean isPasswordStrong(String password) {
+        String pattern = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%&!?^+=_;:§]).{8,}$";
+        return Pattern.matches(pattern, password);
+    }
 }
