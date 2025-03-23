@@ -6,7 +6,9 @@ import com.mns.admin.dto.PasswordChangeDto;
 import com.mns.admin.model.Utilisateur;
 import com.mns.admin.security.JwtUtil;
 import com.mns.admin.service.CandidatureService;
+import com.mns.admin.service.SessionService;
 import com.mns.admin.service.UserService;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -20,11 +22,13 @@ public class AuthController {
     private final UserService userService;
     private final JwtUtil jwtUtil;
     private final CandidatureService candidatureService;
+    private final SessionService sessionsService;
 
-    public AuthController(UserService userService, JwtUtil jwtUtil, CandidatureService candidatureService) {
+    public AuthController(UserService userService, JwtUtil jwtUtil, CandidatureService candidatureService, SessionService sessionService) {
         this.userService = userService;
         this.jwtUtil = jwtUtil;
         this.candidatureService = candidatureService;
+        this.sessionsService = sessionService;
     }
 
     @GetMapping("/verify-email")
@@ -45,6 +49,17 @@ public class AuthController {
             }
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
         }
+    }
+
+    @PostMapping("/logout")
+    public ResponseEntity<?> logout(HttpServletRequest request) {
+        String header = request.getHeader("Authorization");
+        if (header != null && header.startsWith("Bearer ")) {
+            String token = header.substring(7);
+            sessionsService.invalidateSession(token);
+            return ResponseEntity.ok("Déconnexion réussie");
+        }
+        return ResponseEntity.badRequest().body("Token manquant");
     }
 
     @PostMapping(value = "/candidature", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
