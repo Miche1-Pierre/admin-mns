@@ -8,4 +8,5 @@ import java.util.Optional;
 
 public interface UserSessionRepository extends JpaRepository<UtilisateurSession, Long> {
     boolean existsByUtilisateur(Utilisateur utilisateur);
+    Optional<UtilisateurSession> findByToken(String token);
 }
