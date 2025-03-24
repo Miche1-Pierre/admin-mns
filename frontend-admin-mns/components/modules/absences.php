@@ -89,11 +89,12 @@ $absences = $absencesData["absencesMenu"] ?? [];
                             <tr>
                                 <th>ID</th>
                                 <th>Stagiaire</th>
-                                <th>Status</th>
                                 <th>Type</th>
+                                <th>Motif</th>
                                 <th>Début</th>
                                 <th>Fin</th>
                                 <th>Justifié</th>
+                                <th>Etat</th>
                                 <th>Actions</th>
                             </tr>
                         </thead>
@@ -137,6 +138,62 @@ $absences = $absencesData["absencesMenu"] ?? [];
                         <input type="file" id="justifie" name="justifie">
 
                         <button type="submit" class="button">Créer</button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Modal de Consultation avec validation -->
+            <div id="readAbsenceModal" class="modal">
+                <div class="modal-content">
+                    <span class="close-btn" id="closeReadModal"><i class='bx bx-x'></i></span>
+                    <h2>Détails de l'Absence/Retard</h2>
+                    <div id="readAbsenceContent">
+                        <p><strong>ID :</strong> <span id="readId"></span></p>
+                        <p><strong>Stagiaire :</strong> <span id="readUtilisateur"></span></p>
+                        <p><strong>Status :</strong> <span id="readStatut"></span></p>
+                        <p><strong>Type :</strong> <span id="readType"></span></p>
+                        <p><strong>Début :</strong> <span id="readDebut"></span></p>
+                        <p><strong>Fin :</strong> <span id="readFin"></span></p>
+                        <p><strong>Justifié :</strong> <span id="readJustifie"></span></p>
+                        <p><strong>Validation :</strong> <span id="readValidation"></span></p>
+                    </div>
+                    <!-- Boutons de validation -->
+                    <div id="validationSection">
+                        <button id="validateAbsence" class="btn validate" disabled>Valider</button>
+                        <button id="refuseAbsence" class="btn refuse" disabled>Refuser</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Modal d'Édition -->
+            <div id="editAbsenceModal" class="modal">
+                <div class="modal-content">
+                    <span class="close-btn" id="closeEditModal"><i class='bx bx-x'></i></span>
+                    <h2>Modifier l'Absence/Retard</h2>
+                    <form id="editAbsenceForm">
+                        <label for="editStatut">Statut</label>
+                        <select id="editStatut" name="statut" required>
+                            <option value="Absence">Absence</option>
+                            <option value="Retard">Retard</option>
+                        </select>
+
+                        <label for="editType">Type d'Absence/Retard</label>
+                        <select id="editType" name="type" required>
+                            <option value="1">RDV Medical</option>
+                            <option value="2">Congès</option>
+                            <option value="3">Autre</option>
+                        </select>
+
+                        <label for="editDebut">Début</label>
+                        <input type="datetime-local" id="editDebut" name="debut" required>
+
+                        <label for="editFin">Fin</label>
+                        <input type="datetime-local" id="editFin" name="fin" required>
+
+                        <label for="editJustificatif">Justificatif (optionnel)</label>
+                        <input type="file" id="editJustificatif" name="justificatif">
+
+                        <button type="submit" class="button">Enregistrer</button>
                     </form>
                 </div>
             </div>
