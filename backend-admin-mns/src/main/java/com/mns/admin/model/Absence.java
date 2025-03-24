@@ -5,7 +5,9 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Getter
@@ -46,6 +48,20 @@ public class Absence {
 
     @Column(name = "justificatif_path")
     private String justificatifPath;
+
+    @OneToMany(mappedBy = "absence", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Justificatif> justificatifs = new ArrayList<>();
+
+    public enum AbsenceStatus {
+        EN_ATTENTE,
+        VALIDE,
+        REFUSE,
+        SUPPRIME
+    }
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "etat_absence", nullable = false)
+    private AbsenceStatus etatAbsence = AbsenceStatus.EN_ATTENTE;
 
     public Long getIdAbsence() {
         return idAbsence;
@@ -109,5 +125,21 @@ public class Absence {
 
     public void setJustificatifPath(String justificatifPath) {
         this.justificatifPath = justificatifPath;
+    }
+
+    public AbsenceStatus getEtatAbsence() {
+        return etatAbsence;
+    }
+
+    public void setEtatAbsence(AbsenceStatus etatAbsence) {
+        this.etatAbsence = etatAbsence;
+    }
+
+    public List<Justificatif> getJustificatifs() {
+        return justificatifs;
+    }
+
+    public void setJustificatifs(List<Justificatif> justificatifs) {
+        this.justificatifs = justificatifs;
     }
 }
