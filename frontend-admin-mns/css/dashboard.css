@@ -579,6 +579,16 @@ canvas {
     background: #218838;
 }
 
+.document-container .button.read {
+    background: var(--primary-background-color);
+    color: var(--text-color-dark);
+    border: 1px solid var(--tran-secondary-color);
+}
+
+.document-container .button.read:hover {
+    background: var(--secondary-background-color);
+}
+
 .document-container .button.edit {
     background: var(--tran-secondary-color);
     color: var(--text-color-light);
@@ -716,6 +726,63 @@ canvas {
 
 .modal .modal-content input[type="file"]:hover {
     border-color: var(--secondary-color);
+}
+
+#readAbsenceContent {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+    margin-top: 20px;
+}
+
+#readAbsenceContent p {
+    background-color: var(--background-color-light);
+    padding: 15px;
+    border-radius: var(--border-radius);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    font-size: 16px;
+    font-weight: 500;
+}
+
+#readAbsenceContent p span {
+    font-weight: 600;
+    color: var(--text-color-dark);
+}
+
+/* Style général des badges */
+.badge {
+    display: inline-block;
+    padding: 5px 12px;
+    font-size: 14px;
+    font-weight: bold;
+    border-radius: 15px;
+    text-align: center;
+    min-width: 80px;
+}
+
+.badge-valide {
+    background-color: #4CAF50;
+    color: var(--text-color-light);
+}
+
+.badge-attente {
+    background-color: #FFC107;
+    color: var(--text-color-dark);
+}
+
+.badge-refuse {
+    background-color: var(--primary-color);
+    color: var(--text-color-light);
+}
+
+.badge-inconnu {
+    background-color: var(--tran-secondary-color);
+    color: var(--text-color-light);
+}
+
+.badge:hover {
+    opacity: 0.8;
+    cursor: default;
 }
 
 /* Messaging */
