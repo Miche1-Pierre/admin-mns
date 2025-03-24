@@ -43,7 +43,12 @@ public class SecurityConfig {
                                 "/api/dashboard/messaging",
                                 "/api/dashboard/users",
                                 "/api/absences",
-                                "/api/absences/",
+                                "/api/absences/**",
+                                "/api/absences/absence/**",
+                                "/api/absences/delete/**",
+                                "/api/absences/update/**",
+                                "/api/absences/absence/validate/**",
+                                "/api/absences/absence/refuse/**",
                                 "/api/formations",
                                 "/api/formations/formations").permitAll()
                         .anyRequest().authenticated()
