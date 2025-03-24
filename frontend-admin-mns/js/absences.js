@@ -207,6 +207,19 @@ function displayAbsences() {
 
     displayAbsences.forEach(absence => {
         const row = document.createElement("tr");
+        const userRole = localStorage.getItem("role");
+
+        let actionsHtml = `<button class="button read">Voir</button>`;
+
+        if (userRole === "Admin") {
+            actionsHtml += `<button class="button delete">Supprimer</button>`;
+        } else {
+            if (absence.etat !== "VALIDE") {
+                actionsHtml += `<button class="button edit">Modifier</button>`;
+                actionsHtml += `<button class="button delete">Supprimer</button>`;
+            }
+        }
+
         row.innerHTML = `
             <td>${absence.id}</td>
             <td>${absence.utilisateur}</td>
@@ -215,13 +228,227 @@ function displayAbsences() {
             <td>${new Date(absence.debut).toLocaleString()}</td>
             <td>${new Date(absence.fin).toLocaleString()}</td>
             <td>${absence.justifie ? 'Oui' : 'Non'}</td>
+            <td>${absence.etat || "Non défini"}</td>
             <td>
-                <button class="button edit">Modifier</button>
-                <button class="button delete">Supprimer</button>
+                ${actionsHtml}
             </td>
         `;
-
         tableBody.appendChild(row);
+    });
+
+    // Fonction de gestion du bouton "Voir" (lecture)
+    document.querySelectorAll(".button.read").forEach(button => {
+        button.addEventListener("click", () => {
+            const absenceId = button.closest("tr").querySelector("td:first-child").textContent;
+            console.log("Token:", localStorage.getItem("token"));
+
+            fetch(`http://admin-mns:8080/api/absences/absence/${absenceId}`, {
+                headers: {
+                    'Authorization': 'Bearer ' + localStorage.getItem('token')
+                }
+            })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error("Erreur réseau: " + response.status);
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    console.log("Données reçues :", data);
+
+                    document.getElementById("readId").textContent = data.idAbsence || "Non disponible";
+                    document.getElementById("readUtilisateur").textContent = data.utilisateur || "Non disponible";
+                    document.getElementById("readStatut").textContent = data.statutAbsence || "Non disponible";
+                    document.getElementById("readType").textContent = data.typeAbsence || "Non disponible";
+
+                    document.getElementById("readDebut").textContent = data.dateDebutAbsence
+                        ? new Date(data.dateDebutAbsence).toLocaleString()
+                        : "Non disponible";
+
+                    document.getElementById("readFin").textContent = data.dateFinAbsence
+                        ? new Date(data.dateFinAbsence).toLocaleString()
+                        : "Non disponible";
+
+                    document.getElementById("readJustifie").textContent = data.justifieAbsence ? "Oui" : "Non";
+
+                    const validateButton = document.getElementById("validateAbsence");
+                    const refuseButton = document.getElementById("refuseAbsence");
+
+                    const currentUserRole = localStorage.getItem("role");
+
+                    if (currentUserRole === "Stagiaire") {
+                        validateButton.style.display = "none";
+                        refuseButton.style.display = "none";
+                    } else {
+                        validateButton.style.display = "inline-block";
+                        refuseButton.style.display = "inline-block";
+
+                        if (data.etatAbsence === "VALIDE") {
+                            validateButton.disabled = true;
+                            refuseButton.disabled = true;
+                        } else if (data.etatAbsence === "REFUSE") {
+                            validateButton.disabled = false;
+                            refuseButton.disabled = true;
+                        } else {
+                            validateButton.disabled = false;
+                            refuseButton.disabled = false;
+                        }
+
+                        // Fonction pour valider l'absence
+                        validateButton.onclick = function () {
+                            fetch(`http://admin-mns:8080/api/absences/absence/validate/${data.idAbsence}`, {
+                                method: 'PUT',
+                                headers: {
+                                    'Authorization': 'Bearer ' + localStorage.getItem('token')
+                                }
+                            })
+                                .then(response => response.json())
+                                .then(() => {
+                                    console.log("Absence validée");
+                                    validateButton.disabled = true;
+                                    refuseButton.disabled = true;
+                                })
+                                .catch(error => console.error("Erreur de validation :", error));
+                        };
+
+                        // Fonction pour refuser l'absence
+                        refuseButton.onclick = function () {
+                            fetch(`http://admin-mns:8080/api/absences/absence/refuse/${data.idAbsence}`, {
+                                method: 'PUT',
+                                headers: {
+                                    'Authorization': 'Bearer ' + localStorage.getItem('token')
+                                }
+                            })
+                                .then(response => response.json())
+                                .then(() => {
+                                    console.log("Absence refusée");
+                                    validateButton.disabled = true;
+                                    refuseButton.disabled = true;
+                                })
+                                .catch(error => console.error("Erreur de refus :", error));
+                        };
+                    }
+
+                    // Afficher la modal
+                    const modal = document.getElementById("readAbsenceModal");
+                    modal.style.display = "block";
+                })
+                .catch(error => console.error("Erreur lors de la récupération :", error));
+        });
+    });
+
+    // Fonction de gestion de la fermeture de la modal
+    document.getElementById("closeReadModal").addEventListener("click", () => {
+        document.getElementById("readAbsenceModal").style.display = "none";
+    });
+
+    window.addEventListener("click", (e) => {
+        const modal = document.getElementById("readAbsenceModal");
+        if (e.target === modal) {
+            modal.style.display = "none";
+        }
+    });
+
+    // Fonction de gestion du bouton "Modifier" (édition)
+    document.querySelectorAll(".button.edit").forEach(button => {
+        button.addEventListener("click", () => {
+            const row = button.closest("tr");
+            const absenceId = row.querySelector("td:first-child").textContent;
+
+            const absenceData = filteredAbsences.find(a => a.id == absenceId);
+            if (!absenceData) {
+                console.error("Absence non trouvée pour l'édition");
+                return;
+            }
+
+            const modal = document.getElementById("editAbsenceModal");
+            modal.style.display = "block";
+
+            document.getElementById("editStatut").value = absenceData.statut;
+            document.getElementById("editType").value = absenceData.type;
+
+            const debut = new Date(absenceData.debut).toISOString().slice(0, 16);
+            const fin = new Date(absenceData.fin).toISOString().slice(0, 16);
+            document.getElementById("editDebut").value = debut;
+            document.getElementById("editFin").value = fin;
+
+            const editForm = document.getElementById("editAbsenceForm");
+            editForm.onsubmit = async (e) => {
+                e.preventDefault();
+
+                const updatedStatut = document.getElementById("editStatut").value;
+                const updatedType = document.getElementById("editType").value;
+                const updatedDebut = document.getElementById("editDebut").value;
+                const updatedFin = document.getElementById("editFin").value;
+                const updatedJustificatif = document.getElementById("editJustificatif").files[0];
+
+                const formData = new FormData();
+                formData.append("statutAbsence", updatedStatut);
+                formData.append("dateDebutAbsence", updatedDebut);
+                formData.append("dateFinAbsence", updatedFin);
+                if (updatedJustificatif) {
+                    formData.append("justificatif", updatedJustificatif);
+                }
+
+                try {
+                    const response = await fetch(`http://admin-mns:8080/api/absences/update/${absenceId}`, {
+                        method: "PUT",
+                        headers: {
+                            'Authorization': 'Bearer ' + localStorage.getItem('token')
+                        },
+                        body: formData
+                    });
+
+                    const result = await response.json();
+
+                    if (response.ok) {
+                        alert("Absence mise à jour avec succès !");
+                        modal.style.display = "none";
+                        window.location.reload();
+                    } else {
+                        alert("Erreur lors de la mise à jour : " + (result.message || "Erreur inconnue."));
+                    }
+                } catch (error) {
+                    console.error("Erreur lors de la mise à jour :", error);
+                    alert("Une erreur est survenue lors de la mise à jour.");
+                }
+            };
+        });
+    });
+
+    // Fonction de gestion de la fermeture de la modal d'édition
+    document.getElementById("closeEditModal").addEventListener("click", () => {
+        document.getElementById("editAbsenceModal").style.display = "none";
+    });
+
+    window.addEventListener("click", (e) => {
+        const modal = document.getElementById("editAbsenceModal");
+        if (e.target === modal) {
+            modal.style.display = "none";
+        }
+    });
+
+    // Fonction de gestion du bouton "Supprimer"
+    document.querySelectorAll(".button.delete").forEach(button => {
+        button.addEventListener("click", () => {
+            if (confirm("Voulez-vous vraiment supprimer cette absence ?")) {
+                const absenceId = button.closest("tr").querySelector("td:first-child").textContent;
+                fetch(`http://admin-mns:8080/api/absences/delete/${absenceId}`, {
+                    method: "DELETE",
+                    headers: {
+                        'Authorization': 'Bearer ' + localStorage.getItem('token')
+                    }
+                })
+                    .then(response => {
+                        if (response.ok) {
+                            alert("Absence supprimée");
+                        } else {
+                            alert("Erreur lors de la suppression");
+                        }
+                    })
+                    .catch(error => console.error("Erreur:", error));
+            }
+        });
     });
 
     updatePagination();
@@ -394,6 +621,7 @@ function fetchProfile() {
                 const profile = data.profil[0];
                 document.getElementById('user-firstname').textContent = profile.prenom_utilisateur;
                 document.getElementById('user-role').textContent = profile.nom_role;
+                localStorage.setItem("role", profile.nom_role);
             }
         })
         .catch(error => console.error('Erreur:', error));
