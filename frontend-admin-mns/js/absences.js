@@ -209,6 +209,11 @@ function displayAbsences() {
         const row = document.createElement("tr");
         const userRole = localStorage.getItem("role");
 
+        const etatClass = absence.etat === "VALIDE" ? "badge badge-valide" :
+            absence.etat === "EN_ATTENTE" ? "badge badge-attente" :
+                absence.etat === "REFUSE" ? "badge badge-refuse" :
+                    "badge badge-inconnu";
+
         let actionsHtml = `<button class="button read">Voir</button>`;
 
         if (userRole === "Admin") {
@@ -228,7 +233,7 @@ function displayAbsences() {
             <td>${new Date(absence.debut).toLocaleString()}</td>
             <td>${new Date(absence.fin).toLocaleString()}</td>
             <td>${absence.justifie ? 'Oui' : 'Non'}</td>
-            <td>${absence.etat || "Non défini"}</td>
+            <td><span class="${etatClass}">${absence.etat || "Non défini"}</span></td>
             <td>
                 ${actionsHtml}
             </td>
