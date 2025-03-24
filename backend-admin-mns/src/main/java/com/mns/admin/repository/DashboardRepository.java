@@ -122,7 +122,8 @@ public class DashboardRepository {
                         "a.date_debut_absence AS debut, " +
                         "a.date_fin_absence AS fin, " +
                         "a.justifie_absence AS justifie, " +
-                        "a.statut_absence AS statut " +
+                        "a.statut_absence AS statut, " +
+                        "a.etat_absence AS etat " +
                         "FROM absence a " +
                         "JOIN utilisateur ua ON ua.id_utilisateur = a.id_stagiaire " +
                         "JOIN type_absence ta ON ta.id_type_absence = a.id_type_absence " +
@@ -140,7 +141,8 @@ public class DashboardRepository {
                         "a.date_debut_absence AS debut, " +
                         "a.date_fin_absence AS fin, " +
                         "a.justifie_absence AS justifie, " +
-                        "a.statut_absence AS statut " +
+                        "a.statut_absence AS statut," +
+                        "a.etat_absence AS etat " +
                         "FROM absence a " +
                         "JOIN utilisateur ua ON ua.id_utilisateur = a.id_stagiaire " +
                         "JOIN type_absence ta ON ta.id_type_absence = a.id_type_absence " +
