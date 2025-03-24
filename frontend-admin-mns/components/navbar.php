@@ -187,7 +187,7 @@ if ($response === false) {
             })
             .then(data => {
                 console.log(data);
-                localStorage.removeItem("token");
+                localStorage.clear();
                 window.location.href = "/frontend-admin-mns/views/login";
             })
             .catch(error => {
