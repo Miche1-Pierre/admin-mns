@@ -146,7 +146,7 @@ $absences = $absencesData["absencesMenu"] ?? [];
             <div id="readAbsenceModal" class="modal">
                 <div class="modal-content">
                     <span class="close-btn" id="closeReadModal"><i class='bx bx-x'></i></span>
-                    <h2>Détails de l'Absence/Retard</h2>
+                    <h2>Détails de l'Absence/Retard <span id="readAbsenceEtat" class="badge"></span></h2>
                     <div id="readAbsenceContent">
                         <p><strong>ID :</strong> <span id="readId"></span></p>
                         <p><strong>Stagiaire :</strong> <span id="readUtilisateur"></span></p>
@@ -155,7 +155,6 @@ $absences = $absencesData["absencesMenu"] ?? [];
                         <p><strong>Début :</strong> <span id="readDebut"></span></p>
                         <p><strong>Fin :</strong> <span id="readFin"></span></p>
                         <p><strong>Justifié :</strong> <span id="readJustifie"></span></p>
-                        <p><strong>Validation :</strong> <span id="readValidation"></span></p>
                     </div>
                     <!-- Boutons de validation -->
                     <div id="validationSection">
