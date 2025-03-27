@@ -170,4 +170,13 @@ public class UserService {
         String pattern = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%&!?^+=_;:§]).{8,}$";
         return Pattern.matches(pattern, password);
     }
+
+    public void updateRoleToStagiaire(Long userId) {
+        Utilisateur utilisateur = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("Utilisateur non trouvé"));
+
+        Role stagiaireRole = roleRepository.findByNomRole("Stagiaire").orElseThrow(() -> new RuntimeException("Role non trouvé"));
+
+        utilisateur.setRole(stagiaireRole);
+        userRepository.save(utilisateur);
+    }
 }
