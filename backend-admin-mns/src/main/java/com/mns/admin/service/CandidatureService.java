@@ -13,7 +13,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -40,7 +39,7 @@ public class CandidatureService {
     @Autowired
     private UserService userService;
 
-    @Value("${file.upload-dir:uploads}")
+    @Value("${UPLOAD_DIR}")
     private String uploadDir;
 
     @Transactional
@@ -98,5 +97,76 @@ public class CandidatureService {
     private Statut getStatut(Statut.StatutEnum statutEnum) {
         return statutRepository.findByStatutEnum(statutEnum)
                 .orElseThrow(() -> new RuntimeException("Statut non trouvé"));
+    }
+
+    public CandidatureDto getCandidatureById(Long id) {
+        Inscription candidature = inscriptionRepository.findById(id).orElseThrow(() -> new RuntimeException("Candidature non trouvée"));
+
+        CandidatureDto candidatureDto = new CandidatureDto();
+        candidatureDto.setId(candidature.getIdInscription());
+
+        if (candidature.getStagiaire() != null) {
+            candidatureDto.setNom(candidature.getStagiaire().getNomUtilisateur());
+            candidatureDto.setPrenom(candidature.getStagiaire().getPrenomUtilisateur());
+            candidatureDto.setEmail(candidature.getStagiaire().getEmailUtilisateur());
+        }
+
+        candidatureDto.setDateInscription(candidature.getDateInscription());
+        candidatureDto.setFormationNom(candidature.getFormation().getNomFormation());
+        candidatureDto.setInscriptionEtat(candidature.getEtatInscription());
+
+        return candidatureDto;
+    }
+
+    @Transactional
+    public Inscription updateCandidature(Long id, CandidatureDto dto) {
+        Inscription inscription = inscriptionRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Candidature non trouvée"));
+
+        // Mise à jour de la formation si un nouvel identifiant est fourni
+        if (dto.getFormationId() != null) {
+            Formation formation = formationRepository.findById(dto.getFormationId())
+                    .orElseThrow(() -> new RuntimeException("Formation non trouvée"));
+            inscription.setFormation(formation);
+        }
+
+        // Vous pouvez ajouter ici la mise à jour d'autres informations,
+        // par exemple si vous souhaitez mettre à jour des fichiers (CV, lettre)
+        // ou d'autres champs liés au dossier associé.
+
+        return inscriptionRepository.save(inscription);
+    }
+
+    // Supprimer une candidature
+    @Transactional
+    public void deleteCandidature(Long id) {
+        // Vous pouvez ajouter ici une logique pour supprimer également le dossier associé si nécessaire.
+        inscriptionRepository.deleteById(id);
+    }
+
+    public Inscription validateCandidature(Long id) {
+        Inscription inscription = inscriptionRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Candidature non trouvée"));
+
+        if (inscription.getEtatInscription() == Inscription.InscriptionEtat.VALIDE) {
+            throw new RuntimeException("Candidature déjà validée");
+        }
+
+        inscription.setEtatInscription(Inscription.InscriptionEtat.VALIDE);
+        inscriptionRepository.save(inscription);
+        return inscription;
+    }
+
+    public Inscription refuseCandidature(Long id) {
+        Inscription inscription = inscriptionRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Candidature non trouvée"));
+
+        if (inscription.getEtatInscription() == Inscription.InscriptionEtat.REFUSE) {
+            throw new RuntimeException("Candidature déjà refusée");
+        }
+
+        inscription.setEtatInscription(Inscription.InscriptionEtat.REFUSE);
+        inscriptionRepository.save(inscription);
+        return inscription;
     }
 }
