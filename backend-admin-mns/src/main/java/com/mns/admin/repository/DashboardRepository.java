@@ -156,10 +156,13 @@ public class DashboardRepository {
         List<Map<String, Object>> data = jdbcTemplate.queryForList(
                 "SELECT " +
                         "i.id_inscription AS id, " +
-                        "u.nom_utilisateur AS stagiaire, " +
+                        "u.nom_utilisateur AS nom, " +
+                        "u.prenom_utilisateur AS prenom, " +
+                        "u.email_utilisateur AS email, " +
                         "f.nom_formation AS formation, " +
                         "i.date_inscription AS date_inscription, " +
-                        "s.statut AS statut " +
+                        "s.statut AS statut," +
+                        "i.etat_inscription AS etat " +
                         "FROM inscription i " +
                         "JOIN utilisateur u ON u.id_utilisateur = i.id_stagiaire " +
                         "JOIN formation f ON f.id_formation = i.id_formation " +
