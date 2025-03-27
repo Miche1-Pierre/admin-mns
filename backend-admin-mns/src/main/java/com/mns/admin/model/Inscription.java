@@ -38,6 +38,17 @@ public class Inscription {
     @JoinColumn(name = "id_statut", nullable = false)
     private Statut statut;
 
+    public enum InscriptionEtat {
+        EN_ATTENTE,
+        VALIDE,
+        REFUSE,
+        SUPPRIME
+    }
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "etat_inscription", nullable = false)
+    private InscriptionEtat etatInscription = InscriptionEtat.EN_ATTENTE;
+
     public Long getIdInscription() {
         return idInscription;
     }
@@ -76,5 +87,13 @@ public class Inscription {
 
     public void setStatut(Statut statut) {
         this.statut = statut;
+    }
+
+    public InscriptionEtat getEtatInscription() {
+        return etatInscription;
+    }
+
+    public void setEtatInscription(InscriptionEtat etatInscription) {
+        this.etatInscription = etatInscription;
     }
 }
