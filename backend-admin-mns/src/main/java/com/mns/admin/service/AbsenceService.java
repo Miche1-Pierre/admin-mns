@@ -8,6 +8,7 @@ import com.mns.admin.repository.AbsenceRepository;
 import com.mns.admin.repository.TypeAbsenceRepository;
 import com.mns.admin.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -34,7 +35,8 @@ public class AbsenceService {
     @Autowired
     private UserRepository userRepository;
 
-    private final String UPLOAD_DIR = "uploads/";
+    @Value("${UPLOAD_DIR}")
+    private String uploadDir;
 
     public List<Absence> getAllAbsences() {
         return absenceRepository.findAll();
@@ -63,7 +65,7 @@ public class AbsenceService {
 
         if (justificatif != null && !justificatif.isEmpty()) {
             String filename = UUID.randomUUID().toString() + "_" + justificatif.getOriginalFilename();
-            Path path = Paths.get(UPLOAD_DIR + filename);
+            Path path = Paths.get(uploadDir + filename);
             Files.write(path, justificatif.getBytes());
             absence.setJustificatifPath(filename);
         }
@@ -86,7 +88,7 @@ public class AbsenceService {
 
         if (justificatif != null && !justificatif.isEmpty()) {
             String filename = UUID.randomUUID().toString() + "_" + justificatif.getOriginalFilename();
-            Path path = Paths.get(UPLOAD_DIR + filename);
+            Path path = Paths.get(uploadDir + filename);
             Files.write(path, justificatif.getBytes());
             absence.setJustificatifPath(filename);
             absence.setJustifieAbsence(true);
