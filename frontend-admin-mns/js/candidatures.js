@@ -173,11 +173,11 @@ function initCandidatures() {
 function filterCandidatures() {
     const searchQuery = document.getElementById("searchInput").value.toLowerCase();
     const selectedType = document.getElementById("filterType").value;
-    
+
     filteredCandidatures = candidatures.filter(candidature => {
         return (
             (selectedType === "" || candidature.formation === selectedType) &&
-            (candidature.stagiaire.toLowerCase().includes(searchQuery))
+            (candidature.nom.toLowerCase().includes(searchQuery))
         );
     });
 
@@ -191,29 +191,151 @@ function displayCandidatures() {
 
     const startIndex = (currentPage - 1) * itemsPerPage;
     const endIndex = startIndex + itemsPerPage;
-    const displayCandidatures = filteredCandidatures.slice(startIndex, endIndex);
+    const displayData = filteredCandidatures.slice(startIndex, endIndex);
 
     tableBody.innerHTML = "";
 
-    if (displayCandidatures.length === 0) {
+    if (displayData.length === 0) {
         tableBody.innerHTML = "<tr><td colspan='6'>Aucune candidature trouvée.</td></tr>";
         return;
     }
 
-    displayCandidatures.forEach(candidature => {
+    displayData.forEach(candidature => {
         const row = document.createElement("tr");
+
+        const etatClass = candidature.etat === "VALIDE" ? "badge badge-valide" : candidature.etat === "EN_ATTENTE" ? "badge badge-attente" : candidature.etat === "REFUSE" ? "badge badge-refuse" : "badge badge-inconnu";
         row.innerHTML = `
             <td>${candidature.id}</td>
-            <td>${candidature.stagiaire}</td>
+            <td>${candidature.nom}</td>
+            <td>${candidature.prenom}</td>
+            <td>${candidature.email}</td>
             <td>${candidature.formation}</td>
             <td>${new Date(candidature.date_inscription).toLocaleDateString()}</td>
-            <td>${candidature.statut}</td>
+            <td><span class="${etatClass}">${candidature.etat || "Non défini"}</span></td>
             <td>
-                <button class="button edit">Modifier</button>
+                <button class="button read">Voir</button>
                 <button class="button delete">Supprimer</button>
             </td>
         `;
         tableBody.appendChild(row);
+    });
+
+    document.querySelectorAll(".button.read").forEach(button => {
+        button.addEventListener("click", () => {
+            const candidatureId = button.closest("tr").querySelector("td:first-child").textContent;
+            fetch(`http://admin-mns:8080/api/candidatures/candidature/${candidatureId}`, {
+                headers: {
+                    'Authorization': 'Bearer ' + localStorage.getItem('token')
+                }
+            })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error("Erreur lors de la récupération de la candidature");
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    console.log("Données recues : \n", data);
+                    document.getElementById("readId").textContent = data.id;
+                    document.getElementById("readNom").textContent = data.nom;
+                    document.getElementById("readPrenom").textContent = data.prenom;
+                    document.getElementById("readEmail").textContent = data.email;
+                    document.getElementById("readFormation").textContent = data.formationNom;
+                    document.getElementById("readDateInscription").textContent = new Date(data.date_inscription).toLocaleDateString();
+                    document.getElementById("readMessage").textContent = data.message || "";
+                    document.getElementById("readCV").textContent = data.cv ? "Télécharger" : "Non disponible";
+                    document.getElementById("readLettre").textContent = data.lettre ? "Télécharger" : "Non disponible";
+
+                    const validateButton = document.getElementById("validateCandidature");
+                    const refuseButton = document.getElementById("refuseCandidature");
+
+                    if (!validateButton || !refuseButton) {
+                        console.error("Les boutons de validation ou de refus ne sont pas trouvés dans le DOM.");
+                        return;
+                    }
+
+                    if (data.inscriptionEtat === "EN_ATTENTE") {
+                        validateButton.disabled = false;
+                        refuseButton.disabled = false;
+                    } else {
+                        validateButton.disabled = true;
+                        refuseButton.disabled = true;
+                    }
+
+                    validateButton.onclick = function () {
+                        fetch(`http://admin-mns:8080/api/candidatures/candidature/validate/${data.id}`, {
+                            method: 'PUT',
+                            headers: {
+                                'Authorization': 'Bearer ' + localStorage.getItem('token')
+                            }
+                        })
+                            .then(response => response.json())
+                            .then(() => {
+                                alert("Candidature validée");
+                                validateButton.disabled = true;
+                                refuseButton.disabled = true;
+                                window.location.reload();
+                            })
+                            .catch(err => console.error("Erreur lors de la validation :", err));
+                    };
+
+                    refuseButton.onclick = function () {
+                        fetch(`http://admin-mns:8080/api/candidatures/candidature/refuse/${data.id}`, {
+                            method: 'PUT',
+                            headers: {
+                                'Authorization': 'Bearer ' + localStorage.getItem('token')
+                            }
+                        })
+                            .then(response => response.json())
+                            .then(() => {
+                                alert("Candidature refusée");
+                                validateButton.disabled = true;
+                                refuseButton.disabled = true;
+                                window.location.reload();
+                            })
+                            .catch(err => console.error("Erreur lors du refus :", err));
+                    };
+
+                    document.getElementById("readCandidatureModal").style.display = "block";
+                })
+                .catch(error => console.error(error));
+        });
+    });
+
+
+    // Écouteur pour la suppression
+    document.querySelectorAll(".button.delete").forEach(button => {
+        button.addEventListener("click", () => {
+            if (confirm("Voulez-vous vraiment supprimer cette candidature ?")) {
+                const candidatureId = button.closest("tr").querySelector("td:first-child").textContent;
+                fetch(`http://admin-mns:8080/api/candidatures/delete/${candidatureId}`, {
+                    method: "DELETE",
+                    headers: {
+                        'Authorization': 'Bearer ' + localStorage.getItem('token')
+                    }
+                })
+                    .then(response => {
+                        if (response.ok) {
+                            alert("Candidature supprimée");
+                            window.location.reload();
+                        } else {
+                            alert("Erreur lors de la suppression");
+                        }
+                    })
+                    .catch(error => console.error("Erreur:", error));
+            }
+        });
+    });
+
+    document.getElementById("closeReadModal").addEventListener("click", () => {
+        document.getElementById("readCandidatureModal").style.display = "none";
+    });
+
+    window.addEventListener("click", (e) => {
+        const modal = document.getElementById("readCandidatureModal");
+        if (e.target === modal) {
+            modal.style.display = "none";
+        }
     });
 
     updatePagination();
