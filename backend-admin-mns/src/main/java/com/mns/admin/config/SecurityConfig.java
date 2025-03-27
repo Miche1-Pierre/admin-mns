@@ -49,6 +49,13 @@ public class SecurityConfig {
                                 "/api/absences/update/**",
                                 "/api/absences/absence/validate/**",
                                 "/api/absences/absence/refuse/**",
+                                "/api/candidatures",
+                                "/api/candidatures/**",
+                                "/api/candidatures/candidature/**",
+                                "/api/candidatures/delete/**",
+                                "/api/candidatures/update/**",
+                                "/api/candidatures/candidature/validate/**",
+                                "/api/candidatures/candidature/refuse/**",
                                 "/api/formations",
                                 "/api/formations/formations").permitAll()
                         .anyRequest().authenticated()
