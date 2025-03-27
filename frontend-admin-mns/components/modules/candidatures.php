@@ -54,6 +54,7 @@ $candidatures = $candidaturesData["candidaturesMenu"] ?? [];
 
         <script>
             const candidatures = <?php echo json_encode($candidatures, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP); ?>;
+            console.log(candidatures)
         </script>
 
         <div class="dashboard-zone" id="dashboard-zone">
@@ -87,6 +88,8 @@ $candidatures = $candidaturesData["candidaturesMenu"] ?? [];
                             <tr>
                                 <th>ID</th>
                                 <th>Nom</th>
+                                <th>Prénom</th>
+                                <th>Email</th>
                                 <th>Formation</th>
                                 <th>Date</th>
                                 <th>Status</th>
@@ -101,6 +104,29 @@ $candidatures = $candidaturesData["candidaturesMenu"] ?? [];
                 <div class="pagination">
                     <button class="prev-slide">Arrière</button>
                     <button class="next-slide">Suivant</button>
+                </div>
+            </div>
+
+            <!-- Modal de consultation -->
+            <div id="readCandidatureModal" class="modal">
+                <div class="modal-content">
+                    <span class="close-btn" id="closeReadModal"><i class='bx bx-x'></i></span>
+                    <h2>Consulter une Candidature</h2>
+                    <div id="readCandidatureContent">
+                        <p><strong>ID :</strong> <span id="readId"></span></p>
+                        <p><strong>Nom :</strong> <span id="readNom"></span></p>
+                        <p><strong>Prenom :</strong> <span id="readPrenom"></span></p>
+                        <p><strong>Email :</strong> <span id="readEmail"></span></p>
+                        <p><strong>Formation :</strong> <span id="readFormation"></span></p>
+                        <p><strong>Date de Candidature :</strong> <span id="readDateInscription"></span></p>
+                        <p><strong>Message :</strong> <span id="readMessage"></span></p>
+                        <p><strong>CV :</strong> <span id="readCV"></span></p>
+                        <p><strong>Lettre :</strong> <span id="readLettre"></span></p>
+                    </div>
+                    <div id="validationSection">
+                        <button id="validateCandidature" class="btn validate" disabled>Valider</button>
+                        <button id="refuseCandidature" class="btn refuse" disabled>Refuser</button>
+                    </div>
                 </div>
             </div>
         </div>
