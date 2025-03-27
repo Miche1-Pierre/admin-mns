@@ -21,7 +21,7 @@ function widgetCandidatures($widgetsData)
 
     foreach ($data as $row) {
         $idFormation = $row["id_formation"] ?? "Unknown";
-        $nomFormation = $row["nom_formation"] ?? "Formation inconnue";  // Utiliser le nom de la formation
+        $nomFormation = $row["nom_formation"] ?? "Formation inconnue";
 
         $formationNames[$idFormation] = $nomFormation;
 
