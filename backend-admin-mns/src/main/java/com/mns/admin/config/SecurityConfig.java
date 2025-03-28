@@ -23,7 +23,41 @@ public class SecurityConfig {
         http
                 .csrf(csrf -> csrf.disable())
                 .authorizeRequests(auth -> auth
-                        .requestMatchers("/api/auth/login", "/api/auth/validate").permitAll()
+                        .requestMatchers(
+                                "/api/auth/login",
+                                "/api/auth/logout",
+                                "/api/auth/verify-email",
+                                "/api/auth/candidature",
+                                "/api/auth/change-password",
+                                "/api/dashboard",
+                                "/api/dashboard/widgets",
+                                "/api/dashboard/absences",
+                                "/api/dashboard/candidatures",
+                                "/api/dashboard/users",
+                                "/api/dashboard/documents",
+                                "/api/dashboard/justificatifs",
+                                "/api/dashboard/messages",
+                                "/api/dashboard/profil",
+                                "/api/dashboard/modules/absences",
+                                "/api/dashboard/modules/candidatures",
+                                "/api/dashboard/messaging",
+                                "/api/dashboard/users",
+                                "/api/absences",
+                                "/api/absences/**",
+                                "/api/absences/absence/**",
+                                "/api/absences/delete/**",
+                                "/api/absences/update/**",
+                                "/api/absences/absence/validate/**",
+                                "/api/absences/absence/refuse/**",
+                                "/api/candidatures",
+                                "/api/candidatures/**",
+                                "/api/candidatures/candidature/**",
+                                "/api/candidatures/delete/**",
+                                "/api/candidatures/update/**",
+                                "/api/candidatures/candidature/validate/**",
+                                "/api/candidatures/candidature/refuse/**",
+                                "/api/formations",
+                                "/api/formations/formations").permitAll()
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

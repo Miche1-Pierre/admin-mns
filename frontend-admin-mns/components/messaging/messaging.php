@@ -1,18 +1,12 @@
 <?php
-include $_SERVER['DOCUMENT_ROOT'] . '/frontend-admin-mns/php/api/db.php';
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
 
-$contacts = [];
-
-$query = $pdo->query("
-    SELECT 
-        u.id_utilisateur AS id, 
-        u.nom_utilisateur AS nom, 
-        u.email_utilisateur AS email 
-    FROM utilisateur u
-    LIMIT 10
-");
-
-$contacts = $query->fetchAll(PDO::FETCH_ASSOC);
+if (!isset($_SESSION["token"])) {
+    header("Location: login.php");
+    exit();
+}
 ?>
 
 <!DOCTYPE html>
@@ -37,27 +31,23 @@ $contacts = $query->fetchAll(PDO::FETCH_ASSOC);
             <div class="messaging-container">
                 <!-- Barre de recherche des contacts -->
                 <div class="contacts-sidebar">
-                    <input type="text" id="searchContacts" placeholder="Search contact..." />
+                    <input type="text" id="searchContacts" placeholder="Rechercher des contacts..." />
                     <ul id="contactsList">
-                        <?php foreach ($contacts as $contact) : ?>
-                            <li data-id="<?= $contact['id'] ?>" class="contact-item">
-                                <?= htmlspecialchars($contact['nom']) ?>
-                            </li>
-                        <?php endforeach; ?>
+                        <!-- Contact -->
                     </ul>
                 </div>
 
                 <!-- Zone de chat -->
                 <div class="chat-zone">
                     <div class="chat-header">
-                        <span id="chatContactName">Select contact</span>
+                        <span id="chatContactName">Sélectionnez un Contact</span>
                     </div>
                     <div class="chat-messages" id="chatMessages">
                         <!-- Messages affichés dynamiquement -->
                     </div>
                     <div class="chat-input">
-                        <input type="text" id="messageInput" placeholder="Write a message..." />
-                        <button id="sendMessage"><i class='bx bx-send'></i></button>
+                        <input type="text" id="messageInput" placeholder="Rédiger un message..." />
+                        <button id="sendMessage" title="Envoyer !"><i class='bx bx-send'></i></button>
                     </div>
                 </div>
             </div>

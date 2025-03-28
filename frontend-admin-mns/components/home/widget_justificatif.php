@@ -1,37 +1,40 @@
 <?php
 include_once $_SERVER['DOCUMENT_ROOT'] . "/frontend-admin-mns/components/card.php";
-include_once $_SERVER['DOCUMENT_ROOT'] . "/frontend-admin-mns/php/api/db.php";
 
-function getJustificatifs($pdo)
+function widgetJustificatifs($widgetsData)
 {
-    $query = "SELECT id_justificatif, date_depot_justificatif, id_statut, type_document_justificatif 
-              FROM justificatif
-              ORDER BY date_depot_justificatif DESC
-              LIMIT 5";
+    if (!isset($widgetsData["justificatifs"]) || empty($widgetsData["justificatifs"])) {
+        return;
+    }
 
-    $stmt = $pdo->prepare($query);
-    $stmt->execute();
-    return $stmt->fetchAll(PDO::FETCH_ASSOC);
-}
-
-function widgetJustificatifs()
-{
-    global $pdo;
-    $title = "Receipts";
-    $link = "#";
+    $title = "Justificatifs";
+    $link = "/frontend-admin-mns/components/documents/documents.php";
     $img = null;
 
-    $documents = getJustificatifs($pdo);
+    $data = $widgetsData["justificatifs"];
 
-    $content = "<table class='table-widget'><thead><tr><th>Type</th><th>Deposit date</th><th>Status</th><th>Receipt Document Type</th></tr></thead><tbody>";
-    foreach ($documents as $doc) {
+    $content = "<table class='table-widget'>
+                    <thead>
+                        <tr>
+                            <th>Utilisateur</th>
+                            <th>Date de dépôt</th>
+                            <th>Type</th>
+                        </tr>
+                    </thead>
+                    <tbody>";
+
+    foreach ($data as $doc) {
+        $utilisateur = $doc["prenom_utilisateur"] . " " . $doc["nom_utilisateur"];
+        $dateDepot = date("d/m/Y H:i", strtotime($doc["date_depot_justificatif"]));
+        $type = $doc["type_document_justificatif"] ?? "Unknown";
+
         $content .= "<tr>
-                        <td>" . htmlspecialchars($doc["id_justificatif"]) . "</td>
-                        <td>" . htmlspecialchars(date("d/m/Y", strtotime($doc["date_depot_justificatif"]))) . "</td>
-                        <td>" . htmlspecialchars($doc["id_statut"]) . "</td>
-                        <td>" . htmlspecialchars($doc["type_document_justificatif"]) . "</td>
-                     </tr>";
+                        <td>{$utilisateur}</td>
+                        <td>{$dateDepot}</td>
+                        <td>{$type}</td>
+                    </tr>";
     }
+
     $content .= "</tbody></table>";
 
     generateCard($title, $link, $content, $img);

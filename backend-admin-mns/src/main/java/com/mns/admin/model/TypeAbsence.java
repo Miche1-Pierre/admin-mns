@@ -18,4 +18,20 @@ public class TypeAbsence {
 
     @Column(name = "nom_type_absence", nullable = false, length = 50)
     private String nomTypeAbsence;
+
+    public Long getIdTypeAbsence() {
+        return idTypeAbsence;
+    }
+
+    public void setIdTypeAbsence(Long idTypeAbsence) {
+        this.idTypeAbsence = idTypeAbsence;
+    }
+
+    public String getNomTypeAbsence() {
+        return nomTypeAbsence;
+    }
+
+    public void setNomTypeAbsence(String nomTypeAbsence) {
+        this.nomTypeAbsence = nomTypeAbsence;
+    }
 }

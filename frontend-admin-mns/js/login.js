@@ -32,9 +32,10 @@ document.addEventListener("DOMContentLoaded", function () {
                 }),
             });
 
-            console.log("Email:", email);
-            console.log("Password:", password);
-
+            if (response.status === 403) {
+                alert("Un email de vérification a été envoyé. Veuillez vérifier votre email.");
+                return;
+            }
 
             if (!response.ok) {
                 throw new Error("Échec de la connexion. Vérifiez vos identifiants.");
@@ -42,7 +43,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
             const token = await response.text();
             localStorage.setItem("token", token);
-
 
             await fetch("/frontend-admin-mns/views/login.php", {
                 method: "POST",
@@ -53,7 +53,6 @@ document.addEventListener("DOMContentLoaded", function () {
             });
 
             window.location.href = "/frontend-admin-mns/views/dashboard.php";
-
         } catch (error) {
             alert(error.message);
         }

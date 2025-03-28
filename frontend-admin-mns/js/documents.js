@@ -1,9 +1,13 @@
+let filteredDocuments = [];
+let currentPage = 1;
+let itemsPerPage = 10;
+
 document.addEventListener("DOMContentLoaded", function () {
     setActiveMenu();
     initSidebar();
     initDropdownMenu();
-    window.documents = documents;
     initDocuments();
+    fetchProfile();
     updateBreadcrumb();
     initAddDocumentModal();
     initViewAccountModal();
@@ -15,10 +19,8 @@ function setActiveMenu() {
 
     menuItems.forEach(item => {
         const linkHref = item.getAttribute("href");
-
         if (path.includes(linkHref)) {
             item.classList.add("active");
-
             const parentLi = item.closest("li");
             if (parentLi) {
                 parentLi.classList.add("active");
@@ -69,7 +71,6 @@ function initDropdownMenu() {
     document.querySelectorAll(".menu > ul > li").forEach(item => {
         item.addEventListener("click", function (e) {
             e.stopPropagation();
-
             this.parentElement.querySelectorAll("li.active").forEach(activeItem => {
                 if (activeItem !== this) {
                     activeItem.classList.remove("active");
@@ -77,9 +78,7 @@ function initDropdownMenu() {
                     if (subMenu) subMenu.style.display = "none";
                 }
             });
-
             this.classList.toggle("active");
-
             const subMenu = this.querySelector("ul");
             if (subMenu) {
                 subMenu.style.display = subMenu.style.display === "block" ? "none" : "block";
@@ -91,7 +90,6 @@ function initDropdownMenu() {
 function updateBreadcrumb() {
     const breadcrumbList = document.getElementById('breadcrumb-list');
     const breadcrumbTitle = document.getElementById('breadcrumb-title');
-
     const path = window.location.pathname;
 
     if (path.includes("dashboard.php")) {
@@ -99,7 +97,7 @@ function updateBreadcrumb() {
         updateBreadcrumbLinks(["Home"]);
     } else if (path.includes("candidatures.php")) {
         breadcrumbTitle.textContent = "Dashboard";
-        updateBreadcrumbLinks(["Modules", "/", "Applications"]);
+        updateBreadcrumbLinks(["Modules", "/", "Candidatures"]);
     } else if (path.includes("absences.php")) {
         breadcrumbTitle.textContent = "Dashboard";
         updateBreadcrumbLinks(["Modules", "/", "Absences & Lateness"]);
@@ -112,6 +110,9 @@ function updateBreadcrumb() {
     } else if (path.includes("stats.php")) {
         breadcrumbTitle.textContent = "Dashboard";
         updateBreadcrumbLinks(["More", "/", "Stats"]);
+    } else if (path.includes("messaging.php")) {
+        breadcrumbTitle.textContent = "Dashboard";
+        updateBreadcrumbLinks(["Messaging"]);
     } else {
         breadcrumbTitle.textContent = "Page Not Found";
         updateBreadcrumbLinks([]);
@@ -121,112 +122,31 @@ function updateBreadcrumb() {
 function updateBreadcrumbLinks(links) {
     const breadcrumbList = document.getElementById('breadcrumb-list');
     breadcrumbList.innerHTML = "";
-
     links.forEach((linkText, index) => {
         const li = document.createElement('li');
         const a = document.createElement('a');
         a.href = "#";
         a.textContent = linkText;
-
         if (index === links.length - 1) {
             a.classList.add("active");
         }
-
         li.appendChild(a);
         breadcrumbList.appendChild(li);
     });
 }
 
 function initDocuments() {
-    console.log("initDocuments() appelé");
-
     const itemsPerPageSelect = document.getElementById("itemsPerPage");
     const searchInput = document.getElementById("searchInput");
-    const filterType = document.getElementById("filterType");
-    const filterAuthor = document.getElementById("filterAuthor");
-    const tableBody = document.getElementById("documentTableBody");
 
-    if (!itemsPerPageSelect || !searchInput || !filterType || !filterAuthor || !tableBody) {
+    if (!itemsPerPageSelect || !searchInput) {
         console.error("Un ou plusieurs éléments DOM manquent.");
         return;
     }
 
-    window.documents = window.documents || [];
-    let currentPage = 1;
-    let filteredDocuments = [...window.documents];
-    let itemsPerPage = parseInt(itemsPerPageSelect.value) || 10;
-
-    function filterDocuments() {
-        console.log("Filtrage en cours...");
-        const searchQuery = searchInput.value.toLowerCase();
-        const selectedType = filterType.value;
-        const selectedAuthor = filterAuthor.value;
-
-        filteredDocuments = window.documents.filter(doc => {
-            return (
-                (selectedType === "" || doc.type?.toLowerCase() === selectedType.toLowerCase()) &&
-                (selectedAuthor === "" || doc.auteur?.toLowerCase() === selectedAuthor.toLowerCase()) &&
-                (doc.nom?.toLowerCase().includes(searchQuery) || doc.auteur?.toLowerCase().includes(searchQuery))
-            );
-        });
-
-        currentPage = 1;
-        displayDocuments();
-    }
-
-    function displayDocuments() {
-        console.log("Documents à afficher:", documents);
-    
-        const startIndex = (currentPage - 1) * itemsPerPage;
-        const endIndex = startIndex + itemsPerPage;
-    
-        const displayedDocs = documents.slice(startIndex, endIndex);
-        tableBody.innerHTML = "";
-    
-        if (displayedDocs.length === 0) {
-            tableBody.innerHTML = "<tr><td colspan='6'>Aucun document trouvé.</td></tr>";
-            return;
-        }
-    
-        displayedDocs.forEach(doc => {
-            const row = document.createElement("tr");
-            row.innerHTML = `
-                <td>${doc.id}</td>
-                <td>${doc.nom}</td>
-                <td>${doc.type}</td>
-                <td>${doc.date}</td>
-                <td>${doc.auteur}</td>
-                <td>
-                    <button class="button edit">Edit</button>
-                    <button class="button delete">Delete</button>
-                </td>
-            `;
-            tableBody.appendChild(row);
-        });
-    
-        updatePagination();
-    }    
-
-    function updatePagination() {
-        const pagination = document.querySelector(".pagination");
-        const prevButton = pagination.querySelector(".prev-slide");
-        const nextButton = pagination.querySelector(".next-slide");
-
-        prevButton.disabled = currentPage === 1;
-        nextButton.disabled = currentPage * itemsPerPage >= filteredDocuments.length;
-    }
-
-    document.addEventListener("click", function (event) {
-        if (event.target.matches(".prev-slide") && currentPage > 1) {
-            currentPage--;
-            displayDocuments();
-        }
-
-        if (event.target.matches(".next-slide") && currentPage * itemsPerPage < filteredDocuments.length) {
-            currentPage++;
-            displayDocuments();
-        }
-    });
+    itemsPerPage = parseInt(itemsPerPageSelect.value) || 10;
+    filteredDocuments = [...documents];
+    currentPage = 1;
 
     itemsPerPageSelect.addEventListener("change", () => {
         itemsPerPage = parseInt(itemsPerPageSelect.value) || 10;
@@ -235,11 +155,76 @@ function initDocuments() {
     });
 
     searchInput.addEventListener("input", filterDocuments);
-    filterType.addEventListener("change", filterDocuments);
-    filterAuthor.addEventListener("change", filterDocuments);
 
     displayDocuments();
 }
+
+function filterDocuments() {
+    const searchQuery = document.getElementById("searchInput").value.toLowerCase();
+
+    filteredDocuments = documents.filter(doc => {
+        return (
+            (doc.nom.toLowerCase().includes(searchQuery) || doc.type.toLowerCase().includes(searchQuery))
+        );
+    });
+
+    currentPage = 1;
+    displayDocuments();
+}
+
+function displayDocuments() {
+    const tableBody = document.getElementById("documentTableBody");
+    if (!tableBody) return;
+
+    const startIndex = (currentPage - 1) * itemsPerPage;
+    const endIndex = startIndex + itemsPerPage;
+    const displayedDocs = filteredDocuments.slice(startIndex, endIndex);
+
+    tableBody.innerHTML = "";
+
+    if (displayedDocs.length === 0) {
+        tableBody.innerHTML = "<tr><td colspan='5'>Aucun document trouvé.</td></tr>";
+        return;
+    }
+
+    displayedDocs.forEach(doc => {
+        const row = document.createElement("tr");
+        row.innerHTML = `
+            <td>${doc.id}</td>
+            <td>${doc.nom}</td>
+            <td>${doc.type}</td>
+            <td>${new Date(doc.depot).toLocaleString()}</td>
+            <td>${new Date(doc.limite).toLocaleString()}</td>
+            <td>
+                <button class="button edit">Modifier</button>
+                <button class="button delete">Supprimer</button>
+            </td>
+        `;
+        tableBody.appendChild(row);
+    });
+
+    updatePagination();
+}
+
+function updatePagination() {
+    const prevButton = document.querySelector(".prev-slide");
+    const nextButton = document.querySelector(".next-slide");
+
+    prevButton.disabled = currentPage === 1;
+    nextButton.disabled = currentPage * itemsPerPage >= filteredDocuments.length;
+}
+
+document.addEventListener("click", function (event) {
+    if (event.target.matches(".prev-slide") && currentPage > 1) {
+        currentPage--;
+        displayDocuments();
+    }
+    if (event.target.matches(".next-slide") && currentPage * itemsPerPage < filteredDocuments.length) {
+        currentPage++;
+        displayDocuments();
+    }
+});
+
 
 function initAddDocumentModal() {
     const addButton = document.querySelector(".button.add");
@@ -263,7 +248,6 @@ function initAddDocumentModal() {
 
     form.addEventListener("submit", (e) => {
         e.preventDefault();
-
         const documentName = document.getElementById("document").value;
         const dateLimite = document.getElementById("date_limite").value;
         const idDossier = document.getElementById("id_dossier").value;
@@ -272,36 +256,60 @@ function initAddDocumentModal() {
         const dateDepotDocument = new Date().toISOString();
 
         const newDocument = {
-            documentName,
-            dateDepotDocument,
-            dateLimite,
-            idDossier,
-            idStatut,
-            idTypeDocument,
+            id: Date.now(),
+            nom: documentName,
+            date: dateDepotDocument,
+            type: "N/A",
+            auteur: "Current User"
         };
 
-        window.documents.push(newDocument);
-
+        documents.push(newDocument);
+        filteredDocuments = documents;
+        currentPage = 1;
         displayDocuments();
-
         modal.style.display = "none";
         form.reset();
     });
 }
 
+function fetchProfile() {
+    fetch("http://admin-mns:8080/api/dashboard/profil", {
+        headers: {
+            'Authorization': 'Bearer ' + localStorage.getItem('token')
+        }
+    })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Erreur lors de la récupération du profil');
+            }
+            return response.json();
+        })
+        .then(data => {
+            if (data.profil && data.profil.length > 0) {
+                const profile = data.profil[0];
+                document.getElementById('user-firstname').textContent = profile.prenom_utilisateur;
+                document.getElementById('user-role').textContent = profile.nom_role;
+            }
+        })
+        .catch(error => console.error('Erreur:', error));
+}
+
 function initViewAccountModal() {
     const viewButton = document.querySelector(".button.view");
     const modal = document.getElementById("viewAccountModal");
+    if (!modal) return;
     const closeModalButton = modal.querySelector(".close-btn");
-    // const form = document.getElementById("changeAccountForm");
 
-    viewButton.addEventListener("click", () => {
-        modal.style.display = "block";
-    });
-
-    closeModalButton.addEventListener("click", () => {
-        modal.style.display = "none";
-    });
+    if (viewButton) {
+        viewButton.addEventListener("click", () => {
+            modal.style.display = "block";
+        });
+    }
+    if (closeModalButton) {
+        closeModalButton.addEventListener("click", () => {
+            modal.style.display = "none";
+        });
+    }
 
     window.addEventListener("click", (e) => {
         if (e.target === modal) {

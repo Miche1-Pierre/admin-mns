@@ -2,10 +2,10 @@ document.addEventListener("DOMContentLoaded", function () {
     setActiveMenu();
     initSidebar();
     initDropdownMenu();
-    window.users = users;
-    initUsers();
     updateBreadcrumb();
+    fetchProfile();
     initViewAccountModal();
+    initUsers();
 });
 
 function setActiveMenu() {
@@ -101,7 +101,7 @@ function updateBreadcrumb() {
         updateBreadcrumbLinks(["Modules", "/", "Candidatures"]);
     } else if (path.includes("absences.php")) {
         breadcrumbTitle.textContent = "Dashboard";
-        updateBreadcrumbLinks(["Modules /", "Absences & Lateness"]);
+        updateBreadcrumbLinks(["Modules", "/", "Absences & Lateness"]);
     } else if (path.includes("users.php")) {
         breadcrumbTitle.textContent = "Dashboard";
         updateBreadcrumbLinks(["Users"]);
@@ -110,7 +110,10 @@ function updateBreadcrumb() {
         updateBreadcrumbLinks(["Documents"]);
     } else if (path.includes("stats.php")) {
         breadcrumbTitle.textContent = "Dashboard";
-        updateBreadcrumbLinks(["More /", "Stats"]);
+        updateBreadcrumbLinks(["More", "/", "Stats"]);
+    } else if (path.includes("messaging.php")) {
+        breadcrumbTitle.textContent = "Dashboard";
+        updateBreadcrumbLinks(["Messaging"]);
     } else {
         breadcrumbTitle.textContent = "Page Not Found";
         updateBreadcrumbLinks([]);
@@ -137,33 +140,33 @@ function updateBreadcrumbLinks(links) {
 }
 
 function initUsers() {
-    console.log("initUsers() appelé");
+    console.log("Chargement des utilisateurs...");
 
+    const tableBody = document.getElementById("documentTableBody");
     const itemsPerPageSelect = document.getElementById("itemsPerPage");
     const searchInput = document.getElementById("searchInput");
     const filterRole = document.getElementById("filterRole");
-    const tableBody = document.getElementById("documentTableBody");
 
-    if (!itemsPerPageSelect || !searchInput || !filterRole || !tableBody) {
-        console.error("Un ou plusieurs éléments DOM manquent.");
+    if (!tableBody || !itemsPerPageSelect || !searchInput || !filterRole) {
+        console.error("Erreur: Un ou plusieurs éléments HTML manquent.");
         return;
     }
 
     let currentPage = 1;
+    let itemsPerPage = parseInt(itemsPerPageSelect.value, 10) || 25;
     let filteredUsers = [...users];
-    let itemsPerPage = parseInt(itemsPerPageSelect.value) || 25;
 
     function filterUsers() {
-        console.log("Filtrage des utilisateurs...");
         const searchQuery = searchInput.value.toLowerCase();
-        const selectedRole = filterRole.value;
+        const selectedRole = filterRole.value.toLowerCase();
 
         filteredUsers = users.filter(user => {
-            return (
-                (selectedRole === "" || user.role === selectedRole) &&
-                (user.nom.toLowerCase().includes(searchQuery) ||
-                 user.email.toLowerCase().includes(searchQuery))
-            );
+            const matchRole = selectedRole === "" || user.role.toLowerCase() === selectedRole;
+            const matchSearch =
+                user.nom.toLowerCase().includes(searchQuery) ||
+                user.prenom.toLowerCase().includes(searchQuery) ||
+                user.email.toLowerCase().includes(searchQuery);
+            return matchRole && matchSearch;
         });
 
         currentPage = 1;
@@ -171,15 +174,15 @@ function initUsers() {
     }
 
     function displayUsers() {
-        console.log("Affichage des utilisateurs...", users);
+        console.log("Affichage des utilisateurs...");
         const startIndex = (currentPage - 1) * itemsPerPage;
         const endIndex = startIndex + itemsPerPage;
-
         const displayedUsers = filteredUsers.slice(startIndex, endIndex);
+
         tableBody.innerHTML = "";
 
         if (displayedUsers.length === 0) {
-            tableBody.innerHTML = "<tr><td colspan='6'>Aucun utilisateur trouvé.</td></tr>";
+            tableBody.innerHTML = `<tr><td colspan='6' style="text-align:center;">Aucun utilisateur trouvé.</td></tr>`;
             return;
         }
 
@@ -192,8 +195,8 @@ function initUsers() {
                 <td>${user.email}</td>
                 <td>${user.role}</td>
                 <td>
-                    <button class="button edit">Edit</button>
-                    <button class="button delete">Delete</button>
+                    <button class="button edit" data-id="${user.id}">Modifier</button>
+                    <button class="button delete" data-id="${user.id}">Supprimer</button>
                 </td>
             `;
             tableBody.appendChild(row);
@@ -224,7 +227,7 @@ function initUsers() {
     });
 
     itemsPerPageSelect.addEventListener("change", () => {
-        itemsPerPage = parseInt(itemsPerPageSelect.value) || 25;
+        itemsPerPage = parseInt(itemsPerPageSelect.value, 10) || 25;
         currentPage = 1;
         displayUsers();
     });
@@ -233,6 +236,28 @@ function initUsers() {
     filterRole.addEventListener("change", filterUsers);
 
     displayUsers();
+}
+
+function fetchProfile() {
+    fetch("http://admin-mns:8080/api/dashboard/profil", {
+        headers: {
+            'Authorization': 'Bearer ' + localStorage.getItem('token')
+        }
+    })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Erreur lors de la récupération du profil');
+            }
+            return response.json();
+        })
+        .then(data => {
+            if (data.profil && data.profil.length > 0) {
+                const profile = data.profil[0];
+                document.getElementById('user-firstname').textContent = profile.prenom_utilisateur;
+                document.getElementById('user-role').textContent = profile.nom_role;
+            }
+        })
+        .catch(error => console.error('Erreur:', error));
 }
 
 function initViewAccountModal() {

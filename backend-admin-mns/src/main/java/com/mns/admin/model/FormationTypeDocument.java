@@ -29,4 +29,36 @@ public class FormationTypeDocument {
 
     @Column(name = "obligatoire_formation_type_document")
     private boolean obligatoire_formationTypeDocument;
+
+    public Long getIdFormationTypeDocument() {
+        return idFormationTypeDocument;
+    }
+
+    public void setIdFormationTypeDocument(Long idFormationTypeDocument) {
+        this.idFormationTypeDocument = idFormationTypeDocument;
+    }
+
+    public TypeDocument getTypeDocument() {
+        return typeDocument;
+    }
+
+    public void setTypeDocument(TypeDocument typeDocument) {
+        this.typeDocument = typeDocument;
+    }
+
+    public Formation getFormation() {
+        return formation;
+    }
+
+    public void setFormation(Formation formation) {
+        this.formation = formation;
+    }
+
+    public boolean isObligatoire_formationTypeDocument() {
+        return obligatoire_formationTypeDocument;
+    }
+
+    public void setObligatoire_formationTypeDocument(boolean obligatoire_formationTypeDocument) {
+        this.obligatoire_formationTypeDocument = obligatoire_formationTypeDocument;
+    }
 }

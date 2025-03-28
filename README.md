@@ -2,7 +2,7 @@
   <h1>Admin</h1>
   <img src="./frontend-admin-mns/assets/logo.png" width="200px" alt="Admin Mns" />
 
-  &#xa0;
+&#xa0;
 
   <!-- <a href="https://adminmns.netlify.app">Demo</a> -->
 </div>
@@ -14,20 +14,20 @@
 
   <img alt="Repository size" src="https://img.shields.io/github/repo-size/Miche1-Pierre/admin-mns?color=blue">
 
-  <img alt="License" src="https://img.shields.io/github/license/Miche1-Pierre/admin-mns?color=black">
-
   <img alt="Github issues" src="https://img.shields.io/github/issues/Miche1-Pierre/admin-mns?color=green" />
-
+  <br>
+  <img alt="License" src="https://img.shields.io/github/license/Miche1-Pierre/admin-mns?color=black">
+  <br>
   <img alt="Github forks" src="https://img.shields.io/github/forks/Miche1-Pierre/admin-mns?color=56BEB8" />
-
+  <br>
   <img alt="Github stars" src="https://img.shields.io/github/stars/Miche1-Pierre/admin-mns?color=yellow" />
+  <br>
+  <img alt="GitHub language breakdown" src="https://github-readme-stats.vercel.app/api/top-langs/?username=Miche1-Pierre&repo=admin-mns&layout=compact">
 </p>
-
-Status
 
 <h4 align="center"> 
 	🚧  Admin Mns 🚀 Under construction...  🚧
-</h4> 
+</h4>
 
 <hr>
 
@@ -43,7 +43,7 @@ Status
 
 <br>
 
-## :dart: About ##
+## :dart: About
 
 ADMIN MNS est une application qui doit permettre la gestion des dossiers des stagiaires
 dans les phases d’inscriptions et pendant le parcours de formation. Cette application
@@ -51,13 +51,13 @@ doit permettre également le suivi des absences et des retards au sein de toutes
 L’accent sera mis sur les qualités techniques des projets mais également sur les aspects
 organisationnels et humains
 
-## :sparkles: Features ##
+## :sparkles: Features
 
 :heavy_check_mark: Faciliter les échanges entre l’écoles et les stagiaires;\
 :heavy_check_mark: Faciliter le suivi des dossiers d’inscriptions;\
 :heavy_check_mark: Faciliter la gestion des absences et des retards;
 
-## :rocket: Technologies ##
+## :rocket: Technologies
 
 The following tools were used in this project:
 
@@ -69,11 +69,11 @@ The following tools were used in this project:
 - [Java Spring Boot](https://spring.io/projects/spring-boot)
 - [MySQL](https://www.mysql.com/fr/)
 
-## :white_check_mark: Requirements ##
+## :white_check_mark: Requirements
 
 Before starting :checkered_flag:, you need to have [Git](https://git-scm.com)
 
-## :checkered_flag: Starting ##
+## :checkered_flag: Starting
 
 ```bash
 # Clone this project
@@ -93,10 +93,9 @@ $ yarn start
 
 Use the DB script in phpMyAdmin to create database : [SQL-Script](./docs/admin-mns-db.sql)
 
-## :memo: License ##
+## :memo: License
 
 This project isn't yet under license.
-
 
 Made with :heart: by <a href="https://github.com/Miche1-Pierre" target="_blank">Michel Pierre</a>
 

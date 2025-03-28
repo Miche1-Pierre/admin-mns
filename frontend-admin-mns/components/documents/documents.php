@@ -1,22 +1,37 @@
 <?php
-include $_SERVER['DOCUMENT_ROOT'] . '/frontend-admin-mns/php/api/db.php';
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
 
-$documents = [];
+if (!isset($_SESSION["token"])) {
+    header("Location: login.php");
+    exit();
+}
 
-$query = $pdo->query("
-    SELECT
-        d.id_document AS id,
-        d.contenu_chiffre_document AS nom,
-        td.nom_type_document AS type,
-        DATE_FORMAT(d.date_depot_document, '%d/%m/%Y') AS date,
-        u.nom_utilisateur AS auteur
-    FROM document d
-    JOIN type_document td ON d.id_type_document = td.id_type_document
-    JOIN dossier ds ON d.id_dossier = ds.id_dossier
-    JOIN utilisateur u ON ds.id_stagiaire = u.id_utilisateur
-");
+$token = $_SESSION["token"];
+$apiUrl = "http://admin-mns:8080/api/dashboard/documents";
 
-$documents = $query->fetchAll(PDO::FETCH_ASSOC);
+$headers = [
+    "Authorization: Bearer $token",
+    "Content-Type: application/json"
+];
+
+$ch = curl_init();
+curl_setopt($ch, CURLOPT_URL, $apiUrl);
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+$response = curl_exec($ch);
+
+if ($response === false) {
+    error_log("Erreur cURL : " . curl_error($ch));
+    curl_close($ch);
+    $documentsData = [];
+} else {
+    curl_close($ch);
+    $documentsData = json_decode($response, true);
+}
+
+$documents = $documentsData["documentsMenu"] ?? [];
 ?>
 
 <!DOCTYPE html>
@@ -38,33 +53,21 @@ $documents = $query->fetchAll(PDO::FETCH_ASSOC);
         <?php include $_SERVER['DOCUMENT_ROOT'] . "/frontend-admin-mns/components/breadcrumb.php"; ?>
 
         <script>
-            const documents = <?php echo json_encode($documents, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP) ?>;
+            const documents = <?php echo json_encode($documents, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP); ?>;
         </script>
 
         <div class="dashboard-zone" id="dashboard-zone">
             <div class="document-container">
-                <button class="button add">Add document</button>
+                <button class="button add">Ajouter un Document</button>
 
                 <!-- Bandeau de filtrage -->
                 <div class="filter-bar">
-                    <input type="text" id="searchInput" placeholder="Search document..." />
-                    <select id="filterType">
-                        <option value="">All types</option>
-                        <option value="PDF">PDF</option>
-                        <option value="DOCX">DOCX</option>
-                        <option value="XLSX">XLSX</option>
-                    </select>
-                    <select id="filterAuthor">
-                        <option value="">All authors</option>
-                        <?php foreach (array_unique(array_column($documents, 'auteur')) as $author) : ?>
-                            <option value="<?= htmlspecialchars($author) ?>"><?= htmlspecialchars($author) ?></option>
-                        <?php endforeach; ?>
-                    </select>
+                    <input type="text" id="searchInput" placeholder="Rechercher un document..." />
                     <select id="itemsPerPage">
-                        <option value="10">10 lines</option>
-                        <option value="25" selected>25 lines</option>
-                        <option value="50">50 lines</option>
-                        <option value="100">100 lines</option>
+                        <option value="10">10 lignes</option>
+                        <option value="25" selected>25 lignes</option>
+                        <option value="50">50 lignes</option>
+                        <option value="100">100 lignes</option>
                     </select>
                 </div>
 
@@ -74,10 +77,10 @@ $documents = $query->fetchAll(PDO::FETCH_ASSOC);
                         <thead>
                             <tr>
                                 <th>ID</th>
-                                <th>Name</th>
+                                <th>Nom</th>
                                 <th>Type</th>
-                                <th>Date</th>
-                                <th>Author</th>
+                                <th>Date Dépôt</th>
+                                <th>Date Limite</th>
                                 <th>Actions</th>
                             </tr>
                         </thead>
@@ -100,19 +103,14 @@ $documents = $query->fetchAll(PDO::FETCH_ASSOC);
                     <form id="addDocumentForm">
                         <label for="document">Name</label>
                         <input type="text" id="document" name="document" required>
-
                         <label for="date_limite">Document deadline</label>
                         <input type="datetime-local" id="date_limite" name="date_limite" required>
-
                         <label for="id_dossier">Dossier ID</label>
                         <input type="number" id="id_dossier" name="id_dossier" required>
-
                         <label for="id_statut">Status ID</label>
                         <input type="number" id="id_statut" name="id_statut" required>
-
                         <label for="id_type_document">Document type ID</label>
                         <input type="number" id="id_type_document" name="id_type_document" required>
-
                         <button type="submit" class="button">Create</button>
                     </form>
                 </div>

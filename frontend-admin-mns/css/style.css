@@ -300,16 +300,6 @@ section {
     font-weight: 600;
 }
 
-.hero #beamsCanvas {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    z-index: 0;
-    pointer-events: none;
-}
-
 /* Right section */
 .right {
     max-width: 50%;
@@ -1226,6 +1216,91 @@ footer .footer-right .social-links .social-icon i:hover {
     background-color: var(--tran-primary-color);
 }
 
+.candidature .modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: var(--shadow-color);
+    justify-content: center;
+    align-items: center;
+}
+
+.candidature .modal .modal-content {
+    background: var(--primary-background-color);
+    padding: 20px;
+    border-radius: 10px;
+    width: 400px;
+    text-align: center;
+    position: relative;
+}
+
+.candidature .modal .close-btn {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    cursor: pointer;
+    font-size: 20px;
+}
+
+.candidature .modal .button {
+    padding: 10px 20px;
+    margin-top: 10px;
+    cursor: pointer;
+    border: none;
+    border-radius: 5px;
+}
+
+.candidature .modal .confirm-btn {
+    background-color: green;
+    color: var(--text-color-light);
+}
+
+.candidature .modal .cancel-btn {
+    background-color: var(--primary-color);
+    color: var(--text-color-light);
+}
+
+.candidature .modal .confirm-btn:hover {
+    background-color: rgb(0, 150, 0);
+    color: var(--text-color-light);
+}
+
+.candidature .modal .cancel-btn:hover {
+    background-color: var(--tran-primary-color);
+    color: var(--text-color-light);
+}
+
+/* Banner */
+.banner-animation {
+    position: relative;
+    width: 100%;
+    height: 150px;
+    overflow: hidden;
+    background-color: var(--secondary-background-color);
+}
+
+.banner-animation .stagger-visualizer {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+}
+
+.banner-animation .stagger-visualizer div {
+    position: relative;
+    width: 1rem;
+    height: 1rem;
+    border: 1px solid var(--secondary-color);
+    background-color: var(--secondary-color);
+}
 
 /* Media Queries for responsiveness */
-/* Hero */

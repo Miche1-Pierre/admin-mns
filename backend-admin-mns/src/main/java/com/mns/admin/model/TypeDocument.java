@@ -27,4 +27,44 @@ public class TypeDocument {
 
     @Column(name = "obligatoire_type_document", nullable = false)
     private boolean obligatoireTypeDocument;
+
+    public Long getIdTypeDocument() {
+        return idTypeDocument;
+    }
+
+    public void setIdTypeDocument(Long idTypeDocument) {
+        this.idTypeDocument = idTypeDocument;
+    }
+
+    public String getNomTypeDocument() {
+        return nomTypeDocument;
+    }
+
+    public void setNomTypeDocument(String nomTypeDocument) {
+        this.nomTypeDocument = nomTypeDocument;
+    }
+
+    public String getDescriptionTypeDocument() {
+        return descriptionTypeDocument;
+    }
+
+    public void setDescriptionTypeDocument(String descriptionTypeDocument) {
+        this.descriptionTypeDocument = descriptionTypeDocument;
+    }
+
+    public boolean isChiffrementRequisTypeDocument() {
+        return chiffrementRequisTypeDocument;
+    }
+
+    public void setChiffrementRequisTypeDocument(boolean chiffrementRequisTypeDocument) {
+        this.chiffrementRequisTypeDocument = chiffrementRequisTypeDocument;
+    }
+
+    public boolean isObligatoireTypeDocument() {
+        return obligatoireTypeDocument;
+    }
+
+    public void setObligatoireTypeDocument(boolean obligatoireTypeDocument) {
+        this.obligatoireTypeDocument = obligatoireTypeDocument;
+    }
 }

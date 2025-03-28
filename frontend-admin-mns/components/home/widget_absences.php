@@ -1,65 +1,89 @@
 <?php
 include_once $_SERVER['DOCUMENT_ROOT'] . "/frontend-admin-mns/components/card.php";
-include_once $_SERVER['DOCUMENT_ROOT'] . "/frontend-admin-mns/php/api/db.php";
 
-function getAbsencesParMois($pdo)
+function widgetAbsences($widgetsData)
 {
-    $query = "SELECT 
-                MONTH(date_debut_absence) AS mois, 
-                SUM(CASE WHEN id_type_absence = 1 THEN 1 ELSE 0 END) AS absences,
-                SUM(CASE WHEN id_type_absence = 2 THEN 1 ELSE 0 END) AS retards
-              FROM absence
-              GROUP BY mois
-              ORDER BY mois";
+    if (!isset($widgetsData["absences"]) || empty($widgetsData["absences"])) {
+        return;
+    }
 
-    $stmt = $pdo->prepare($query);
-    $stmt->execute();
-    return $stmt->fetchAll(PDO::FETCH_ASSOC);
-}
-
-function widgetAbsences()
-{
-    global $pdo;
-    $title = "Absences & Lateness";
-    $link = "#";
-    $text = "View absences and late arrivals";
+    $title = "Absences & Retards";
+    $link = "/frontend-admin-mns/components/modules/absences.php";
+    $text = "Voir les Absences et les Retards";
     $img = null;
     $chartId = "absencesChart";
     $chartType = "bar";
 
-    $data = getAbsencesParMois($pdo);
+    $data = $widgetsData["absences"];
 
     $labels = [];
     $absencesData = [];
     $retardsData = [];
 
+    for ($m = 1; $m <= 12; $m++) {
+        $labels[$m - 1] = date("M", mktime(0, 0, 0, $m, 1));
+        $absencesData[$m - 1] = 0;
+        $retardsData[$m - 1] = 0;
+    }
+
     foreach ($data as $row) {
-        $labels[] = date("M", mktime(0, 0, 0, $row["mois"], 1));
-        $absencesData[] = $row["absences"];
-        $retardsData[] = $row["retards"];
+        if (!isset($row["mois"])) {
+            continue;
+        }
+        $mois = (int)$row["mois"] - 1;
+        if ($mois >= 0 && $mois < 12) {
+            $absencesData[$mois] = $row["absences"];
+            $retardsData[$mois] = $row["retards"];
+        }
+    }
+
+    $currentMonth = (int)date("n") - 1;
+
+    $barColorsAbsences = array_fill(0, 12, "#1F2232");
+    $barColorsRetards = array_fill(0, 12, "#B70320");
+
+    $barColorsAbsences[$currentMonth] = "#2B2D42";
+    $barColorsRetards[$currentMonth] = "#D90429";
+
+    $rotatedLabels = [];
+    $rotatedAbsences = [];
+    $rotatedRetards = [];
+    $rotatedColorsAbsences = [];
+    $rotatedColorsRetards = [];
+
+    for ($m = $currentMonth + 1; $m < 12; $m++) {
+        $rotatedLabels[] = $labels[$m];
+        $rotatedAbsences[] = $absencesData[$m];
+        $rotatedRetards[] = $retardsData[$m];
+        $rotatedColorsAbsences[] = $barColorsAbsences[$m];
+        $rotatedColorsRetards[] = $barColorsRetards[$m];
+    }
+
+    for ($m = 0; $m <= $currentMonth; $m++) {
+        $rotatedLabels[] = $labels[$m];
+        $rotatedAbsences[] = $absencesData[$m];
+        $rotatedRetards[] = $retardsData[$m];
+        $rotatedColorsAbsences[] = $barColorsAbsences[$m];
+        $rotatedColorsRetards[] = $barColorsRetards[$m];
     }
 
     $datasets = [
         [
             "label" => "Absences",
-            "data" => $absencesData,
-            "backgroundColor" => "#2B2D42",
-            "borderColor" => "#eeeeee",
-            "borderWidth" => 1
+            "data" => $rotatedAbsences,
+            "backgroundColor" => $rotatedColorsAbsences
         ],
         [
-            "label" => "Lateness",
-            "data" => $retardsData,
-            "backgroundColor" => "#D90429",
-            "borderColor" => "#eeeeee",
-            "borderWidth" => 1
+            "label" => "Retards",
+            "data" => $rotatedRetards,
+            "backgroundColor" => $rotatedColorsRetards
         ]
     ];
 
     $options = [
         "responsive" => true,
-        "maintainAspectRatio" => false
+        "maintainAspectRatio" => false,
     ];
 
-    generateCard($title, $link, $text, $img, $chartId, $chartType, $labels, $datasets, $options);
+    generateCard($title, $link, $text, $img, $chartId, $chartType, $rotatedLabels, $datasets, $options);
 }

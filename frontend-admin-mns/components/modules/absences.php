@@ -1,23 +1,37 @@
 <?php
-include $_SERVER['DOCUMENT_ROOT'] . '/frontend-admin-mns/php/api/db.php';
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
 
-$absences = [];
+if (!isset($_SESSION["token"])) {
+    header("Location: login.php");
+    exit();
+}
 
-$query = $pdo->query("
-    SELECT
-        a.id_absence AS id,
-        ua.nom_utilisateur AS utilisateur,
-        ta.nom_type_absence AS type,
-        a.date_debut_absence AS debut,
-        a.date_fin_absence AS fin,
-        a.justifie_absence AS justifie,
-        a.statut_absence AS statut
-    FROM absence a
-    JOIN utilisateur ua ON ua.id_utilisateur = a.id_stagiaire
-    JOIN type_absence ta ON ta.id_type_absence = a.id_type_absence
-");
+$token = $_SESSION["token"];
+$apiUrl = "http://admin-mns:8080/api/dashboard/absences";
 
-$absences = $query->fetchAll(PDO::FETCH_ASSOC);
+$headers = [
+    "Authorization: Bearer $token",
+    "Content-Type: application/json"
+];
+
+$ch = curl_init();
+curl_setopt($ch, CURLOPT_URL, $apiUrl);
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+$response = curl_exec($ch);
+
+if ($response === false) {
+    error_log("Erreur cURL : " . curl_error($ch));
+    curl_close($ch);
+    $absencesData = [];
+} else {
+    curl_close($ch);
+    $absencesData = json_decode($response, true);
+}
+
+$absences = $absencesData["absencesMenu"] ?? [];
 ?>
 
 <!DOCTYPE html>
@@ -44,27 +58,27 @@ $absences = $query->fetchAll(PDO::FETCH_ASSOC);
 
         <div class="dashboard-zone" id="dashboard-zone">
             <div class="document-container">
-                <button class="button add">Add Absences/Lateness</button>
+                <button class="button add">Ajouter une Absence/Retards</button>
 
                 <!-- Bandeau de filtrage -->
                 <div class="filter-bar">
                     <input type="text" id="searchInput" placeholder="Rechercher un étudiant..." />
                     <select id="filterStatut">
-                        <option value="">All statuts</option>
-                        <option value="Absence">Absence</option>
-                        <option value="Retard">Late</option>
+                        <option value="">Tout les status</option>
+                        <option value="Absence">Absences</option>
+                        <option value="Retard">Retards</option>
                     </select>
                     <select id="filterMotif">
-                        <option value="">All motifs</option>
-                        <option value="Maladie">Sickness</option>
-                        <option value="Congé payé">Paid vacation</option>
-                        <option value="Autre">Other</option>
+                        <option value="">Tout les motifs</option>
+                        <option value="Maladie">Maladies</option>
+                        <option value="Congé payé">Congès</option>
+                        <option value="Autre">Autres</option>
                     </select>
                     <select id="itemsPerPage">
-                        <option value="10">10 lines</option>
-                        <option value="25" selected>25 lines</option>
-                        <option value="50">50 lines</option>
-                        <option value="100">100 lines</option>
+                        <option value="10">10 lignes</option>
+                        <option value="25" selected>25 lignes</option>
+                        <option value="50">50 lignes</option>
+                        <option value="100">100 lignes</option>
                     </select>
                 </div>
 
@@ -74,23 +88,24 @@ $absences = $query->fetchAll(PDO::FETCH_ASSOC);
                         <thead>
                             <tr>
                                 <th>ID</th>
-                                <th>Student</th>
-                                <th>Status</th>
+                                <th>Stagiaire</th>
                                 <th>Type</th>
-                                <th>Start</th>
-                                <th>End</th>
-                                <th>Justify</th>
+                                <th>Motif</th>
+                                <th>Début</th>
+                                <th>Fin</th>
+                                <th>Justifié</th>
+                                <th>Etat</th>
                                 <th>Actions</th>
                             </tr>
                         </thead>
-                        <tbody id="documentTableBody">
+                        <tbody id="absencesTableBody">
                         </tbody>
                     </table>
                 </div>
 
                 <div class="pagination">
-                    <button class="prev-slide">Previous</button>
-                    <button class="next-slide">Next</button>
+                    <button class="prev-slide">Arrière</button>
+                    <button class="next-slide">Suivant</button>
                 </div>
             </div>
 
@@ -98,34 +113,86 @@ $absences = $query->fetchAll(PDO::FETCH_ASSOC);
             <div id="addAbsenceModal" class="modal">
                 <div class="modal-content">
                     <span class="close-btn"><i class='bx bx-x'></i></span>
-                    <h2>Add Absence/Lateness</h2>
+                    <h2>Ajouter une Absence/Retards</h2>
                     <form id="addAbsenceForm">
-                        <label for="utilisateur">Student Name</label>
-                        <input type="text" id="utilisateur" name="utilisateur" required>
-
                         <label for="statut">Status</label>
                         <select id="statut" name="statut" required>
                             <option value="Absence">Absence</option>
-                            <option value="Retard">Late</option>
+                            <option value="Retard">Retard</option>
                         </select>
 
-                        <label for="type">Absence Type</label>
+                        <label for="type">Type d'Absence/Retard</label>
                         <select id="type" name="type" required>
-                            <option value="Rendez-vous médical">Medical appointment</option>
-                            <option value="Congé payé">Paid vacation</option>
-                            <option value="Autre">Other</option>
+                            <option value="1">RDV Medical</option>
+                            <option value="2">Congès</option>
+                            <option value="3">Autre</option>
                         </select>
 
-                        <label for="debut">Start Date</label>
+                        <label for="debut">Début</label>
                         <input type="datetime-local" id="debut" name="debut" required>
 
-                        <label for="fin">End Date</label>
+                        <label for="fin">Fin</label>
                         <input type="datetime-local" id="fin" name="fin" required>
 
-                        <label for="justifie">Receipt (optionnal)</label>
+                        <label for="justifie">Justificatif (optionel)</label>
                         <input type="file" id="justifie" name="justifie">
 
-                        <button type="submit" class="button">Create</button>
+                        <button type="submit" class="button">Créer</button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Modal de Consultation avec validation -->
+            <div id="readAbsenceModal" class="modal">
+                <div class="modal-content">
+                    <span class="close-btn" id="closeReadModal"><i class='bx bx-x'></i></span>
+                    <h2>Détails de l'Absence/Retard <span id="readAbsenceEtat" class="badge"></span></h2>
+                    <div id="readAbsenceContent">
+                        <p><strong>ID :</strong> <span id="readId"></span></p>
+                        <p><strong>Stagiaire :</strong> <span id="readUtilisateur"></span></p>
+                        <p><strong>Status :</strong> <span id="readStatut"></span></p>
+                        <p><strong>Type :</strong> <span id="readType"></span></p>
+                        <p><strong>Début :</strong> <span id="readDebut"></span></p>
+                        <p><strong>Fin :</strong> <span id="readFin"></span></p>
+                        <p><strong>Justifié :</strong> <span id="readJustifie"></span></p>
+                    </div>
+                    <!-- Boutons de validation -->
+                    <div id="validationSection">
+                        <button id="validateAbsence" class="btn validate" disabled>Valider</button>
+                        <button id="refuseAbsence" class="btn refuse" disabled>Refuser</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Modal d'Édition -->
+            <div id="editAbsenceModal" class="modal">
+                <div class="modal-content">
+                    <span class="close-btn" id="closeEditModal"><i class='bx bx-x'></i></span>
+                    <h2>Modifier l'Absence/Retard</h2>
+                    <form id="editAbsenceForm">
+                        <label for="editStatut">Statut</label>
+                        <select id="editStatut" name="statut" required>
+                            <option value="Absence">Absence</option>
+                            <option value="Retard">Retard</option>
+                        </select>
+
+                        <label for="editType">Type d'Absence/Retard</label>
+                        <select id="editType" name="type" required>
+                            <option value="1">RDV Medical</option>
+                            <option value="2">Congès</option>
+                            <option value="3">Autre</option>
+                        </select>
+
+                        <label for="editDebut">Début</label>
+                        <input type="datetime-local" id="editDebut" name="debut" required>
+
+                        <label for="editFin">Fin</label>
+                        <input type="datetime-local" id="editFin" name="fin" required>
+
+                        <label for="editJustificatif">Justificatif (optionnel)</label>
+                        <input type="file" id="editJustificatif" name="justificatif">
+
+                        <button type="submit" class="button">Enregistrer</button>
                     </form>
                 </div>
             </div>
