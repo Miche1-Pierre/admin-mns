@@ -12,7 +12,7 @@
             <small class="text-muted" id="user-role">Utilisateur</small>
         </div>
         <div class="profile-photo">
-            <a class="button view"><img src="/frontend-admin-mns/assets/user1.png"></a>
+            <a class="button view"><img src="/assets/user1.png"></a>
         </div>
     </div>
 

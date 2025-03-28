@@ -1,5 +1,5 @@
 <?php
-include_once $_SERVER['DOCUMENT_ROOT'] . "/frontend-admin-mns/components/card.php";
+include_once $_SERVER['DOCUMENT_ROOT'] . "/components/card.php";
 
 function widgetAbsences($widgetsData)
 {
@@ -8,7 +8,7 @@ function widgetAbsences($widgetsData)
     }
 
     $title = "Absences & Retards";
-    $link = "/frontend-admin-mns/components/modules/absences.php";
+    $link = "/components/modules/absences.php";
     $text = "Voir les Absences et les Retards";
     $img = null;
     $chartId = "absencesChart";

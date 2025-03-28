@@ -40,17 +40,17 @@ $absences = $absencesData["absencesMenu"] ?? [];
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="/frontend-admin-mns/css/dashboard.css">
+    <link rel="stylesheet" href="/css/dashboard.css">
     <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
     <title>ADMIN MNS | Absences & Lateness</title>
 </head>
 
 <body>
     <header>
-        <?php include $_SERVER['DOCUMENT_ROOT'] . "/frontend-admin-mns/components/navbar.php"; ?>
+        <?php include $_SERVER['DOCUMENT_ROOT'] . "/components/navbar.php"; ?>
     </header>
     <main>
-        <?php include $_SERVER['DOCUMENT_ROOT'] . "/frontend-admin-mns/components/breadcrumb.php"; ?>
+        <?php include $_SERVER['DOCUMENT_ROOT'] . "/components/breadcrumb.php"; ?>
 
         <script>
             const absences = <?php echo json_encode($absences, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP); ?>;
@@ -200,7 +200,7 @@ $absences = $absencesData["absencesMenu"] ?? [];
     </main>
     <footer></footer>
 
-    <script src="/frontend-admin-mns/js/absences.js"></script>
+    <script src="/js/absences.js"></script>
 </body>
 
 </html>

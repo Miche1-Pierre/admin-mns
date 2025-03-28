@@ -16,7 +16,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["token"])) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <!-- CSS -->
-    <link rel="stylesheet" href="/frontend-admin-mns/css/login.css">
+    <link rel="stylesheet" href="/css/login.css">
     <!-- Icons -->
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
     <title>ADMIN MNS | Connexion</title>
@@ -25,7 +25,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["token"])) {
 <body>
     <div class="container" id="container">
         <div class="form-container sign-up">
-            <form method="" action="/frontend-admin-mns/views/candidatures.php">
+            <form method="" action="/views/candidatures.php">
                 <h1>Créer un compte pour intégrer MNS</h1>
                 <p>Vous allez être redirigé vers la page de candidature en cliquant sur le bouton ci-dessous.</p>
                 <p>Veuillez vous assurer d'avoir toutes les informations nécessaires avant de continuer.</p>
@@ -70,7 +70,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["token"])) {
         </div>
     </div>
 
-    <script src="/frontend-admin-mns/js/login.js"></script>
+    <script src="/js/login.js"></script>
 </body>
 
 </html>

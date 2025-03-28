@@ -15,21 +15,21 @@ if (!isset($_SESSION["token"])) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="/frontend-admin-mns/css/dashboard.css">
+    <link rel="stylesheet" href="/css/dashboard.css">
     <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
     <title>ADMIN MNS | Account</title>
 </head>
 
 <body>
     <header>
-        <?php include $_SERVER['DOCUMENT_ROOT'] . "/frontend-admin-mns/components/navbar.php"; ?>
+        <?php include $_SERVER['DOCUMENT_ROOT'] . "/components/navbar.php"; ?>
     </header>
     <main>
-        <?php include $_SERVER['DOCUMENT_ROOT'] . "/frontend-admin-mns/components/breadcrumb.php"; ?>
+        <?php include $_SERVER['DOCUMENT_ROOT'] . "/components/breadcrumb.php"; ?>
 
         <div class="settings-zone" id="settings-zone">
             <h2>Paramètres de Compte</h2>
-            <form action="/frontend-admin-mns/actions/update_profile.php" method="POST" enctype="multipart/form-data">
+            <form action="/actions/update_profile.php" method="POST" enctype="multipart/form-data">
                 <div class="form-group">
                     <label for="profile-photo">Photo de Profil</label>
                     <input type="file" id="profile-photo" name="profile-photo">

@@ -44,7 +44,7 @@ document.addEventListener("DOMContentLoaded", function () {
             const token = await response.text();
             localStorage.setItem("token", token);
 
-            await fetch("/frontend-admin-mns/views/login.php", {
+            await fetch("/views/login.php", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/x-www-form-urlencoded",
@@ -52,7 +52,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 body: `token=${token}`,
             });
 
-            window.location.href = "/frontend-admin-mns/views/dashboard.php";
+            window.location.href = "/views/dashboard.php";
         } catch (error) {
             alert(error.message);
         }
