@@ -1,47 +1,55 @@
 <?php
 include_once $_SERVER['DOCUMENT_ROOT'] . "/frontend-admin-mns/components/card.php";
-include_once $_SERVER['DOCUMENT_ROOT'] . "/frontend-admin-mns/php/api/db.php";
 
-function getCandidaturesParFormation($pdo)
+function widgetCandidatures($widgetsData)
 {
-    $query = "SELECT f.nom_formation, COUNT(i.id_inscription) AS nb_candidatures
-    FROM inscription i
-    JOIN formation f ON i.id_formation = f.id_formation
-    GROUP BY f.nom_formation
-    ORDER BY nb_candidatures DESC";
+    if (!isset($widgetsData["candidatures"]) || empty($widgetsData["candidatures"])) {
+        return;
+    }
 
-    $stmt = $pdo->prepare($query);
-    $stmt->execute();
-    return $stmt->fetchAll(PDO::FETCH_ASSOC);
-}
-function widgetCandidatures()
-{
-    global $pdo;
-    $title = "Applications by Training";
-    $link = "#";
-    $text = "Breakdown of applicants by training course";
+    $title = "Candidatures";
+    $link = "/frontend-admin-mns/components/modules/candidatures.php";
+    $text = "Voir les Candidatures par Formations";
     $img = null;
     $chartId = "candidaturesChart";
     $chartType = "pie";
 
-    $data = getCandidaturesParFormation($pdo);
+    $data = $widgetsData["candidatures"];
+
+    $groupedData = [];
+    $formationNames = []; 
+
+    foreach ($data as $row) {
+        $idFormation = $row["id_formation"] ?? "Unknown";
+        $nomFormation = $row["nom_formation"] ?? "Formation inconnue";
+
+        $formationNames[$idFormation] = $nomFormation;
+
+        if (!isset($groupedData[$idFormation])) {
+            $groupedData[$idFormation] = 0;
+        }
+
+        $groupedData[$idFormation]++;
+    }
 
     $labels = [];
-    $dataValues = [];
-    $bgColors = ["#D90429", "#2B2D42", "#EDF2F4", "#424242", "#8D99AE"];
-
-    foreach ($data as $index => $row) {
-        $labels[] = $row["nom_formation"];
-        $dataValues[] = $row["nb_candidatures"];
+    foreach ($groupedData as $idFormation => $count) {
+        $labels[] = $formationNames[$idFormation];
     }
+
+    $dataValues = array_values($groupedData);
+
+    $bgColors = ["#D90429", "#2B2D42", "#EDF2F4", "#424242", "#ef233c", "#393E46", "#c70021"];
+    $backgroundColors = array_pad($bgColors, count($dataValues), "#000000");
 
     $datasets = [
         [
-            "label" => "Applications",
+            "label" => "Candidatures",
             "data" => $dataValues,
-            "backgroundColor" => array_slice($bgColors, 0, count($dataValues)),
-            "borderColor" => array_fill(0, count($dataValues), "#ffffff"),
-            "borderWidth" => 1
+            "backgroundColor" => array_slice($backgroundColors, 0, count($dataValues)),
+            "borderColor" => array_fill(0, count($dataValues), "#222222"),
+            "borderWidth" => 0
+
         ]
     ];
 

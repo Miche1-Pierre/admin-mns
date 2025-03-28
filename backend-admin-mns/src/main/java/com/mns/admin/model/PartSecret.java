@@ -39,4 +39,52 @@ public class PartSecret {
 
     @Column(name = "statut_part_secret", nullable = false, length = 50)
     private String statutPartSecret;
+
+    public Long getIdPartSecret() {
+        return idPartSecret;
+    }
+
+    public void setIdPartSecret(Long idPartSecret) {
+        this.idPartSecret = idPartSecret;
+    }
+
+    public Secret getSecret() {
+        return secret;
+    }
+
+    public void setSecret(Secret secret) {
+        this.secret = secret;
+    }
+
+    public Utilisateur getUtilisateur() {
+        return utilisateur;
+    }
+
+    public void setUtilisateur(Utilisateur utilisateur) {
+        this.utilisateur = utilisateur;
+    }
+
+    public String getPartPartSecret() {
+        return partPartSecret;
+    }
+
+    public void setPartPartSecret(String partPartSecret) {
+        this.partPartSecret = partPartSecret;
+    }
+
+    public LocalDateTime getDateCreationPartSecret() {
+        return dateCreationPartSecret;
+    }
+
+    public void setDateCreationPartSecret(LocalDateTime dateCreationPartSecret) {
+        this.dateCreationPartSecret = dateCreationPartSecret;
+    }
+
+    public String getStatutPartSecret() {
+        return statutPartSecret;
+    }
+
+    public void setStatutPartSecret(String statutPartSecret) {
+        this.statutPartSecret = statutPartSecret;
+    }
 }

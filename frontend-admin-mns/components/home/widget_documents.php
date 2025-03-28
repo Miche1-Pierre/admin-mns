@@ -1,36 +1,40 @@
 <?php
 include_once $_SERVER['DOCUMENT_ROOT'] . "/frontend-admin-mns/components/card.php";
-include_once $_SERVER['DOCUMENT_ROOT'] . "/frontend-admin-mns/php/api/db.php";
 
-function getDocuments($pdo)
+function widgetDocuments($widgetsData)
 {
-    $query = "SELECT id_type_document, date_depot_document, id_statut 
-              FROM document
-              ORDER BY date_depot_document DESC
-              LIMIT 5";
+    if (!isset($widgetsData["documents"]) || empty($widgetsData["documents"])) {
+        return;
+    }
 
-    $stmt = $pdo->prepare($query);
-    $stmt->execute();
-    return $stmt->fetchAll(PDO::FETCH_ASSOC);
-}
-
-function widgetDocuments()
-{
-    global $pdo;
-    $title = "Documents";
-    $link = "#";
+    $title = "Documents récents";
+    $link = "/frontend-admin-mns/components/documents/documents.php";
     $img = null;
 
-    $documents = getDocuments($pdo);
+    $data = $widgetsData["documents"];
 
-    $content = "<table class='table-widget'><thead><tr><th>Type</th><th>Deposit date</th><th>Status</th></tr></thead><tbody>";
-    foreach ($documents as $doc) {
+    $content = "<table class='table-widget'>
+                    <thead>
+                        <tr>
+                            <th>N° Document</th>
+                            <th>N° Dossier</th>
+                            <th>Date de dépôt</th>
+                        </tr>
+                    </thead>
+                    <tbody>";
+
+    foreach ($data as $doc) {
+        $id_doc = $doc["id_document"] ?? "N/A";
+        $id_dossier = $doc["id_dossier"] ?? "N/A";
+        $date = $doc["date_depot_document"] ?? "N/A";
+
         $content .= "<tr>
-                        <td>" . htmlspecialchars($doc["id_type_document"]) . "</td>
-                        <td>" . htmlspecialchars(date("d/m/Y", strtotime($doc["date_depot_document"]))) . "</td>
-                        <td>" . htmlspecialchars($doc["id_statut"]) . "</td>
-                     </tr>";
+                        <td>{$id_doc}</td>
+                        <td>{$id_dossier}</td>
+                        <td>{$date}</td>
+                    </tr>";
     }
+
     $content .= "</tbody></table>";
 
     generateCard($title, $link, $content, $img);

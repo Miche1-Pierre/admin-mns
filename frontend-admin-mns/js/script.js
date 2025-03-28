@@ -1,78 +1,72 @@
-/* Hero */
-const canvas = document.getElementById('beamsCanvas');
-const ctx = canvas.getContext('2d');
+/* Banner */
+const container = document.querySelector('.banner-animation .stagger-visualizer');
+const containerWidth = container.offsetWidth;
+const containerHeight = container.offsetHeight;
+const elementSize = 16;
+const columns = Math.floor(containerWidth / elementSize);
+const rows = Math.floor(containerHeight / elementSize);
+const grid = [columns, rows];
+const numberOfElements = columns * rows;
 
-// Définir la taille du canvas
-canvas.width = window.innerWidth;
-canvas.height = window.innerHeight;
-
-// Tableau des lignes
-let lines = [];
-
-// Nombre de lignes à créer par seconde (ou par frame)
-const linesPerFrame = 1;  // Par exemple, 5 lignes à chaque frame
-
-let frameCount = 0;
-
-// Fonction pour créer une nouvelle ligne
-function createLine() {
-    const line = {
-        x: Math.random() * canvas.width,  // Position horizontale aléatoire
-        y: -20,                          // Position initiale au-dessus de l'écran
-        length: Math.random() * 100 + 50, // Longueur aléatoire de la ligne
-        speed: Math.random() * 3 + 2,     // Vitesse de chute aléatoire
-        alpha: 1,                         // Opacité initiale
-        color: `#D90429` // Couleur aléatoire
-    };
-    lines.push(line);
+const fragment = document.createDocumentFragment();
+for (let i = 0; i < numberOfElements; i++) {
+    fragment.appendChild(document.createElement('div'));
 }
+container.appendChild(fragment);
 
-// Dessiner les lignes
-function drawLines() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height); // Effacer le canvas à chaque frame
-
-    lines.forEach((line, index) => {
-        ctx.save();
-        ctx.translate(line.x, line.y); // Déplacer le point de départ de la ligne
-
-        // Dessiner la ligne
-        ctx.globalAlpha = line.alpha;
-        ctx.strokeStyle = line.color;
-        ctx.lineWidth = 2;
-        ctx.beginPath();
-        ctx.moveTo(0, 0);
-        ctx.lineTo(0, line.length);
-        ctx.stroke();
-
-        // Mettre à jour la position de la ligne
-        line.y += line.speed;
-        line.alpha -= 0.005; // La ligne devient de plus en plus transparente
-
-        // Retirer la ligne une fois qu'elle est partie de l'écran
-        if (line.y > canvas.height || line.alpha <= 0) {
-            lines.splice(index, 1);
-        }
-
-        ctx.restore();
+const staggersAnimation = anime.timeline({
+    targets: '.banner-animation .stagger-visualizer div',
+    easing: 'easeInOutSine',
+    delay: anime.stagger(50),
+    loop: true,
+    autoplay: false
+})
+    .add({
+        translateX: [
+            { value: anime.stagger('-.1rem', { grid: grid, from: 'center', axis: 'x' }) },
+            { value: anime.stagger('.1rem', { grid: grid, from: 'center', axis: 'x' }) }
+        ],
+        translateY: [
+            { value: anime.stagger('-.1rem', { grid: grid, from: 'center', axis: 'y' }) },
+            { value: anime.stagger('.1rem', { grid: grid, from: 'center', axis: 'y' }) }
+        ],
+        duration: 1000,
+        scale: 0.5,
+        delay: anime.stagger(100, { grid: grid, from: 'center' })
+    })
+    .add({
+        translateX: () => anime.random(-10, 10),
+        translateY: () => anime.random(-10, 10),
+        delay: anime.stagger(8, { from: 'last' })
+    })
+    .add({
+        translateX: anime.stagger('.25rem', { grid: grid, from: 'center', axis: 'x' }),
+        translateY: anime.stagger('.25rem', { grid: grid, from: 'center', axis: 'y' }),
+        rotate: 0,
+        scaleX: 2.5,
+        scaleY: 0.25,
+        delay: anime.stagger(4, { from: 'center' })
+    })
+    .add({
+        rotate: anime.stagger([90, 0], { grid: grid, from: 'center' }),
+        delay: anime.stagger(50, { grid: grid, from: 'center' })
+    })
+    .add({
+        translateX: 0,
+        translateY: 0,
+        scale: 0.5,
+        scaleX: 1,
+        rotate: 180,
+        duration: 1000,
+        delay: anime.stagger(100, { grid: grid, from: 'center' })
+    })
+    .add({
+        scaleY: 1,
+        scale: 1,
+        delay: anime.stagger(20, { grid: grid, from: 'center' })
     });
-}
 
-// Boucle d'animation
-function animate() {
-    frameCount++;
-
-    // Créer plusieurs lignes à chaque "linesPerFrame" frames
-    if (frameCount % 5 === 0) {  // Crée 5 lignes toutes les 5 frames
-        for (let i = 0; i < linesPerFrame; i++) {
-            createLine();
-        }
-    }
-
-    drawLines();  // Dessiner toutes les lignes
-    requestAnimationFrame(animate); // Continuer l'animation
-}
-
-animate();
+staggersAnimation.play();
 
 /* Card */
 document.querySelectorAll(".card").forEach(card => {

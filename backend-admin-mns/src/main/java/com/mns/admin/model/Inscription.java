@@ -33,4 +33,67 @@ public class Inscription {
     @Column(name = "date_inscription", nullable = false, updatable = false)
     @Temporal(TemporalType.TIMESTAMP)
     private LocalDateTime dateInscription;
+
+    @ManyToOne
+    @JoinColumn(name = "id_statut", nullable = false)
+    private Statut statut;
+
+    public enum InscriptionEtat {
+        EN_ATTENTE,
+        VALIDE,
+        REFUSE,
+        SUPPRIME
+    }
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "etat_inscription", nullable = false)
+    private InscriptionEtat etatInscription = InscriptionEtat.EN_ATTENTE;
+
+    public Long getIdInscription() {
+        return idInscription;
+    }
+
+    public void setIdInscription(Long idInscription) {
+        this.idInscription = idInscription;
+    }
+
+    public Utilisateur getStagiaire() {
+        return stagiaire;
+    }
+
+    public void setStagiaire(Utilisateur stagiaire) {
+        this.stagiaire = stagiaire;
+    }
+
+    public Formation getFormation() {
+        return formation;
+    }
+
+    public void setFormation(Formation formation) {
+        this.formation = formation;
+    }
+
+    public LocalDateTime getDateInscription() {
+        return dateInscription;
+    }
+
+    public void setDateInscription(LocalDateTime dateInscription) {
+        this.dateInscription = dateInscription;
+    }
+
+    public Statut getStatut() {
+        return statut;
+    }
+
+    public void setStatut(Statut statut) {
+        this.statut = statut;
+    }
+
+    public InscriptionEtat getEtatInscription() {
+        return etatInscription;
+    }
+
+    public void setEtatInscription(InscriptionEtat etatInscription) {
+        this.etatInscription = etatInscription;
+    }
 }
