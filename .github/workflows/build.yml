@@ -3,23 +3,34 @@ name: Build and Deploy
 on:
   push:
     branches:
-      - main
+      - main  # Déclenche sur les commits dans la branche main
   pull_request:
     branches:
-      - main
+      - main  # Déclenche sur les pull requests vers la branche main
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-latest  # Machine virtuelle Ubuntu
 
     steps:
+      # 1. Vérifier le code du dépôt
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Set up JDK 8
+      # 2. Configurer Java (version 22)
+      - name: Set up JDK 22
         uses: actions/setup-java@v2
         with:
-          java-version: '1.8'
+          java-version: '22'  # Demander Java 22
+          distribution: 'adoptopenjdk'  # Optionnel si tu veux adopter OpenJDK, sinon tu peux le laisser
 
+      # 3. Installer les dépendances et construire avec Maven
       - name: Build with Maven
         run: mvn clean package --file pom.xml
+
+      # 4. Télécharger le fichier .jar généré
+      - name: Upload JAR as artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: my-app-jar
+          path: target/*.jar
