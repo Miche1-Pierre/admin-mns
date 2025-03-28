@@ -7,12 +7,11 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication
 public class BackendAdminMnsApplication {
 
+
 	public static void main(String[] args) {
-		// Charger le fichier .env s'il existe
 		Dotenv dotenv = Dotenv.configure().ignoreIfMissing().load();
 		dotenv.entries().forEach(entry -> System.setProperty(entry.getKey(), entry.getValue()));
 
-		// Lancer Spring Boot
 		SpringApplication.run(BackendAdminMnsApplication.class, args);
 	}
 }
