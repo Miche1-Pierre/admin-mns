@@ -36,7 +36,7 @@ if ($response === false) {
         <div class="head">
             <div class="logo-details">
                 <p class="details">Admin</p>
-                <img src="/assets/logo.png" alt="">
+                <img src="/frontend-admin-mns/assets/logo.png" alt="">
             </div>
         </div>
         <div class="nav">
@@ -188,7 +188,7 @@ if ($response === false) {
             .then(data => {
                 console.log(data);
                 localStorage.clear();
-                window.location.href = "/views/login";
+                window.location.href = "/frontend-admin-mns/views/login";
             })
             .catch(error => {
                 console.error(error);

@@ -1,5 +1,5 @@
 <?php
-include_once $_SERVER['DOCUMENT_ROOT'] . "/components/card.php";
+include_once $_SERVER['DOCUMENT_ROOT'] . "/frontend-admin-mns/components/card.php";
 
 function widgetJustificatifs($widgetsData)
 {
@@ -8,7 +8,7 @@ function widgetJustificatifs($widgetsData)
     }
 
     $title = "Justificatifs";
-    $link = "/components/documents/documents.php";
+    $link = "/frontend-admin-mns/components/documents/documents.php";
     $img = null;
 
     $data = $widgetsData["justificatifs"];

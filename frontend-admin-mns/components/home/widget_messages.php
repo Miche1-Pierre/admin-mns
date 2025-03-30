@@ -1,5 +1,5 @@
 <?php
-include_once $_SERVER['DOCUMENT_ROOT'] . "/components/card.php";
+include_once $_SERVER['DOCUMENT_ROOT'] . "/frontend-admin-mns/components/card.php";
 
 function widgetMessages($widgetsData)
 {
@@ -8,7 +8,7 @@ function widgetMessages($widgetsData)
     }
 
     $title = "Messages";
-    $link = "/components/messaging/messaging.php";
+    $link = "/frontend-admin-mns/components/messaging/messaging.php";
     $img = null;
 
     $data = $widgetsData["messages"];

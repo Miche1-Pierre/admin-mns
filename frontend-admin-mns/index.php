@@ -6,7 +6,7 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <!-- CSS -->
-    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/frontend-admin-mns/css/style.css">
     <!-- Icons -->
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
     <title>ADMIN MNS | Landing Page</title>
@@ -14,7 +14,7 @@
 
 <body>
     <header>
-        <a href="#" class="logo">Admin <img src="/assets/logo.png" alt=""></a>
+        <a href="#" class="logo">Admin <img src="/frontend-admin-mns/assets/logo.png" alt=""></a>
         <nav class="navbar">
             <a href="index.html" class="active">Home</a>
             <a href="#">Products</a>
@@ -40,7 +40,7 @@
             </div>
 
             <div class="right">
-                <img class="hero-image" src="/assets/hero.png" alt="">
+                <img class="hero-image" src="/frontend-admin-mns/assets/hero.png" alt="">
             </div>
             <div class="scroll">
                 <a href="#ancre-box" class="scroll-btn"><i class='bx bx-chevrons-down'></i></a>
@@ -84,22 +84,22 @@
                 aliquet scelerisque nullam sagittis, pulvinar. Fermentum scelerisque sit consectetur hac mi. Mollis leo eleifend ultricies purus iaculis.</p>
             <div class="company-card">
                 <div class="card-company" id="card">
-                    <img src="/assets/logo.png" alt="" class="logo">
+                    <img src="/frontend-admin-mns/assets/logo.png" alt="" class="logo">
                 </div>
                 <div class="card-company" id="card">
-                    <img src="/assets/logo_ifa.png" alt="" class="logo">
+                    <img src="/frontend-admin-mns/assets/logo_ifa.png" alt="" class="logo">
                 </div>
                 <div class="card-company" id="card">
-                    <img src="/assets/logo_republique_francaise.jpg" alt="" class="logo">
+                    <img src="/frontend-admin-mns/assets/logo_republique_francaise.jpg" alt="" class="logo">
                 </div>
                 <div class="card-company" id="card">
-                    <img src="/assets/logo_france_competences.jpg" alt="" class="logo">
+                    <img src="/frontend-admin-mns/assets/logo_france_competences.jpg" alt="" class="logo">
                 </div>
                 <div class="card-company" id="card">
-                    <img src="/assets/logo_eureka-education.png" alt="" class="logo">
+                    <img src="/frontend-admin-mns/assets/logo_eureka-education.png" alt="" class="logo">
                 </div>
                 <div class="card-company" id="card">
-                    <img src="/assets/qualiopi-logo.png" alt="" class="logo">
+                    <img src="/frontend-admin-mns/assets/qualiopi-logo.png" alt="" class="logo">
                 </div>
             </div>
         </section>
@@ -399,7 +399,7 @@
     </section>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
-    <script src="/js/script.js"></script>
+    <script src="/frontend-admin-mns/js/script.js"></script>
 </body>
 
 </html>

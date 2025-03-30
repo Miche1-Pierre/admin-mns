@@ -1,5 +1,5 @@
 <?php
-include_once $_SERVER['DOCUMENT_ROOT'] . "/components/card.php";
+include_once $_SERVER['DOCUMENT_ROOT'] . "/frontend-admin-mns/components/card.php";
 
 function widgetCandidatures($widgetsData)
 {
@@ -8,7 +8,7 @@ function widgetCandidatures($widgetsData)
     }
 
     $title = "Candidatures";
-    $link = "/components/modules/candidatures.php";
+    $link = "/frontend-admin-mns/components/modules/candidatures.php";
     $text = "Voir les Candidatures par Formations";
     $img = null;
     $chartId = "candidaturesChart";
