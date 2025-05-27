@@ -33,7 +33,7 @@ document.addEventListener("DOMContentLoaded", function () {
             });
 
             if (response.status === 403) {
-                alert("Un email de vérification a été envoyé. Veuillez vérifier votre email.");
+                showToast("Un email de vérification a été envoyé. Veuillez vérifier votre email.", "info");
                 return;
             }
 
@@ -53,8 +53,33 @@ document.addEventListener("DOMContentLoaded", function () {
             });
 
             window.location.href = "/frontend-admin-mns/views/dashboard.php";
-        } catch (error) {
-            alert(error.message);
+        } catch {
+            showToast("Échec de la connexion. Vérifiez vos identifiants.", "error");
         }
     });
 });
+
+function showToast(message, type = "success", duration = 5000) {
+    let container = document.getElementById('toast-container');
+
+    if (!container) {
+        container = document.createElement('div');
+        container.id = 'toast-container';
+        document.body.appendChild(container);
+    }
+
+    const toast = document.createElement("div");
+    toast.className = `toast ${type}`;
+    toast.innerHTML = `
+        <span>${message}</span>
+        <button class="close-btn" onclick="this.parentElement.remove()">
+            <i class='bx bx-x'></i>
+        </button>
+    `;
+
+    container.appendChild(toast);
+
+    setTimeout(() => {
+        toast.remove();
+    }, duration);
+}
