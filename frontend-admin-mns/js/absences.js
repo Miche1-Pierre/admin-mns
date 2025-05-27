@@ -407,15 +407,15 @@ function displayAbsences() {
                     const result = await response.json();
 
                     if (response.ok) {
-                        alert("Absence mise à jour avec succès !");
+                        showToast("Absence mise à jour avec succès !", "success");
                         modal.style.display = "none";
                         window.location.reload();
                     } else {
-                        alert("Erreur lors de la mise à jour : " + (result.message || "Erreur inconnue."));
+                        showToast("Erreur lors de la mise à jour ", "error");
                     }
                 } catch (error) {
                     console.error("Erreur lors de la mise à jour :", error);
-                    alert("Une erreur est survenue lors de la mise à jour.");
+                    showToast("Une erreur est survenue lors de la mise à jour.", "error");
                 }
             };
         });
@@ -446,9 +446,9 @@ function displayAbsences() {
                 })
                     .then(response => {
                         if (response.ok) {
-                            alert("Absence supprimée");
+                            showToast("Absence supprimée !", "success");
                         } else {
-                            alert("Erreur lors de la suppression");
+                            showToast("Erreur lors de la suppression", "error");
                         }
                     })
                     .catch(error => console.error("Erreur:", error));
@@ -576,14 +576,14 @@ function initAddAbsenceModal() {
             const result = await response.json();
 
             if (response.ok) {
-                alert("Absence ajoutée avec succès !");
+                showToast("Absence ajoutée avec succès !", "success");
                 window.location.reload();
             } else {
-                alert("Erreur : " + (result.message || "Impossible d'ajouter l'absence."));
+                showToast("Impossible d'ajouter l'absence.", "error");
             }
         } catch (error) {
             console.error("Erreur lors de l'ajout de l'absence :", error);
-            alert("Une erreur est survenue. Veuillez réessayer.");
+            showToast("Une erreur est survenue. Veuillez réessayer.", "error");
         }
     });
 }
@@ -630,4 +630,21 @@ function fetchProfile() {
             }
         })
         .catch(error => console.error('Erreur:', error));
+}
+
+function showToast(message, type = "success", duration = 5000) {
+    const container = document.getElementById('toast-container');
+
+    const toast = document.createElement("div");
+    toast.className = `toast ${type}`;
+    toast.innerHTML = `
+    <span> ${message} </span>
+    <button class= "close-btn" onclick="this.parentElement.remove()"> <i class='bx  bx-x'  ></i> </button>
+    `;
+
+    container.appendChild(toast);
+
+    setTimeout(() => {
+        toast.remove();
+    }, duration);
 }
