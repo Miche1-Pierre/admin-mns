@@ -957,7 +957,7 @@ canvas {
     padding: 14px 18px;
     border-radius: 8px;
     font-size: 14px;
-    color: white;
+    color: var(--text-color-light);
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
     animation: fadeIn 0.3s ease-in-out;
 }
@@ -976,7 +976,6 @@ canvas {
 
 .toast.warning {
     background-color: #ffc107;
-    color: var(--secondary-color);
 }
 
 .toast .close-btn {
