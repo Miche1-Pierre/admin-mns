@@ -126,7 +126,7 @@
     });
 
     document.addEventListener('DOMContentLoaded', function() {
-        fetch('http://admin-mns:8080/api/formations/formations')
+        fetch("http://admin-mns:8080/api/formations/formations")
             .then(response => response.json())
             .then(formations => {
                 let formationSelect = document.getElementById('formation');
