@@ -108,25 +108,25 @@
                 console.log("Réponse reçue :", data);
 
                 if (typeof data === "string" && data.includes("succès")) {
-                    alert("Candidature envoyée avec succès ! Un e-mail de confirmation vous a été envoyé.");
+                    showToast("Candidature envoyée avec succès ! Un e-mail de confirmation vous a été envoyé.", "success");
                     document.getElementById("recapModal").style.display = "none";
                     document.getElementById("candidature-form").reset();
                 } else if (data.success) {
-                    alert("Candidature envoyée avec succès ! Un e-mail de confirmation vous a été envoyé.");
+                    showToast("Candidature envoyée avec succès ! Un e-mail de confirmation vous a été envoyé.", "success");
                     document.getElementById("recapModal").style.display = "none";
                     document.getElementById("candidature-form").reset();
                 } else {
-                    alert("Erreur : " + (data.message || "Une erreur est survenue."));
+                    showToast("Une erreur est survenue.", "error");
                 }
             })
             .catch(error => {
                 console.error("Erreur Fetch :", error);
-                alert("Impossible d'envoyer la candidature. Veuillez réessayer.");
+                showToast("Impossible d'envoyer la candidature. Veuillez réessayer.", "error");
             });
     });
 
     document.addEventListener('DOMContentLoaded', function() {
-        fetch('http://admin-mns:8080/api/formations/formations')
+        fetch("http://admin-mns:8080/api/formations/formations")
             .then(response => response.json())
             .then(formations => {
                 let formationSelect = document.getElementById('formation');
@@ -139,6 +139,59 @@
             })
             .catch(err => console.error("Erreur lors du chargement des formations :", err));
     });
+
+    function showToast(message = null, type = "success", duration = 5000, persist = false) {
+        if (persist && message) {
+            // Stocke le toast dans localStorage pour affichage après reload
+            localStorage.setItem("toastMessage", JSON.stringify({
+                message,
+                type,
+                duration
+            }));
+            return;
+        }
+
+        if (!message) {
+            const stored = localStorage.getItem("toastMessage");
+            if (stored) {
+                try {
+                    const parsed = JSON.parse(stored);
+                    message = parsed.message;
+                    type = parsed.type || type;
+                    duration = parsed.duration || duration;
+                    localStorage.removeItem("toastMessage");
+                } catch (e) {
+                    console.error("Toast mal formaté :", e);
+                    return;
+                }
+            } else {
+                return;
+            }
+        }
+
+        let container = document.getElementById('toast-container');
+
+        if (!container) {
+            container = document.createElement('div');
+            container.id = 'toast-container';
+            document.body.appendChild(container);
+        }
+
+        const toast = document.createElement("div");
+        toast.className = `toast ${type}`;
+        toast.innerHTML = `
+        <span>${message}</span>
+        <button class="close-btn" onclick="this.parentElement.remove()">
+            <i class='bx bx-x'></i>
+        </button>
+    `;
+
+        container.appendChild(toast);
+
+        setTimeout(() => {
+            toast.remove();
+        }, duration);
+    }
 </script>
 
 </html>
