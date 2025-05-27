@@ -328,7 +328,7 @@ function initViewAccountModal() {
             })
             .then(data => {
                 console.log("Réponse reçue :", data);
-                alert(data);
+                showToast("Mot de passe changé avec succès !", "success");
                 modal.style.display = "none";
             })
             .catch(error => {
@@ -338,14 +338,46 @@ function initViewAccountModal() {
     });
 }
 
-function showToast(message, type = "success", duration = 5000) {
-    const container = document.getElementById('toast-container');
+function showToast(message = null, type = "success", duration = 5000, persist = false) {
+    if (persist && message) {
+        // Stocke le toast dans localStorage pour affichage après reload
+        localStorage.setItem("toastMessage", JSON.stringify({ message, type, duration }));
+        return;
+    }
+
+    if (!message) {
+        const stored = localStorage.getItem("toastMessage");
+        if (stored) {
+            try {
+                const parsed = JSON.parse(stored);
+                message = parsed.message;
+                type = parsed.type || type;
+                duration = parsed.duration || duration;
+                localStorage.removeItem("toastMessage");
+            } catch (e) {
+                console.error("Toast mal formaté :", e);
+                return;
+            }
+        } else {
+            return;
+        }
+    }
+
+    let container = document.getElementById('toast-container');
+
+    if (!container) {
+        container = document.createElement('div');
+        container.id = 'toast-container';
+        document.body.appendChild(container);
+    }
 
     const toast = document.createElement("div");
     toast.className = `toast ${type}`;
     toast.innerHTML = `
-    <span> ${message} </span>
-    <button class= "close-btn" onclick="this.parentElement.remove()"> <i class='bx  bx-x'  ></i> </button>
+        <span>${message}</span>
+        <button class="close-btn" onclick="this.parentElement.remove()">
+            <i class='bx bx-x'></i>
+        </button>
     `;
 
     container.appendChild(toast);
