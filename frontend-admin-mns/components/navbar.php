@@ -169,6 +169,8 @@ if ($response === false) {
     </aside>
 </div>
 
+<div class="toast-container" id="toast-container"></div>
+
 <script>
     function logout() {
         const token = localStorage.getItem('token');
