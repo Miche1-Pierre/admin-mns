@@ -294,12 +294,12 @@ function initViewAccountModal() {
         const confirmNewPassword = document.getElementById("confirmNewPassword").value;
 
         if (newPassword !== confirmNewPassword) {
-            alert("Les nouveaux mots de passe ne correspondent pas.");
+            showToast("Les nouveaux mots de passe ne correspondent pas.", "error");
             return;
         }
 
         if (!isPasswordStrong(newPassword)) {
-            alert("Le mot de passe doit contenir au moins 8 caractères, une majuscule, une minuscule, un chiffre et un caractère spécial.");
+            showToast("Le mot de passe doit contenir au moins 8 caractères, une majuscule, une minuscule, un chiffre et un caractère spécial.", "warning", 10000);
             return;
         }
 
@@ -333,7 +333,24 @@ function initViewAccountModal() {
             })
             .catch(error => {
                 console.error('Erreur:', error);
-                alert("Erreur lors de la mise à jour du mot de passe.");
+                showToast("Erreur lors de la mise à jour du mot de passe.", "error");
             });
     });
+}
+
+function showToast(message, type = "success", duration = 5000) {
+    const container = document.getElementById('toast-container');
+
+    const toast = document.createElement("div");
+    toast.className = `toast ${type}`;
+    toast.innerHTML = `
+    <span> ${message} </span>
+    <button class= "close-btn" onclick="this.parentElement.remove()"> <i class='bx  bx-x'  ></i> </button>
+    `;
+
+    container.appendChild(toast);
+
+    setTimeout(() => {
+        toast.remove();
+    }, duration);
 }
