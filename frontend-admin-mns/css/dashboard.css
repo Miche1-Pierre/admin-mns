@@ -957,9 +957,12 @@ canvas {
     padding: 14px 18px;
     border-radius: 8px;
     font-size: 14px;
-    color: var(--text-color-light);
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
     animation: fadeIn 0.3s ease-in-out;
+}
+
+.toast span {
+    color: var(--text-color-light);
 }
 
 .toast.success {
@@ -976,6 +979,11 @@ canvas {
 
 .toast.warning {
     background-color: #ffc107;
+}
+
+.toast.warning span,
+.toast.info span {
+    color: var(--text-color-dark);
 }
 
 .toast .close-btn {
