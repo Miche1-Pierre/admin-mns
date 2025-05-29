@@ -15,6 +15,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import java.net.URI;
+
 @RestController
 @RequestMapping("/api/auth")
 @CrossOrigin(origins = "http://admin-mns")
@@ -32,9 +34,17 @@ public class AuthController {
     }
 
     @GetMapping("/verify-email")
-    public ResponseEntity<String> verifyEmail(@RequestParam String token) {
-        String jwt = userService.verifyEmail(token);
-        return ResponseEntity.ok("Email vérifié avec succès !");
+    public ResponseEntity<Void> verifyEmail(@RequestParam String token) {
+        try {
+            userService.verifyEmail(token);
+            return ResponseEntity.status(HttpStatus.FOUND)
+                    .location(URI.create("http://admin-mns/frontend-admin-mns/views/login.php?status=verified"))
+                    .build();
+        } catch (RuntimeException ex) {
+            return ResponseEntity.status(HttpStatus.FOUND)
+                    .location(URI.create("http://admin-mns/frontend-admin-mns/views/login.php?status=expired"))
+                    .build();
+        }
     }
 
     @PostMapping("/login")
