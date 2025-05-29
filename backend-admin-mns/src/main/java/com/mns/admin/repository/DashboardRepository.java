@@ -180,6 +180,7 @@ public class DashboardRepository {
                         "d.date_depot_document AS depot, " +
                         "d.date_limite_document AS limite, " +
                         "td.nom_type_document AS type, " +
+                        "d.nom_physique AS nom_physique, " +
                         "do.id_stagiaire AS stagiaire " +
                         "FROM document d " +
                         "JOIN dossier do ON do.id_dossier = d.id_dossier " +
@@ -196,7 +197,8 @@ public class DashboardRepository {
                         "d.nom_document AS nom, " +
                         "d.date_depot_document AS depot, " +
                         "d.date_limite_document AS limite, " +
-                        "td.nom_type_document AS type " +
+                        "td.nom_type_document AS type, " +
+                        "d.nom_physique AS nom_physique " +
                         "FROM document d " +
                         "JOIN dossier do ON do.id_dossier = d.id_dossier " +
                         "JOIN type_document td ON td.id_type_document = d.id_type_document " +
