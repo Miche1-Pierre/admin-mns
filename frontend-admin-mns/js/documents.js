@@ -196,6 +196,7 @@ function displayDocuments() {
             <td>${new Date(doc.depot).toLocaleString()}</td>
             <td>${new Date(doc.limite).toLocaleString()}</td>
             <td>
+                <button class="button preview">Preview</button>
                 <button class="button edit">Modifier</button>
                 <button class="button delete">Supprimer</button>
             </td>
@@ -315,6 +316,79 @@ function initViewAccountModal() {
         if (e.target === modal) {
             modal.style.display = "none";
         }
+    });
+}
+
+document.addEventListener("click", function (event) {
+    if (event.target.matches(".button.preview")) {
+        const row = event.target.closest("tr");
+        const docId = row.querySelector("td:first-child").textContent;
+
+        fetch(`http://admin-mns:8080/api/documents/preview/${docId}`, {
+            headers: {
+                'Authorization': 'Bearer ' + localStorage.getItem('token')
+            }
+        })
+            .then(response => {
+                if (!response.ok) throw new Error("Erreur lors du chargement du document");
+                return response.blob();
+            })
+            .then(blob => {
+                const url = URL.createObjectURL(blob);
+                showDocumentPreview(url);
+            })
+            .catch(error => {
+                console.error(error);
+                showToast("Impossible d'afficher le document", "error");
+            });
+    }
+});
+
+document.addEventListener("click", function (event) {
+    if (event.target.matches(".button.delete")) {
+        const row = event.target.closest("tr");
+        const docId = row.querySelector("td:first-child").textContent;
+
+        showToast("Voulez-vous vraiment supprimer ce document ?", "warning", 10000);
+
+        if (confirm("Êtes-vous sûr de vouloir supprimer ce document ?")) {
+            fetch(`http://admin-mns:8080/api/documents/delete/${docId}`, {
+                method: "DELETE",
+                headers: {
+                    'Authorization': 'Bearer ' + localStorage.getItem('token')
+                }
+            })
+                .then(response => {
+                    if (response.ok) {
+                        showToast("Document supprimé avec succès", "success", 5000, true);
+                        window.location.reload();
+                    } else {
+                        showToast("Erreur lors de la suppression", "error");
+                    }
+                })
+                .catch(error => {
+                    console.error("Erreur:", error);
+                    showToast("Erreur réseau lors de la suppression", "error");
+                });
+        }
+    }
+});
+
+function showDocumentPreview(fileUrl) {
+    const modal = document.getElementById("previewDocumentModal");
+    const closeModal = modal.querySelector(".close-btn");
+    const content = document.getElementById("previewContent");
+
+    content.innerHTML = `
+        <iframe src="${fileUrl}" width="100%" height="600px" style="border: none;"></iframe>
+    `;
+
+    modal.style.display = "block";
+
+    closeModal.addEventListener("click", () => modal.style.display = "none");
+
+    window.addEventListener("click", e => {
+        if (e.target === modal) modal.style.display = "none";
     });
 }
 
