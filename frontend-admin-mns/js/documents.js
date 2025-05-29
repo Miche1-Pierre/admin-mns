@@ -189,18 +189,20 @@ function displayDocuments() {
 
     displayedDocs.forEach(doc => {
         const row = document.createElement("tr");
+        row.dataset.filename = doc.nom;
+        row.dataset.nom_physique = doc.nom_physique || doc.nom;
         row.innerHTML = `
-            <td>${doc.id}</td>
-            <td>${doc.nom}</td>
-            <td>${doc.type}</td>
-            <td>${new Date(doc.depot).toLocaleString()}</td>
-            <td>${new Date(doc.limite).toLocaleString()}</td>
-            <td>
-                <button class="button preview">Preview</button>
-                <button class="button edit">Modifier</button>
-                <button class="button delete">Supprimer</button>
-            </td>
-        `;
+        <td>${doc.id}</td>
+        <td>${doc.nom}</td>
+        <td>${doc.type}</td>
+        <td>${new Date(doc.depot).toLocaleString()}</td>
+        <td>${new Date(doc.limite).toLocaleString()}</td>
+        <td>
+            <button class="button preview">Preview</button>
+            <button class="button edit">Modifier</button>
+            <button class="button delete">Supprimer</button>
+        </td>
+    `;
         tableBody.appendChild(row);
     });
 
@@ -322,9 +324,16 @@ function initViewAccountModal() {
 document.addEventListener("click", function (event) {
     if (event.target.matches(".button.preview")) {
         const row = event.target.closest("tr");
-        const docId = row.querySelector("td:first-child").textContent;
+        const docPhysique = row.dataset.nom_physique;
 
-        fetch(`http://admin-mns:8080/api/documents/preview/${docId}`, {
+        if (!docPhysique) {
+            console.warn("nom_physique non défini sur la ligne");
+            showToast("Fichier introuvable", "error");
+            return;
+        }
+
+        const encodedDocNom = encodeURIComponent(docPhysique);
+        fetch(`http://admin-mns:8080/api/documents/preview/${encodedDocNom}`, {
             headers: {
                 'Authorization': 'Bearer ' + localStorage.getItem('token')
             }
@@ -374,23 +383,24 @@ document.addEventListener("click", function (event) {
     }
 });
 
-function showDocumentPreview(fileUrl) {
-    const modal = document.getElementById("previewDocumentModal");
-    const closeModal = modal.querySelector(".close-btn");
-    const content = document.getElementById("previewContent");
+function showDocumentPreview(url) {
+    const modal = document.getElementById('previewDocumentModal');
+    const previewContent = document.getElementById('previewContent');
 
-    content.innerHTML = `
-        <iframe src="${fileUrl}" width="100%" height="600px" style="border: none;"></iframe>
-    `;
+    previewContent.innerHTML = `<iframe src="${url}" style="width:100%; height:100%; border:none;"></iframe>`;
 
-    modal.style.display = "block";
-
-    closeModal.addEventListener("click", () => modal.style.display = "none");
-
-    window.addEventListener("click", e => {
-        if (e.target === modal) modal.style.display = "none";
-    });
+    modal.classList.add('show');
+    modal.style.display = 'flex';
 }
+
+document.querySelector('#previewDocumentModal .close-btn').addEventListener('click', () => {
+    const modal = document.getElementById('previewDocumentModal');
+    modal.classList.remove('show');
+    setTimeout(() => {
+        modal.style.display = 'none';
+        document.getElementById('previewContent').innerHTML = '';
+    }, 300);
+});
 
 function showToast(message = null, type = "success", duration = 5000, persist = false) {
     if (persist && message) {
