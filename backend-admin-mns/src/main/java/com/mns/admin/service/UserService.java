@@ -12,10 +12,13 @@ import com.mns.admin.repository.UserSessionRepository;
 import com.mns.admin.repository.VerrificationTokenRepository;
 import com.mns.admin.security.JwtUtil;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.net.URI;
 import java.time.LocalDateTime;
 import java.util.UUID;
 import java.util.regex.Pattern;
@@ -49,7 +52,7 @@ public class UserService {
 
         if (!utilisateur.isEmailVerifie()) {
             sendEmailVerification(utilisateur);
-            throw new RuntimeException("Veuillez vérifier votre email.");
+            throw new RuntimeException("Veuillez vérifier votre email. Un lien de vérification vous a été renvoyé.");
         }
 
         if (!passwordEncoder.matches(authRequest.getMotDePasse(), utilisateur.getMotDePasseUtilisateur())) {
@@ -65,40 +68,59 @@ public class UserService {
     }
 
     public void sendEmailVerification(Utilisateur utilisateur) {
+        sendEmailVerification(utilisateur, null);
+    }
+
+    public void sendEmailVerification(Utilisateur utilisateur, String tempPassword) {
         if (utilisateur.isEmailVerifie()) {
             throw new RuntimeException("L'email est déjà vérifié.");
         }
-        String token = jwtUtil.generateToken(utilisateur.getEmailUtilisateur(), utilisateur.getRole().getNomRole());
 
+        String token = jwtUtil.generateToken(utilisateur.getEmailUtilisateur(), utilisateur.getRole().getNomRole());
         LocalDateTime expirationDate = LocalDateTime.now().plusMinutes(15);
         VerificationToken verificationToken = new VerificationToken(token, utilisateur, expirationDate);
         verificationTokenRepository.save(verificationToken);
 
         String verificationLink = "http://admin-mns:8080/api/auth/verify-email?token=" + token;
-        String emailBody = "<p>Cliquez sur le lien ci-dessous pour valider votre email :</p>" +
-                "<a href='" + verificationLink + "'>Vérifier mon compte</a>";
 
-        emailService.sendEmail(utilisateur.getEmailUtilisateur(), "Vérification de votre compte", emailBody);
+        StringBuilder emailBody = new StringBuilder();
+        emailBody.append("<p>Bienvenue sur la plateforme MNS !</p>");
+        emailBody.append("<p>Cliquez sur le lien ci-dessous pour vérifier votre email :</p>");
+        emailBody.append("<a href='").append(verificationLink).append("'>Vérifier mon compte</a>");
+
+        if (tempPassword != null) {
+            emailBody.append("<p>Votre mot de passe temporaire est : <strong>")
+                    .append(tempPassword).append("</strong></p>");
+            emailBody.append("<p>Vous pourrez le modifier après vous être connecté depuis votre espace personnel.</p>");
+        }
+
+        emailService.sendEmail(
+                utilisateur.getEmailUtilisateur(),
+                "Vérification de votre compte",
+                emailBody.toString()
+        );
     }
 
-    public String verifyEmail(String token) {
+
+    public ResponseEntity<?> verifyEmail(String token) {
         String email = jwtUtil.getEmailFromToken(token);
         Utilisateur utilisateur = userRepository.findByEmailUtilisateur(email)
                 .orElseThrow(() -> new RuntimeException("Utilisateur non trouvé"));
 
         if (jwtUtil.isTokenExpired(token)) {
-            throw new RuntimeException("Le token de vérification a expiré.");
-        }
-
-        if (!userSessionRepository.existsByUtilisateur(utilisateur)) {
-            generateUserSession(utilisateur, utilisateur.getRole().getNomRole());
+            return ResponseEntity.status(HttpStatus.FOUND)
+                    .location(URI.create("http://admin-mns/frontend-admin-mns/views/login.php?status=expired"))
+                    .build();
         }
 
         utilisateur.setEmailVerifie(true);
         userRepository.save(utilisateur);
 
-        return jwtUtil.generateToken(utilisateur.getEmailUtilisateur(), utilisateur.getRole().getNomRole());
+        return ResponseEntity.status(HttpStatus.FOUND)
+                .location(URI.create("http://admin-mns/frontend-admin-mns/views/login.php?status=verified"))
+                .build();
     }
+
 
     public String generateUserSession(Utilisateur utilisateur, String role) {
         String token = jwtUtil.generateToken(utilisateur.getEmailUtilisateur(), role);
@@ -141,7 +163,7 @@ public class UserService {
         utilisateur.setEmailVerifie(false);
         userRepository.save(utilisateur);
 
-        sendEmailVerification(utilisateur);
+        sendEmailVerification(utilisateur, tempPassword);
 
         return utilisateur;
     }
