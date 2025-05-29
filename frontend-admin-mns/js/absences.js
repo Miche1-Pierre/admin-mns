@@ -439,24 +439,44 @@ function displayAbsences() {
     // Fonction de gestion du bouton "Supprimer"
     document.querySelectorAll(".button.delete").forEach(button => {
         button.addEventListener("click", () => {
-            if (confirm("Voulez-vous vraiment supprimer cette absence ?")) {
-                const absenceId = button.closest("tr").querySelector("td:first-child").textContent;
-                fetch(`http://admin-mns:8080/api/absences/delete/${absenceId}`, {
-                    method: "DELETE",
-                    headers: {
-                        'Authorization': 'Bearer ' + localStorage.getItem('token')
-                    }
-                })
-                    .then(response => {
-                        if (response.ok) {
-                            showToast("Absence supprimée !", "success", 5000, true);
-                            window.location.reload();
-                        } else {
-                            showToast("Erreur lors de la suppression", "error");
+            const absenceId = button.closest("tr").querySelector("td:first-child").textContent;
+
+            showToast(
+                "Voulez-vous vraiment supprimer cette absence ?",
+                "warning",
+                10000,
+                false,
+                [
+                    {
+                        label: "Oui",
+                        action: "confirm",
+                        onClick: () => {
+                            fetch(`http://admin-mns:8080/api/absences/delete/${absenceId}`, {
+                                method: "DELETE",
+                                headers: {
+                                    'Authorization': 'Bearer ' + localStorage.getItem('token')
+                                }
+                            })
+                                .then(response => {
+                                    if (response.ok) {
+                                        showToast("Absence supprimée !", "success", 5000, true);
+                                        window.location.reload();
+                                    } else {
+                                        showToast("Erreur lors de la suppression", "error");
+                                    }
+                                })
+                                .catch(error => console.error("Erreur:", error));
                         }
-                    })
-                    .catch(error => console.error("Erreur:", error));
-            }
+                    },
+                    {
+                        label: "Non",
+                        action: "cancel",
+                        onClick: () => {
+                            showToast("Suppression annulée.", "info", 3000);
+                        }
+                    }
+                ]
+            );
         });
     });
 
@@ -636,9 +656,8 @@ function fetchProfile() {
         .catch(error => console.error('Erreur:', error));
 }
 
-function showToast(message = null, type = "success", duration = 5000, persist = false) {
+function showToast(message = null, type = "success", duration = 5000, persist = false, buttons = null) {
     if (persist && message) {
-        // Stocke le toast dans localStorage pour affichage après reload
         localStorage.setItem("toastMessage", JSON.stringify({ message, type, duration }));
         return;
     }
@@ -671,16 +690,42 @@ function showToast(message = null, type = "success", duration = 5000, persist = 
 
     const toast = document.createElement("div");
     toast.className = `toast ${type}`;
-    toast.innerHTML = `
-        <span>${message}</span>
-        <button class="close-btn" onclick="this.parentElement.remove()">
-            <i class='bx bx-x'></i>
-        </button>
-    `;
 
+    let html = `<span>${message}</span>`;
+
+    if (buttons && Array.isArray(buttons)) {
+        html += `<div class="toast-buttons">`;
+        buttons.forEach(btn => {
+            html += `<button class="toast-btn" data-action="${btn.action}">${btn.label}</button>`;
+        });
+        html += `</div>`;
+    } else {
+        html += `
+            <button class="close-btn" onclick="this.parentElement.remove()">
+                <i class='bx bx-x'></i>
+            </button>
+        `;
+    }
+
+    toast.innerHTML = html;
     container.appendChild(toast);
 
-    setTimeout(() => {
-        toast.remove();
-    }, duration);
+    if (buttons) {
+        toast.querySelectorAll(".toast-btn").forEach(button => {
+            button.addEventListener("click", () => {
+                const action = button.dataset.action;
+                const btnObj = buttons.find(b => b.action === action);
+                if (btnObj && typeof btnObj.onClick === "function") {
+                    btnObj.onClick();
+                }
+                toast.remove();
+            });
+        });
+    }
+
+    if (!buttons) {
+        setTimeout(() => {
+            toast.remove();
+        }, duration);
+    }
 }
