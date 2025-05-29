@@ -310,9 +310,10 @@ function displayAbsences() {
                             })
                                 .then(response => response.json())
                                 .then(() => {
-                                    console.log("Absence validée");
+                                    showToast("Absence validé !", "success", 5000, true);
                                     validateButton.disabled = true;
                                     refuseButton.disabled = true;
+                                    window.location.reload();
                                 })
                                 .catch(error => console.error("Erreur de validation :", error));
                         };
@@ -327,9 +328,10 @@ function displayAbsences() {
                             })
                                 .then(response => response.json())
                                 .then(() => {
-                                    console.log("Absence refusée");
+                                    showToast("Absence refusée !", "warning", 5000, true);
                                     validateButton.disabled = true;
                                     refuseButton.disabled = true;
+                                    window.location.reload();
                                 })
                                 .catch(error => console.error("Erreur de refus :", error));
                         };
@@ -448,6 +450,7 @@ function displayAbsences() {
                     .then(response => {
                         if (response.ok) {
                             showToast("Absence supprimée !", "success");
+                            window.location.reload();
                         } else {
                             showToast("Erreur lors de la suppression", "error");
                         }
