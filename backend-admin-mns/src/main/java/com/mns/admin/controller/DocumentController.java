@@ -3,6 +3,7 @@ package com.mns.admin.controller;
 import com.mns.admin.dto.DocumentDto;
 import com.mns.admin.model.Document;
 import com.mns.admin.model.Utilisateur;
+import com.mns.admin.repository.DocumentRepository;
 import com.mns.admin.service.DocumentService;
 import com.mns.admin.service.UserService;
 import jakarta.validation.Valid;
@@ -16,9 +17,12 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -35,9 +39,12 @@ public class DocumentController {
     private DocumentService documentService;
 
     @Autowired
+    private DocumentRepository documentRepository;
+
+    @Autowired
     private UserService userService;
 
-    @Value("${file.upload-dir}")
+    @Value("${UPLOAD_DIR}")
     private String uploadDir;
 
     // GET all documents
@@ -46,9 +53,23 @@ public class DocumentController {
         return ResponseEntity.ok(documentService.getAllDocuments());
     }
 
-    @GetMapping("/preview/{filename:.+}")
-    public ResponseEntity<Resource> previewFile(@PathVariable String filename) throws MalformedURLException {
-        Path filePath = Paths.get(uploadDir).resolve(filename);
+    @GetMapping("/preview/{nomDocument:.+}")
+    public ResponseEntity<Resource> previewFile(@PathVariable String nomDocument) throws MalformedURLException {
+        Document doc = documentRepository.findByNomPhysique(nomDocument)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Document non trouvé"));
+
+        String uniqueFilename = doc.getNomPhysique();
+
+        Path uploadPath = Paths.get(uploadDir).toAbsolutePath().normalize();
+        Path filePath = uploadPath.resolve(uniqueFilename).normalize();
+
+        System.out.println("uploadPath = " + uploadPath);
+        System.out.println("filePath = " + filePath);
+
+        if (!filePath.startsWith(uploadPath)) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
+
         Resource resource = new UrlResource(filePath.toUri());
 
         if (!resource.exists() || !resource.isReadable()) {
@@ -58,6 +79,9 @@ public class DocumentController {
         String contentType;
         try {
             contentType = Files.probeContentType(filePath);
+            if (contentType == null) {
+                contentType = "application/octet-stream";
+            }
         } catch (IOException e) {
             contentType = "application/octet-stream";
         }
@@ -66,6 +90,8 @@ public class DocumentController {
                 .contentType(MediaType.parseMediaType(contentType))
                 .body(resource);
     }
+
+
 
     // GET document by ID
     @GetMapping("/{id}")
