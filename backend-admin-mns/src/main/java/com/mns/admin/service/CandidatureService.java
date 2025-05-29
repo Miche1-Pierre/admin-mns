@@ -2,10 +2,7 @@ package com.mns.admin.service;
 
 import com.mns.admin.dto.CandidatureDto;
 import com.mns.admin.model.*;
-import com.mns.admin.repository.DossierRepository;
-import com.mns.admin.repository.FormationRepository;
-import com.mns.admin.repository.InscriptionRepository;
-import com.mns.admin.repository.StatutRepository;
+import com.mns.admin.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -39,6 +36,12 @@ public class CandidatureService {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private DocumentRepository documentRepository;
+
+    @Autowired
+    private TypeDocumentRepository typeDocumentRepository;
+
     @Value("${UPLOAD_DIR}")
     private String uploadDir;
 
@@ -46,17 +49,28 @@ public class CandidatureService {
     public void createCandidature(CandidatureDto dto) {
         ensureUploadDirExists();
 
-        String cvFilename = saveFile(dto.getCv());
-        String lettreFilename = saveFile(dto.getLettre());
+        // Création de l'utilisateur
+        Utilisateur utilisateur = userService.createUserFromCandidature(
+                dto.getNom(), dto.getPrenom(), dto.getEmail()
+        );
 
+        // Création du dossier
         Dossier dossier = new Dossier();
         dossier.setDateCreationDossier(LocalDateTime.now());
         dossier.setStatut(getStatut(Statut.StatutEnum.EN_ATTENTE));
-        Utilisateur utilisateur = userService.createUserFromCandidature(dto.getNom(), dto.getPrenom(), dto.getEmail());
         dossier.setStagiaire(utilisateur);
-
         dossierRepository.save(dossier);
 
+        // Sauvegarde des documents
+        if (dto.getCv() != null) {
+            saveDocumentToDB(dto.getCv(), dossier, "CV");
+        }
+
+        if (dto.getLettre() != null) {
+            saveDocumentToDB(dto.getLettre(), dossier, "Lettre de motivation");
+        }
+
+        // Création de l'inscription
         if (dto.getFormationId() != null) {
             Formation formation = formationRepository.findById(dto.getFormationId())
                     .orElseThrow(() -> new RuntimeException("Formation non trouvée"));
@@ -70,16 +84,30 @@ public class CandidatureService {
         }
     }
 
-    private String saveFile(MultipartFile file) {
+    private void saveDocumentToDB(MultipartFile file, Dossier dossier, String typeNom) {
         try {
             String originalFilename = StringUtils.cleanPath(file.getOriginalFilename());
-            String filename = UUID.randomUUID() + "_" + originalFilename;
-            Path destinationPath = Paths.get(uploadDir).resolve(filename);
+            String uniqueFilename = UUID.randomUUID() + "_" + originalFilename;
+            Path destinationPath = Paths.get(uploadDir).resolve(uniqueFilename);
             Files.copy(file.getInputStream(), destinationPath, StandardCopyOption.REPLACE_EXISTING);
 
-            return filename;
+            Document document = new Document();
+            document.setNomDocument(originalFilename);
+            document.setNomPhysique(uniqueFilename);
+            document.setDateDepotDocument(LocalDateTime.now());
+            document.setCleChiffrement_document(UUID.randomUUID().toString());
+            document.setContenuChiffreDocument(file.getBytes());
+            document.setDossier(dossier);
+            document.setStatut(getStatut(Statut.StatutEnum.EN_ATTENTE));
+
+            TypeDocument typeDocument = typeDocumentRepository.findByNomTypeDocument(typeNom)
+                    .orElseThrow(() -> new RuntimeException("Type de document non trouvé : " + typeNom));
+            document.setTypeDocument(typeDocument);
+
+            documentRepository.save(document);
+
         } catch (IOException e) {
-            throw new RuntimeException("Erreur lors de l'enregistrement du fichier: " + file.getOriginalFilename(), e);
+            throw new RuntimeException("Erreur lors de l'enregistrement du document : " + file.getOriginalFilename(), e);
         }
     }
 
@@ -130,17 +158,12 @@ public class CandidatureService {
             inscription.setFormation(formation);
         }
 
-        // Vous pouvez ajouter ici la mise à jour d'autres informations,
-        // par exemple si vous souhaitez mettre à jour des fichiers (CV, lettre)
-        // ou d'autres champs liés au dossier associé.
-
         return inscriptionRepository.save(inscription);
     }
 
     // Supprimer une candidature
     @Transactional
     public void deleteCandidature(Long id) {
-        // Vous pouvez ajouter ici une logique pour supprimer également le dossier associé si nécessaire.
         inscriptionRepository.deleteById(id);
     }
 
