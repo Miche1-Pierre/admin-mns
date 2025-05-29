@@ -981,8 +981,7 @@ canvas {
     background-color: #ffc107;
 }
 
-.toast.warning span,
-.toast.info span {
+.toast.warning span {
     color: var(--text-color-dark);
 }
 
@@ -994,6 +993,24 @@ canvas {
     cursor: pointer;
     margin-left: 10px;
     padding: 0;
+}
+
+.toast-buttons {
+    margin-top: 10px;
+    display: flex;
+    gap: 10px;
+}
+
+.toast-btn {
+    padding: 5px 10px;
+    border: none;
+    cursor: pointer;
+    border-radius: 4px;
+    background-color: #ccc;
+}
+
+.toast-btn:hover {
+    background-color: #bbb;
 }
 
 @keyframes fadeIn {
