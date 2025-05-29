@@ -115,6 +115,17 @@ $documents = $documentsData["documentsMenu"] ?? [];
                     </form>
                 </div>
             </div>
+
+            <!-- Popup pour preview le document -->
+            <div id="previewDocumentModal" class="modal">
+                <div class="modal-content">
+                    <span class="close-btn"><i class='bx bx-x'></i></span>
+                    <h2>Aperçu du document</h2>
+                    <div id="previewContent">
+                        <!-- contenu chargé dynamiquement -->
+                    </div>
+                </div>
+            </div>
         </div>
     </main>
     <footer></footer>
