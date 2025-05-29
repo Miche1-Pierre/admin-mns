@@ -21,8 +21,7 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-                .csrf(csrf -> csrf.disable())
-                .authorizeRequests(auth -> auth
+                .csrf(csrf -> csrf.disable()).authorizeHttpRequests(auth -> auth
                         .requestMatchers(
                                 "/api/auth/login",
                                 "/api/auth/logout",
@@ -57,7 +56,12 @@ public class SecurityConfig {
                                 "/api/candidatures/candidature/validate/**",
                                 "/api/candidatures/candidature/refuse/**",
                                 "/api/formations",
-                                "/api/formations/formations").permitAll()
+                                "/api/formations/formations",
+                                "/api/documents",
+                                "/api/documents/**",
+                                "/api/documents/delete/**",
+                                "/api/documents/update/**",
+                                "/api/documents/preview/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
