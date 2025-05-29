@@ -31,6 +31,9 @@ public class Document {
     @JoinColumn(name = "nom_document", nullable = false)
     private String nomDocument;
 
+    @JoinColumn(name = "nom_physique", nullable = false)
+    private String nomPhysique;
+
     @ManyToOne
     @JoinColumn(name = "id_statut", nullable = false)
     private Statut statut;
@@ -51,7 +54,7 @@ public class Document {
     @Column(name = "cle_chiffrement_document", nullable = false)
     private String cleChiffrement_document;
 
-    @Column(name = "contenu_chiffre_document", nullable = false)
+    @Column(name = "contenu_chiffre_document", nullable = false, columnDefinition = "LONGBLOB")
     @Lob
     private byte[] contenuChiffreDocument;
 
@@ -117,6 +120,14 @@ public class Document {
 
     public void setDateLimiteDocument(LocalDateTime dateLimiteDocument) {
         this.dateLimiteDocument = dateLimiteDocument;
+    }
+
+    public String getNomPhysique() {
+        return nomPhysique;
+    }
+
+    public void setNomPhysique(String nomPhysique) {
+        this.nomPhysique = nomPhysique;
     }
 
     public String getCleChiffrement_document() {
